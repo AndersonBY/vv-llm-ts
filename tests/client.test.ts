@@ -20,7 +20,7 @@ import {
   type CanonicalImageUrlContentPart,
   type CanonicalTextContentPart,
   type JsonObject,
-  type SettingsV2,
+  type Settings,
   VvLlmClient,
   VvLlmError,
 } from "../src/index.js";
@@ -29,9 +29,9 @@ import { readContractFixture } from "./contract-fixtures.js";
 test("default client consumes the pinned contract catalog and metadata", () => {
   const client = new VvLlmClient({ fetch: jsonFetch({}) });
   const vision = client.getModelConfig("deepseek-v4-flash-vision-exp");
-  assert.equal(CONTRACT_VERSION, "1.0.0");
+  assert.equal(CONTRACT_VERSION, "1.0.1");
   assert.equal(CONTRACT_CATALOG_REVISION, 1);
-  assert.equal(CONTRACT_CONSUMER_LOCK_SHA256, "a9ebd65253635e84564b971227f30ec2c81b35096100ef26034273eec3f54188");
+  assert.equal(CONTRACT_CONSUMER_LOCK_SHA256, "4b63dfb29d28212a7e591dad4ccaabdf0ad29940e3eaa80176a59c59b774f0cb");
   assert.equal(client.modelCatalog, DEFAULT_MODEL_CATALOG);
   assert.equal(vision?.max_image_dimension, 8192);
   assert.equal(vision?.capabilities?.thinking, "configurable");
@@ -356,9 +356,9 @@ test("embeddings and rerank normalize common responses", async () => {
   assert.equal(requests[1]?.return_documents, true);
 });
 
-test("settings V2 resolves endpoint bindings and factories preserve transport metadata", async () => {
+test("settings resolves endpoint bindings and factories preserve transport metadata", async () => {
   const fixture = readContractFixture<{
-    settings: SettingsV2;
+    settings: Settings;
     cases: Array<{ kind: "chat" | "embedding" | "rerank"; backend: string; model: string; expected: { model_id: string; endpoint_id: string; endpoint_type: string } }>;
   }>("fixtures/settings-resolution.v1.json");
   const settings = fixture.settings;
@@ -383,6 +383,18 @@ test("settings V2 resolves endpoint bindings and factories preserve transport me
   const rerank = createRerankClientFromSettings(settings, { backend: rerankCase.backend, model: rerankCase.model, fetch: jsonFetch({ results: [] }) });
   assert.equal(rerank.resolved.endpoint.id, rerankCase.expected.endpoint_id);
   assert.equal(EMPTY_MODEL_CATALOG.list().length, 0);
+});
+
+test("settings rejects top-level provider config", () => {
+  for (const kind of ["chat", "embedding", "rerank"] as const) {
+    assert.throws(
+      () => resolveSettingsModel({ openai: { models: {} } }, kind, "openai", "test-model"),
+      (error: unknown) => error instanceof VvLlmError
+        && error.kind === "configuration"
+        && error.code === "UNSUPPORTED_SETTINGS_SHAPE"
+        && error.message.includes("backends.openai"),
+    );
+  }
 });
 
 test("retry headers follow the Python/Rust protocol fixture", () => {

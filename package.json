@@ -22,9 +22,9 @@
   },
   "files": [
     "dist",
-    "contract/v1.0.0/consumer-lock.v1.json",
-    "contract/v1.0.0/manifest.json",
-    "contract/v1.0.0/checksums.sha256",
+    "contract/v1.0.1/consumer-lock.v1.json",
+    "contract/v1.0.1/manifest.json",
+    "contract/v1.0.1/checksums.sha256",
     "README.md",
     "README_ZH.md",
     "CHANGELOG.md",

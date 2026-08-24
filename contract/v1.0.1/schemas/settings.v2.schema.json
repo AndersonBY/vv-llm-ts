@@ -1,14 +1,14 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:vv-llm-contract:settings:v2",
-  "title": "vv-llm shared settings V2",
-  "description": "Language-neutral representation of the shared VectorVein vv-llm settings shape.",
+  "title": "vv-llm Settings",
+  "description": "Language-neutral representation of settings shared by the VectorVein vv-llm runtimes.",
   "type": "object",
   "additionalProperties": true,
   "properties": {
     "VERSION": {
       "type": "string",
-      "description": "The settings format version. V2 callers should use the value 2; omitted values are accepted for legacy/default settings."
+      "description": "The settings format marker. Use the value 2 for the default settings format; this field may be omitted."
     },
     "endpoints": {
       "type": "array",

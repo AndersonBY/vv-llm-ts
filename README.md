@@ -19,14 +19,14 @@ native `fetch` API and has no runtime dependencies.
 - `base_url`/`baseURL`, bearer API key, default and per-request headers/query,
   arbitrary JSON options, `extra_body`, provider extensions, timeout, and
   caller `AbortSignal`.
-- Typed `ModelConfig`/`ModelCatalog` and a V2 settings resolver covering
+- Typed `ModelConfig`/`ModelCatalog` and a settings resolver covering
   `endpoints`, `backends`, `embedding_backends`, `rerank_backends`, string or
   object endpoint bindings, disabled entries, binding `model_id` overrides,
   endpoint headers, and transport metadata.
 - Stable `VvLlmError` classification with status, request ID, retry hints, and
   `retry-after-ms` precedence matching the Python/Rust protocol fixture.
 - The default `ModelCatalog` is generated from the pinned
-  `vv-llm-contract` v1.0.0 catalog and exposes contract version, schema,
+  `vv-llm-contract` v1.0.1 catalog and exposes contract version, schema,
   fixture, catalog-revision, and artifact-hash metadata.
 
 ## Canonical request API
@@ -128,7 +128,7 @@ The methods are Promise based because Node's safe native HTTP API is
 asynchronous. “Synchronous completion” here means a non-streaming completion;
 the stream variant is an async iterator.
 
-## Settings V2
+## Settings
 
 ```ts
 import { createChatClientFromSettings } from "vv-llm-ts";
@@ -174,7 +174,7 @@ The language-neutral contract is maintained in the independent
 
 ## Contract consumption
 
-The checked-in `contract/v1.0.0/` tree is a byte-for-byte vendor snapshot of
+The checked-in `contract/v1.0.1/` tree is a byte-for-byte vendor snapshot of
 the canonical release: `consumer-lock.v1.json`, `manifest.json`,
 `checksums.sha256`, the catalog, the v2 OpenAI-compatible fixture, the
 independent retry fixture, and ten schemas.
@@ -210,7 +210,7 @@ npm run live:test
 ```
 
 Alternatively set `VV_LLM_SETTINGS_JSON` to a JSON file path;
-for Settings V2 also set `VV_LLM_BACKEND` and `VV_LLM_MODEL`. The output only
+for settings also set `VV_LLM_BACKEND` and `VV_LLM_MODEL`. The output only
 contains model name, content/reasoning/tool-call presence flags, and usage
 counts. API keys and prompts are never printed. Without
 `VV_LLM_RUN_LIVE_TESTS=1`, the command exits without making a request.

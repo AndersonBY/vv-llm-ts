@@ -1,11 +1,11 @@
 {
   "format": "vv-llm-contract-consumer-lock.v1",
-  "contract_version": "1.0.0",
+  "contract_version": "1.0.1",
   "schema_version": 2,
   "fixture_version": 2,
   "catalog_revision": 1,
-  "manifest_sha256": "e93e15487d82f7580d5888aa57a10026709d769313ba4d1a6164a973bff1befd",
-  "checksums_sha256": "d9c6caaae43485211719363ec36df90f32762233087a540414d59732aec289b3",
+  "manifest_sha256": "1cf53c31a9336d4a2ed45a880a156faf99cfd6f1ddaaf3c33331de3796d51a75",
+  "checksums_sha256": "1ef2a7a1c5e1cfabca71d5973a0baac5805fe1f3c84ff4532fd83c48906d0f17",
   "artifacts": {
     "catalog/default-chat-catalog.json": "c2c62de65d9adef972936b5d47da465e7bea22b4d540e6afb7088318dc354f84",
     "fixtures/openai-compatible.v2.json": "7696b0c53b8d64ef1d5a483bfe12c2c8a4a372a18258244c862b7b52ad9ede99",
@@ -20,6 +20,6 @@
     "schemas/openai-compatible-fixture.v2.schema.json": "73f08143d6bc3606ee0eb488b7244b738570af99f393a64073ee9f6f42406e83",
     "schemas/rerank.v1.schema.json": "5dc9b51b0b0b6221532092fce4a2701b33f0ee255badadb714f86ad0027f09e6",
     "schemas/retry-after.v1.schema.json": "5cb52b988cada4585fb3c37c640ca607025a0ce53879e6796f106a146fa264ae",
-    "schemas/settings.v2.schema.json": "7cee50ae436138a42f9e30e9d20c82ad41c50383d955b427b2d2662fcb45c752"
+    "schemas/settings.v2.schema.json": "6d7b5d00a715b96addbfd68a84cbae82873020b74cc3dceee2a35da489dfc28f"
   }
 }

@@ -1,13 +1,13 @@
 {
   "format": "vv-llm-contract-manifest.v1",
-  "contract_version": "1.0.0",
+  "contract_version": "1.0.1",
   "schema_version": 2,
   "fixture_version": 2,
   "catalog_revision": 1,
   "checksums": "checksums.sha256",
   "contract": {
     "name": "vv-llm-contract",
-    "version": "1.0.0"
+    "version": "1.0.1"
   },
   "revisions": {
     "schema": "v2",

@@ -4,13 +4,13 @@
  */
 import type { ModelConfig } from "../types.js";
 
-export const CONTRACT_VERSION = "1.0.0" as const;
+export const CONTRACT_VERSION = "1.0.1" as const;
 export const CONTRACT_SCHEMA_VERSION = 2 as const;
 export const CONTRACT_FIXTURE_VERSION = 2 as const;
 export const CONTRACT_CATALOG_REVISION = 1 as const;
-export const CONTRACT_CONSUMER_LOCK_SHA256 = "a9ebd65253635e84564b971227f30ec2c81b35096100ef26034273eec3f54188" as const;
-export const CONTRACT_MANIFEST_SHA256 = "e93e15487d82f7580d5888aa57a10026709d769313ba4d1a6164a973bff1befd" as const;
-export const CONTRACT_CHECKSUMS_SHA256 = "d9c6caaae43485211719363ec36df90f32762233087a540414d59732aec289b3" as const;
+export const CONTRACT_CONSUMER_LOCK_SHA256 = "4b63dfb29d28212a7e591dad4ccaabdf0ad29940e3eaa80176a59c59b774f0cb" as const;
+export const CONTRACT_MANIFEST_SHA256 = "1cf53c31a9336d4a2ed45a880a156faf99cfd6f1ddaaf3c33331de3796d51a75" as const;
+export const CONTRACT_CHECKSUMS_SHA256 = "1ef2a7a1c5e1cfabca71d5973a0baac5805fe1f3c84ff4532fd83c48906d0f17" as const;
 export const CONTRACT_ARTIFACTS = {
   "catalog/default-chat-catalog.json": "c2c62de65d9adef972936b5d47da465e7bea22b4d540e6afb7088318dc354f84",
   "fixtures/openai-compatible.v2.json": "7696b0c53b8d64ef1d5a483bfe12c2c8a4a372a18258244c862b7b52ad9ede99",
@@ -25,7 +25,7 @@ export const CONTRACT_ARTIFACTS = {
   "schemas/openai-compatible-fixture.v2.schema.json": "73f08143d6bc3606ee0eb488b7244b738570af99f393a64073ee9f6f42406e83",
   "schemas/rerank.v1.schema.json": "5dc9b51b0b0b6221532092fce4a2701b33f0ee255badadb714f86ad0027f09e6",
   "schemas/retry-after.v1.schema.json": "5cb52b988cada4585fb3c37c640ca607025a0ce53879e6796f106a146fa264ae",
-  "schemas/settings.v2.schema.json": "7cee50ae436138a42f9e30e9d20c82ad41c50383d955b427b2d2662fcb45c752"
+  "schemas/settings.v2.schema.json": "6d7b5d00a715b96addbfd68a84cbae82873020b74cc3dceee2a35da489dfc28f"
 } as const;
 export const CONTRACT_DEFAULT_MODELS = {
   "moonshot": "kimi-k2.6",

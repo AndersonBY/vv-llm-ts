@@ -54,7 +54,7 @@ multimodal、contract JSON、middleware、metadata 和 fallback 示例。
 ## Contract 与模型目录
 
 canonical language-neutral contract 位于独立的 `vv-llm-contract` 仓库。
-本仓库 vendor 了锁定的 `contract/v1.0.0/` artifact tree，
+本仓库 vendor 了锁定的 `contract/v1.0.1/` artifact tree，
 并生成 `src/generated/contract-catalog.ts`。默认 `ModelCatalog` 使用该目录，
 同时导出 contract version、revision 和 SHA-256 metadata。该 release 使用
 OpenAI fixture v2，并将 retry fixture/schema 独立锁定。
@@ -80,6 +80,6 @@ npm run live:test
 ```
 
 也可以把 `VV_LLM_SETTINGS_JSON` 设置为 Settings JSON 文件路径；
-Settings V2 另需 `VV_LLM_BACKEND` 和 `VV_LLM_MODEL`。输出只包含 model、内容/推理/
+使用 settings 解析时另需 `VV_LLM_BACKEND` 和 `VV_LLM_MODEL`。输出只包含 model、内容/推理/
 tool-call 是否存在和 usage 数量，不输出 key 或 prompt。没有
 `VV_LLM_RUN_LIVE_TESTS=1` 时不会发请求。

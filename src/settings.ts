@@ -3,6 +3,12 @@ import type { JsonObject } from "./types.js";
 import { VvLlmError } from "./errors.js";
 import { type ClientOptions, VvLlmClient } from "./client.js";
 
+const CHAT_BACKENDS = [
+  "anthropic", "deepseek", "gemini", "groq", "local", "minimax", "mistral",
+  "moonshot", "openai", "qwen", "yi", "zhipuai", "baichuan", "stepfun",
+  "xai", "xiaomi", "ernie",
+] as const;
+
 export interface EndpointConfig {
   id: string;
   enabled?: boolean;
@@ -49,7 +55,8 @@ export interface BackendConfig {
   [key: string]: unknown;
 }
 
-export interface SettingsV2 {
+export interface Settings {
+  /** Optional wire-format metadata preserved from shared settings JSON. */
   VERSION?: string;
   endpoints?: readonly EndpointConfig[];
   backends?: Record<string, BackendConfig>;
@@ -87,9 +94,9 @@ export interface SettingsClientResult {
   resolved: ResolvedModelConfig;
 }
 
-/** Resolve a V2 model and its first enabled endpoint without making a request. */
+/** Resolve a settings model and its first enabled endpoint without making a request. */
 export function resolveSettingsModel(
-  settings: SettingsV2,
+  settings: Settings,
   kind: SettingsKind,
   backend: string,
   modelId: string,
@@ -145,28 +152,28 @@ export function resolveSettingsModel(
 }
 
 export function createChatClientFromSettings(
-  settings: SettingsV2,
+  settings: Settings,
   options: SettingsFactoryOptions,
 ): SettingsClientResult {
   return createClientFromSettings(settings, "chat", options);
 }
 
 export function createEmbeddingClientFromSettings(
-  settings: SettingsV2,
+  settings: Settings,
   options: SettingsFactoryOptions,
 ): SettingsClientResult {
   return createClientFromSettings(settings, "embedding", options);
 }
 
 export function createRerankClientFromSettings(
-  settings: SettingsV2,
+  settings: Settings,
   options: SettingsFactoryOptions,
 ): SettingsClientResult {
   return createClientFromSettings(settings, "rerank", options);
 }
 
 function createClientFromSettings(
-  settings: SettingsV2,
+  settings: Settings,
   kind: SettingsKind,
   options: SettingsFactoryOptions,
 ): SettingsClientResult {
@@ -188,29 +195,20 @@ function createClientFromSettings(
   return { client: new VvLlmClient(clientOptions), resolved };
 }
 
-function getBackendMap(settings: SettingsV2, kind: SettingsKind): Record<string, BackendConfig> {
-  if (kind === "chat") {
-    if (settings.backends) return settings.backends;
-    // Preserve V1 top-level backend blocks exactly as provided.
-    const known = [
-      "anthropic", "deepseek", "gemini", "groq", "local", "minimax", "mistral",
-      "moonshot", "openai", "qwen", "yi", "zhipuai", "baichuan", "stepfun",
-      "xai", "xiaomi", "ernie",
-    ];
-    return Object.fromEntries(
-      known.flatMap((name) => {
-        const value = settings[name];
-        return isBackendConfig(value) ? [[name, value]] : [];
-      }),
+function getBackendMap(settings: Settings, kind: SettingsKind): Record<string, BackendConfig> {
+  const legacyBackend = CHAT_BACKENDS.find((backend) => Object.hasOwn(settings, backend));
+  if (legacyBackend) {
+    throw new VvLlmError(
+      `Top-level provider setting '${legacyBackend}' is unsupported; use 'backends.${legacyBackend}'`,
+      { kind: "configuration", code: "UNSUPPORTED_SETTINGS_SHAPE" },
     );
+  }
+  if (kind === "chat") {
+    return settings.backends ?? {};
   }
   return kind === "embedding"
     ? settings.embedding_backends ?? {}
     : settings.rerank_backends ?? {};
-}
-
-function isBackendConfig(value: unknown): value is BackendConfig {
-  return typeof value === "object" && value !== null;
 }
 
 function bindingEnabled(value: EndpointBindingInput): boolean {

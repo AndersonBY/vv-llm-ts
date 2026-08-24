@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:vv-llm-contract:embedding:v1",
+  "title": "vv-llm embedding contract V1",
+  "description": "Normalized embedding response plus the request definition used by OpenAI-compatible and custom retrieval adapters.",
+  "$ref": "#/$defs/EmbeddingResponse",
+  "$defs": {
+    "EmbeddingRequest": {
+      "title": "Embedding request",
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["model", "input"],
+      "properties": {
+        "model": { "type": "string", "minLength": 1 },
+        "input": {
+          "oneOf": [
+            { "type": "string" },
+            { "type": "array", "items": { "type": "string" } }
+          ]
+        },
+        "dimensions": { "type": ["integer", "null"], "minimum": 1 },
+        "extra_body": { "type": ["object", "null"] }
+      }
+    },
+    "EmbeddingUsage": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "prompt_tokens": { "type": ["integer", "null"], "minimum": 0 },
+        "total_tokens": { "type": ["integer", "null"], "minimum": 0 }
+      }
+    },
+    "EmbeddingData": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["index", "embedding"],
+      "properties": {
+        "index": { "type": "integer", "minimum": 0 },
+        "embedding": { "type": "array", "items": { "type": "number" } },
+        "object": { "type": "string", "default": "embedding" },
+        "text": { "type": ["string", "null"] },
+        "metadata": { "type": ["object", "null"] }
+      }
+    },
+    "EmbeddingResponse": {
+      "title": "Embedding response",
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["model", "data"],
+      "properties": {
+        "model": { "type": "string" },
+        "data": { "type": "array", "items": { "$ref": "#/$defs/EmbeddingData" } },
+        "usage": {
+          "anyOf": [
+            { "$ref": "#/$defs/EmbeddingUsage" },
+            { "type": "null" }
+          ]
+        },
+        "raw_response": { "type": ["object", "null"] }
+      }
+    }
+  }
+}

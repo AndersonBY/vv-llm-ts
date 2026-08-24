@@ -1,0 +1,673 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:vv-llm-contract:openai-compatible-fixture:v2",
+  "title": "vv-llm OpenAI-compatible conformance fixture v2",
+  "$comment": "The canonical request, normalized response, and normalized stream delta are strict contract objects. Retry behavior has its own fixture. Raw provider wire payloads are intentionally open because they belong to adapter conformance, not the provider-neutral schema.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "protocol",
+    "request_case",
+    "completion_case",
+    "stream_case"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 2
+    },
+    "protocol": {
+      "const": "openai_chat_completions"
+    },
+    "request_case": {
+      "$ref": "#/$defs/request_case"
+    },
+    "completion_case": {
+      "$ref": "#/$defs/completion_case"
+    },
+    "stream_case": {
+      "$ref": "#/$defs/stream_case"
+    }
+  },
+  "patternProperties": {
+    "^x_[a-z][a-z0-9_]*$": {}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "json_value": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/json_value"
+          }
+        },
+        {
+          "$ref": "#/$defs/json_object"
+        }
+      ]
+    },
+    "json_object": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/json_value"
+      }
+    },
+    "request_case": {
+      "type": "object",
+      "required": [
+        "canonical_request",
+        "expected_wire_request"
+      ],
+      "properties": {
+        "canonical_request": {
+          "$ref": "#/$defs/chat_request"
+        },
+        "expected_wire_request": {
+          "$ref": "#/$defs/raw_wire_object"
+        }
+      },
+      "patternProperties": {
+        "^x_[a-z][a-z0-9_]*$": {}
+      },
+      "additionalProperties": false
+    },
+    "completion_case": {
+      "type": "object",
+      "required": [
+        "raw_response",
+        "expected_response"
+      ],
+      "properties": {
+        "raw_response": {
+          "$ref": "#/$defs/raw_wire_object"
+        },
+        "expected_response": {
+          "$ref": "#/$defs/chat_response"
+        }
+      },
+      "patternProperties": {
+        "^x_[a-z][a-z0-9_]*$": {}
+      },
+      "additionalProperties": false
+    },
+    "stream_case": {
+      "type": "object",
+      "required": [
+        "raw_chunks",
+        "expected_deltas"
+      ],
+      "properties": {
+        "raw_chunks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/raw_wire_object"
+          }
+        },
+        "expected_deltas": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/chat_stream_delta"
+          }
+        }
+      },
+      "patternProperties": {
+        "^x_[a-z][a-z0-9_]*$": {}
+      },
+      "additionalProperties": false
+    },
+    "raw_wire_object": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/json_value"
+      }
+    },
+    "chat_request": {
+      "type": "object",
+      "required": [
+        "model",
+        "messages"
+      ],
+      "properties": {
+        "model": {
+          "type": "string",
+          "minLength": 1
+        },
+        "messages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/message"
+          }
+        },
+        "options": {
+          "$ref": "#/$defs/chat_request_options"
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/chat_tool"
+          }
+        },
+        "tool_choice": {
+          "oneOf": [
+            {
+              "enum": [
+                "auto",
+                "required",
+                "none"
+              ]
+            },
+            {
+              "$ref": "#/$defs/json_object"
+            }
+          ]
+        },
+        "extra_body": {
+          "$ref": "#/$defs/json_object"
+        }
+      },
+      "patternProperties": {
+        "^x_[a-z][a-z0-9_]*$": {}
+      },
+      "additionalProperties": false
+    },
+    "message": {
+      "type": "object",
+      "required": [
+        "role",
+        "content"
+      ],
+      "properties": {
+        "role": {
+          "enum": [
+            "system",
+            "user",
+            "assistant",
+            "tool"
+          ]
+        },
+        "content": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/content_part"
+              }
+            }
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "tool_call_id": {
+          "type": "string"
+        },
+        "tool_calls": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/tool_call"
+          }
+        },
+        "reasoning_content": {
+          "type": "string"
+        }
+      },
+      "patternProperties": {
+        "^x_[a-z][a-z0-9_]*$": {}
+      },
+      "additionalProperties": false
+    },
+    "content_part": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "type",
+            "text"
+          ],
+          "properties": {
+            "type": {
+              "const": "text"
+            },
+            "text": {
+              "type": "string"
+            },
+            "cache_control": {
+              "$ref": "#/$defs/json_value"
+            }
+          },
+          "patternProperties": {
+            "^x_[a-z][a-z0-9_]*$": {}
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "type",
+            "url"
+          ],
+          "properties": {
+            "type": {
+              "const": "image_url"
+            },
+            "url": {
+              "type": "string",
+              "minLength": 1
+            },
+            "detail": {
+              "enum": [
+                "auto",
+                "low",
+                "high"
+              ]
+            },
+            "cache_control": {
+              "$ref": "#/$defs/json_value"
+            }
+          },
+          "patternProperties": {
+            "^x_[a-z][a-z0-9_]*$": {}
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "type",
+            "image_url"
+          ],
+          "properties": {
+            "type": {
+              "const": "image_url"
+            },
+            "image_url": {
+              "type": "object",
+              "required": [
+                "url"
+              ],
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "detail": {
+                  "enum": [
+                    "auto",
+                    "low",
+                    "high"
+                  ]
+                }
+              },
+              "patternProperties": {
+                "^x_[a-z][a-z0-9_]*$": {}
+              },
+              "additionalProperties": false
+            },
+            "cache_control": {
+              "$ref": "#/$defs/json_value"
+            }
+          },
+          "patternProperties": {
+            "^x_[a-z][a-z0-9_]*$": {}
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "chat_tool": {
+      "type": "object",
+      "required": [
+        "name",
+        "parameters"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "parameters": {
+          "$ref": "#/$defs/json_value"
+        },
+        "cache_control": {
+          "$ref": "#/$defs/json_value"
+        }
+      },
+      "patternProperties": {
+        "^x_[a-z][a-z0-9_]*$": {}
+      },
+      "additionalProperties": false
+    },
+    "tool_call": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "arguments"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "arguments": {
+          "type": "string"
+        },
+        "index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "extra_content": {
+          "$ref": "#/$defs/json_value"
+        }
+      },
+      "patternProperties": {
+        "^x_[a-z][a-z0-9_]*$": {}
+      },
+      "additionalProperties": false
+    },
+    "thinking": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "default",
+            "enabled",
+            "disabled",
+            "adaptive",
+            "provider_defined"
+          ]
+        },
+        "budget_tokens": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "value": {
+          "$ref": "#/$defs/json_value"
+        }
+      },
+      "patternProperties": {
+        "^x_[a-z][a-z0-9_]*$": {}
+      },
+      "additionalProperties": false
+    },
+    "chat_request_options": {
+      "type": "object",
+      "properties": {
+        "temperature": {
+          "type": "number",
+          "minimum": 0
+        },
+        "max_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_completion_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "stream": {
+          "type": "boolean"
+        },
+        "top_p": {
+          "type": "number",
+          "minimum": 0
+        },
+        "stop": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "response_format": {
+          "$ref": "#/$defs/json_value"
+        },
+        "stream_options": {
+          "$ref": "#/$defs/json_value"
+        },
+        "audio": {
+          "$ref": "#/$defs/json_value"
+        },
+        "frequency_penalty": {
+          "type": "number"
+        },
+        "logit_bias": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer"
+          }
+        },
+        "logprobs": {
+          "type": "boolean"
+        },
+        "max_tokens_details": {
+          "$ref": "#/$defs/json_value"
+        },
+        "metadata": {
+          "$ref": "#/$defs/json_value"
+        },
+        "modalities": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "n": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "parallel_tool_calls": {
+          "type": "boolean"
+        },
+        "prediction": {
+          "$ref": "#/$defs/json_value"
+        },
+        "presence_penalty": {
+          "type": "number"
+        },
+        "reasoning_effort": {
+          "type": "string"
+        },
+        "thinking": {
+          "$ref": "#/$defs/thinking"
+        },
+        "seed": {
+          "type": "integer"
+        },
+        "service_tier": {
+          "type": "string"
+        },
+        "store": {
+          "type": "boolean"
+        },
+        "top_logprobs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "user": {
+          "type": "string"
+        }
+      },
+      "patternProperties": {
+        "^x_[a-z][a-z0-9_]*$": {}
+      },
+      "additionalProperties": false
+    },
+    "chat_response": {
+      "type": "object",
+      "required": [
+        "content",
+        "tool_calls"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "reasoning_content": {
+          "type": "string"
+        },
+        "raw_content": {
+          "$ref": "#/$defs/json_value"
+        },
+        "tool_calls": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/tool_call"
+          }
+        },
+        "usage": {
+          "$ref": "#/$defs/chat_usage"
+        }
+      },
+      "patternProperties": {
+        "^x_[a-z][a-z0-9_]*$": {}
+      },
+      "additionalProperties": false
+    },
+    "chat_stream_delta": {
+      "type": "object",
+      "anyOf": [
+        {
+          "required": [
+            "content"
+          ]
+        },
+        {
+          "required": [
+            "reasoning_content"
+          ]
+        },
+        {
+          "required": [
+            "tool_calls"
+          ]
+        },
+        {
+          "required": [
+            "usage"
+          ]
+        },
+        {
+          "required": [
+            "raw_content"
+          ]
+        },
+        {
+          "required": [
+            "done"
+          ]
+        }
+      ],
+      "properties": {
+        "content": {
+          "type": "string"
+        },
+        "reasoning_content": {
+          "type": "string"
+        },
+        "tool_calls": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/tool_call"
+          }
+        },
+        "usage": {
+          "$ref": "#/$defs/chat_usage"
+        },
+        "raw_content": {
+          "$ref": "#/$defs/json_value"
+        },
+        "done": {
+          "type": "boolean"
+        }
+      },
+      "patternProperties": {
+        "^x_[a-z][a-z0-9_]*$": {}
+      },
+      "additionalProperties": false
+    },
+    "chat_usage": {
+      "type": "object",
+      "properties": {
+        "prompt_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "completion_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "input_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "output_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cache_read_input_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cache_creation_input_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "raw_usage": {
+          "$ref": "#/$defs/json_value"
+        },
+        "completion_tokens_details": {
+          "$ref": "#/$defs/json_value"
+        },
+        "prompt_tokens_details": {
+          "$ref": "#/$defs/json_value"
+        }
+      },
+      "patternProperties": {
+        "^x_[a-z][a-z0-9_]*$": {}
+      },
+      "additionalProperties": false
+    }
+  }
+}

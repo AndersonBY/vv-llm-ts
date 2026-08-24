@@ -1,0 +1,50 @@
+{
+  "name": "vv-llm-ts",
+  "version": "0.1.0",
+  "description": "Strict, dependency-light TypeScript client for OpenAI-compatible chat, embeddings, and rerank APIs",
+  "license": "MIT",
+  "author": "VV LLM contributors",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AndersonBY/vv-llm-ts.git"
+  },
+  "homepage": "https://github.com/AndersonBY/vv-llm-ts#readme",
+  "bugs": "https://github.com/AndersonBY/vv-llm-ts/issues",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "contract/v1.0.0/consumer-lock.v1.json",
+    "contract/v1.0.0/manifest.json",
+    "contract/v1.0.0/checksums.sha256",
+    "README.md",
+    "README_ZH.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "contract:sync": "node scripts/contract-sync.mjs",
+    "contract:check": "node scripts/contract-sync.mjs --check",
+    "live:test": "node scripts/live-smoke.mjs",
+    "build": "npm run contract:check && tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "npm run contract:check && npm run typecheck",
+    "examples:check": "npm run build && tsc -p tsconfig.examples.json --noEmit",
+    "examples:build": "npm run build && tsc -p tsconfig.examples.json",
+    "build:test": "tsc -p tsconfig.test.json",
+    "test": "npm run contract:check && npm run build:test && node --test dist-test/tests/client.test.js dist-test/tests/contract-lock.test.js dist-test/tests/execution.test.js",
+    "pack:check": "npm run contract:check && npm run build && npm pack --dry-run"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.15",
+    "typescript": "^5.5.4"
+  }
+}

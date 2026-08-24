@@ -1,0 +1,9 @@
+node_modules/
+dist/
+dist-test/
+dist-examples/
+*.tgz
+coverage/
+.env*
+!.env.example
+.live-settings*.json

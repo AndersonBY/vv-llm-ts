@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:vv-llm-contract:retry-after-fixture:v1",
+  "title": "vv-llm retry-after conformance fixture v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "cases"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "cases": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/retry_after_case"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "retry_after_case": {
+      "type": "object",
+      "required": [
+        "name",
+        "headers",
+        "now_unix_seconds",
+        "expected_seconds"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "headers": {
+          "type": "object",
+          "properties": {
+            "retry-after-ms": {
+              "type": "string"
+            },
+            "retry-after": {
+              "type": "string"
+            }
+          },
+          "patternProperties": {
+            "^x-[a-z][a-z0-9-]*$": {}
+          },
+          "additionalProperties": false
+        },
+        "now_unix_seconds": {
+          "type": "number",
+          "minimum": 0
+        },
+        "expected_seconds": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        }
+      },
+      "patternProperties": {
+        "^x_[a-z][a-z0-9_]*$": {}
+      },
+      "additionalProperties": false
+    }
+  }
+}

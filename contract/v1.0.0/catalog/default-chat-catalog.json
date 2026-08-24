@@ -1,0 +1,1767 @@
+{
+  "default_models": {
+    "moonshot": "kimi-k2.6",
+    "deepseek": "deepseek-v4-pro",
+    "baichuan": "Baichuan4",
+    "groq": "llama3-70b-8192",
+    "qwen": "qwen3.5-397b-a17b",
+    "yi": "yi-lightning",
+    "zhipuai": "glm-5.2",
+    "mistral": "mistral-small",
+    "openai": "gpt-5.5",
+    "anthropic": "claude-opus-4-8",
+    "minimax": "MiniMax-M3",
+    "gemini": "gemini-3.5-flash",
+    "ernie": "ernie-4.5-8k-preview",
+    "stepfun": "step-3.5-flash",
+    "xai": "grok-4.20-0309-reasoning",
+    "xiaomi": "mimo-v2-pro"
+  },
+  "backends": {
+    "moonshot": {
+      "models": {
+        "kimi-k2-0711-preview": {
+          "id": "kimi-k2-0711-preview",
+          "context_length": 131072,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "kimi-k2-0905-preview": {
+          "id": "kimi-k2-0905-preview",
+          "context_length": 256000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "kimi-k2-turbo-preview": {
+          "id": "kimi-k2-turbo-preview",
+          "context_length": 131072,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "kimi-k2-thinking": {
+          "id": "kimi-k2-thinking",
+          "context_length": 256000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "kimi-k2-thinking-turbo": {
+          "id": "kimi-k2-thinking-turbo",
+          "context_length": 256000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "kimi-k2.5": {
+          "id": "kimi-k2.5",
+          "context_length": 256000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "kimi-k2.6": {
+          "id": "kimi-k2.6",
+          "context_length": 256000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "kimi-k2.7-code": {
+          "id": "kimi-k2.7-code",
+          "context_length": 256000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "kimi-k3": {
+          "id": "kimi-k3",
+          "context_length": 1048576,
+          "max_output_tokens": 1048576,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        }
+      }
+    },
+    "deepseek": {
+      "models": {
+        "deepseek-chat": {
+          "id": "deepseek-chat",
+          "context_length": 64000,
+          "max_output_tokens": 8192,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "deepseek-reasoner": {
+          "id": "deepseek-reasoner",
+          "context_length": 64000,
+          "max_output_tokens": 8192,
+          "function_call_available": true,
+          "response_format_available": false,
+          "native_multimodal": false,
+          "capabilities": {
+            "tools": true,
+            "structured_output": "none",
+            "thinking": "always_enabled"
+          }
+        },
+        "deepseek-v4-flash": {
+          "id": "deepseek-v4-flash",
+          "context_length": 1000000,
+          "max_output_tokens": 384000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false,
+          "capabilities": {
+            "tools": true,
+            "structured_output": "json_schema",
+            "thinking": "configurable"
+          }
+        },
+        "deepseek-v4-flash-vision-exp": {
+          "id": "deepseek-v4-flash-vision-exp",
+          "context_length": 1000000,
+          "max_output_tokens": 384000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true,
+          "max_image_dimension": 8192,
+          "capabilities": {
+            "tools": true,
+            "structured_output": "json_schema",
+            "input_modalities": [
+              "text",
+              "image"
+            ],
+            "thinking": "configurable"
+          }
+        },
+        "deepseek-v4-pro": {
+          "id": "deepseek-v4-pro",
+          "context_length": 1000000,
+          "max_output_tokens": 384000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false,
+          "capabilities": {
+            "tools": true,
+            "structured_output": "json_schema",
+            "thinking": "configurable"
+          }
+        }
+      }
+    },
+    "baichuan": {
+      "models": {
+        "Baichuan4": {
+          "id": "Baichuan4",
+          "context_length": 32768,
+          "max_output_tokens": 2048,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        }
+      }
+    },
+    "groq": {
+      "models": {
+        "mixtral-8x7b-32768": {
+          "id": "mixtral-8x7b-32768",
+          "context_length": 32768,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "llama3-70b-8192": {
+          "id": "llama3-70b-8192",
+          "context_length": 8192,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "llama3-8b-8192": {
+          "id": "llama3-8b-8192",
+          "context_length": 8192,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "gemma-7b-it": {
+          "id": "gemma-7b-it",
+          "context_length": 8192,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "gemma2-9b-it": {
+          "id": "gemma2-9b-it",
+          "context_length": 8192,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "llama3-groq-70b-8192-tool-use-preview": {
+          "id": "llama3-groq-70b-8192-tool-use-preview",
+          "context_length": 8192,
+          "function_call_available": true,
+          "response_format_available": true,
+          "max_output_tokens": 8000,
+          "native_multimodal": false
+        },
+        "llama3-groq-8b-8192-tool-use-preview": {
+          "id": "llama3-groq-8b-8192-tool-use-preview",
+          "context_length": 8192,
+          "function_call_available": true,
+          "response_format_available": true,
+          "max_output_tokens": 8000,
+          "native_multimodal": false
+        },
+        "llama-3.1-70b-versatile": {
+          "id": "llama-3.1-70b-versatile",
+          "context_length": 131072,
+          "function_call_available": true,
+          "response_format_available": true,
+          "max_output_tokens": 8000,
+          "native_multimodal": false
+        },
+        "llama-3.1-8b-instant": {
+          "id": "llama-3.1-8b-instant",
+          "context_length": 131072,
+          "function_call_available": true,
+          "response_format_available": true,
+          "max_output_tokens": 8000,
+          "native_multimodal": false
+        }
+      }
+    },
+    "qwen": {
+      "models": {
+        "qwen2.5-7b-instruct": {
+          "id": "qwen2.5-7b-instruct",
+          "context_length": 131072,
+          "max_output_tokens": 8192,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "qwen2.5-14b-instruct": {
+          "id": "qwen2.5-14b-instruct",
+          "context_length": 131072,
+          "max_output_tokens": 8192,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "qwen2.5-32b-instruct": {
+          "id": "qwen2.5-32b-instruct",
+          "context_length": 131072,
+          "max_output_tokens": 8192,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "qwen2.5-coder-32b-instruct": {
+          "id": "qwen2.5-coder-32b-instruct",
+          "context_length": 30000,
+          "max_output_tokens": 4096,
+          "function_call_available": false,
+          "response_format_available": false,
+          "native_multimodal": false
+        },
+        "qwq-32b": {
+          "id": "qwq-32b",
+          "context_length": 131072,
+          "max_output_tokens": 8192,
+          "function_call_available": false,
+          "response_format_available": false,
+          "native_multimodal": false
+        },
+        "qwen2.5-72b-instruct": {
+          "id": "qwen2.5-72b-instruct",
+          "context_length": 131072,
+          "max_output_tokens": 8192,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "qwen2-vl-72b-instruct": {
+          "id": "qwen2-vl-72b-instruct",
+          "context_length": 131072,
+          "max_output_tokens": 8192,
+          "function_call_available": false,
+          "response_format_available": false,
+          "native_multimodal": true
+        },
+        "qwen2.5-vl-72b-instruct": {
+          "id": "qwen2.5-vl-72b-instruct",
+          "context_length": 131072,
+          "max_output_tokens": 8192,
+          "function_call_available": false,
+          "response_format_available": false,
+          "native_multimodal": true
+        },
+        "qwen2.5-vl-7b-instruct": {
+          "id": "qwen2.5-vl-7b-instruct",
+          "context_length": 131072,
+          "max_output_tokens": 8192,
+          "function_call_available": false,
+          "response_format_available": false,
+          "native_multimodal": true
+        },
+        "qwen2.5-vl-3b-instruct": {
+          "id": "qwen2.5-vl-3b-instruct",
+          "context_length": 131072,
+          "max_output_tokens": 8192,
+          "function_call_available": false,
+          "response_format_available": false,
+          "native_multimodal": true
+        },
+        "qwen-max": {
+          "id": "qwen-max",
+          "context_length": 8096,
+          "max_output_tokens": 2048,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "qwen-max-longcontext": {
+          "id": "qwen-max-longcontext",
+          "context_length": 30000,
+          "max_output_tokens": 2048,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "qwen-plus": {
+          "id": "qwen-plus",
+          "context_length": 131072,
+          "max_output_tokens": 8096,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "qwen-turbo": {
+          "id": "qwen-turbo",
+          "context_length": 8096,
+          "max_output_tokens": 1500,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "qvq-max": {
+          "id": "qvq-max",
+          "context_length": 122880,
+          "max_output_tokens": 8192,
+          "function_call_available": false,
+          "response_format_available": false,
+          "native_multimodal": true
+        },
+        "qwen3-235b-a22b": {
+          "id": "qwen3-235b-a22b",
+          "context_length": 131072,
+          "max_output_tokens": 8192,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "qwen3-32b": {
+          "id": "qwen3-32b",
+          "context_length": 131072,
+          "max_output_tokens": 8192,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "qwen3-30b-a3b": {
+          "id": "qwen3-30b-a3b",
+          "context_length": 131072,
+          "max_output_tokens": 8192,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "qwen3-14b": {
+          "id": "qwen3-14b",
+          "context_length": 131072,
+          "max_output_tokens": 8192,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "qwen3-8b": {
+          "id": "qwen3-8b",
+          "context_length": 131072,
+          "max_output_tokens": 8192,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "qwen3-4b": {
+          "id": "qwen3-4b",
+          "context_length": 131072,
+          "max_output_tokens": 8192,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "qwen3-1.7b": {
+          "id": "qwen3-1.7b",
+          "context_length": 32768,
+          "max_output_tokens": 8192,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "qwen3-0.6b": {
+          "id": "qwen3-0.6b",
+          "context_length": 32768,
+          "max_output_tokens": 8192,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "qwen3-235b-a22b-instruct-2507": {
+          "id": "qwen3-235b-a22b-instruct-2507",
+          "context_length": 131072,
+          "max_output_tokens": 32768,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "qwen3-235b-a22b-thinking-2507": {
+          "id": "qwen3-235b-a22b-thinking-2507",
+          "context_length": 131072,
+          "max_output_tokens": 32768,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "qwen3-coder-480b-a35b-instruct": {
+          "id": "qwen3-coder-480b-a35b-instruct",
+          "context_length": 262144,
+          "max_output_tokens": 65536,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "qwen3-next-80b-a3b-thinking": {
+          "id": "qwen3-next-80b-a3b-thinking",
+          "context_length": 159744,
+          "max_output_tokens": 32768,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "qwen3-next-80b-a3b-instruct": {
+          "id": "qwen3-next-80b-a3b-instruct",
+          "context_length": 159744,
+          "max_output_tokens": 32768,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "qwen3-max-preview": {
+          "id": "qwen3-max-preview",
+          "context_length": 262144,
+          "max_output_tokens": 32768,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "qwen3-max": {
+          "id": "qwen3-max",
+          "context_length": 262144,
+          "max_output_tokens": 32768,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "qwen3-vl-plus": {
+          "id": "qwen3-vl-plus",
+          "context_length": 262144,
+          "max_output_tokens": 32768,
+          "function_call_available": true,
+          "response_format_available": false,
+          "native_multimodal": true
+        },
+        "qwen3-coder-plus": {
+          "id": "qwen3-coder-plus",
+          "context_length": 1000000,
+          "max_output_tokens": 65536,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "qwen3-coder-flash": {
+          "id": "qwen3-coder-flash",
+          "context_length": 1000000,
+          "max_output_tokens": 65536,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "qwen3-vl-235b-a22b-thinking": {
+          "id": "qwen3-vl-235b-a22b-thinking",
+          "context_length": 131072,
+          "max_output_tokens": 32768,
+          "function_call_available": true,
+          "response_format_available": false,
+          "native_multimodal": true
+        },
+        "qwen3-vl-235b-a22b-instruct": {
+          "id": "qwen3-vl-235b-a22b-instruct",
+          "context_length": 131072,
+          "max_output_tokens": 32768,
+          "function_call_available": true,
+          "response_format_available": false,
+          "native_multimodal": true
+        },
+        "qwen3-vl-30b-a3b-thinking": {
+          "id": "qwen3-vl-30b-a3b-thinking",
+          "context_length": 131072,
+          "max_output_tokens": 32768,
+          "function_call_available": true,
+          "response_format_available": false,
+          "native_multimodal": true
+        },
+        "qwen3-vl-30b-a3b-instruct": {
+          "id": "qwen3-vl-30b-a3b-instruct",
+          "context_length": 131072,
+          "max_output_tokens": 32768,
+          "function_call_available": true,
+          "response_format_available": false,
+          "native_multimodal": true
+        },
+        "qwen3-vl-8b-thinking": {
+          "id": "qwen3-vl-8b-thinking",
+          "context_length": 131072,
+          "max_output_tokens": 32768,
+          "function_call_available": true,
+          "response_format_available": false,
+          "native_multimodal": true
+        },
+        "qwen3-vl-8b-instruct": {
+          "id": "qwen3-vl-8b-instruct",
+          "context_length": 131072,
+          "max_output_tokens": 32768,
+          "function_call_available": true,
+          "response_format_available": false,
+          "native_multimodal": true
+        },
+        "qwen3-vl-flash": {
+          "id": "qwen3-vl-flash",
+          "context_length": 262144,
+          "max_output_tokens": 32768,
+          "function_call_available": true,
+          "response_format_available": false,
+          "native_multimodal": true
+        },
+        "qwen3-vl-32b-thinking": {
+          "id": "qwen3-vl-32b-thinking",
+          "context_length": 131072,
+          "max_output_tokens": 32768,
+          "function_call_available": true,
+          "response_format_available": false,
+          "native_multimodal": true
+        },
+        "qwen3-vl-32b-instruct": {
+          "id": "qwen3-vl-32b-instruct",
+          "context_length": 131072,
+          "max_output_tokens": 32768,
+          "function_call_available": true,
+          "response_format_available": false,
+          "native_multimodal": true
+        },
+        "qwen3.5-397b-a17b": {
+          "id": "qwen3.5-397b-a17b",
+          "context_length": 262144,
+          "max_output_tokens": 65536,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "qwen3.5-122b-a10b": {
+          "id": "qwen3.5-122b-a10b",
+          "context_length": 262144,
+          "max_output_tokens": 65536,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "qwen3.5-27b": {
+          "id": "qwen3.5-27b",
+          "context_length": 262144,
+          "max_output_tokens": 65536,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "qwen3.5-35b-a3b": {
+          "id": "qwen3.5-35b-a3b",
+          "context_length": 262144,
+          "max_output_tokens": 65536,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "qwen3.5-9b": {
+          "id": "qwen3.5-9b",
+          "context_length": 262144,
+          "max_output_tokens": 65536,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "qwen3.5-4b": {
+          "id": "qwen3.5-4b",
+          "context_length": 262144,
+          "max_output_tokens": 65536,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "qwen3.5-2b": {
+          "id": "qwen3.5-2b",
+          "context_length": 262144,
+          "max_output_tokens": 65536,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "qwen3.5-0.8b": {
+          "id": "qwen3.5-0.8b",
+          "context_length": 262144,
+          "max_output_tokens": 65536,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "qwen3.6-plus": {
+          "id": "qwen3.6-plus",
+          "context_length": 1000000,
+          "max_output_tokens": 65536,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "qwen3.6-flash": {
+          "id": "qwen3.6-flash",
+          "context_length": 1000000,
+          "max_output_tokens": 65536,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "qwen3.6-35b-a3b": {
+          "id": "qwen3.6-35b-a3b",
+          "context_length": 262144,
+          "max_output_tokens": 65536,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "qwen3.6-27b": {
+          "id": "qwen3.6-27b",
+          "context_length": 262144,
+          "max_output_tokens": 65536,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "qwen3.7-max": {
+          "id": "qwen3.7-max",
+          "context_length": 1000000,
+          "max_output_tokens": 65536,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "qwen3.8-max": {
+          "id": "qwen3.8-max",
+          "context_length": 1000000,
+          "max_output_tokens": 131072,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true,
+          "capabilities": {
+            "tools": true,
+            "structured_output": "json_schema",
+            "input_modalities": [
+              "text",
+              "image",
+              "video"
+            ],
+            "parallel_tool_calls": true,
+            "thinking": "configurable"
+          }
+        },
+        "qwen3.8-27b": {
+          "id": "qwen3.8-27b",
+          "context_length": 1000000,
+          "max_output_tokens": 131072,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true,
+          "capabilities": {
+            "tools": true,
+            "structured_output": "json_schema",
+            "input_modalities": [
+              "text",
+              "image",
+              "video"
+            ],
+            "thinking": "configurable"
+          }
+        }
+      }
+    },
+    "yi": {
+      "models": {
+        "yi-lightning": {
+          "id": "yi-lightning",
+          "context_length": 16000,
+          "max_output_tokens": 4096,
+          "function_call_available": false,
+          "response_format_available": false,
+          "native_multimodal": false
+        },
+        "yi-vision-v2": {
+          "id": "yi-vision-v2",
+          "context_length": 16000,
+          "max_output_tokens": 2000,
+          "function_call_available": false,
+          "response_format_available": false,
+          "native_multimodal": true
+        }
+      }
+    },
+    "zhipuai": {
+      "models": {
+        "glm-4.5": {
+          "id": "glm-4.5",
+          "context_length": 128000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "max_output_tokens": 96000,
+          "native_multimodal": false
+        },
+        "glm-4.5-x": {
+          "id": "glm-4.5-x",
+          "context_length": 128000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "max_output_tokens": 96000,
+          "native_multimodal": false
+        },
+        "glm-4.5-air": {
+          "id": "glm-4.5-air",
+          "context_length": 128000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "max_output_tokens": 96000,
+          "native_multimodal": false
+        },
+        "glm-4.5-airx": {
+          "id": "glm-4.5-airx",
+          "context_length": 128000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "max_output_tokens": 96000,
+          "native_multimodal": false
+        },
+        "glm-4.5-flash": {
+          "id": "glm-4.5-flash",
+          "context_length": 128000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "max_output_tokens": 96000,
+          "native_multimodal": false
+        },
+        "glm-4.5v": {
+          "id": "glm-4.5v",
+          "context_length": 64000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "max_output_tokens": 16384,
+          "native_multimodal": true
+        },
+        "glm-4.6": {
+          "id": "glm-4.6",
+          "context_length": 200000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "max_output_tokens": 128000,
+          "native_multimodal": false
+        },
+        "glm-4.6v": {
+          "id": "glm-4.6v",
+          "context_length": 128000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "max_output_tokens": 32000,
+          "native_multimodal": true
+        },
+        "glm-4.6v-flash": {
+          "id": "glm-4.6v-flash",
+          "context_length": 128000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "max_output_tokens": 32000,
+          "native_multimodal": true
+        },
+        "glm-4.7": {
+          "id": "glm-4.7",
+          "context_length": 200000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "max_output_tokens": 128000,
+          "native_multimodal": false
+        },
+        "glm-4.7-flash": {
+          "id": "glm-4.7-flash",
+          "context_length": 200000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "max_output_tokens": 128000,
+          "native_multimodal": false
+        },
+        "glm-5": {
+          "id": "glm-5",
+          "context_length": 200000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "max_output_tokens": 128000,
+          "native_multimodal": false
+        },
+        "glm-5-code": {
+          "id": "glm-5-code",
+          "context_length": 200000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "max_output_tokens": 128000,
+          "native_multimodal": false
+        },
+        "glm-5-turbo": {
+          "id": "glm-5-turbo",
+          "context_length": 200000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "max_output_tokens": 128000,
+          "native_multimodal": false
+        },
+        "glm-5v-turbo": {
+          "id": "glm-5v-turbo",
+          "context_length": 200000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "max_output_tokens": 128000,
+          "native_multimodal": true
+        },
+        "glm-5.1": {
+          "id": "glm-5.1",
+          "context_length": 200000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "max_output_tokens": 128000,
+          "native_multimodal": false
+        },
+        "glm-5.2": {
+          "id": "glm-5.2",
+          "context_length": 1000000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "max_output_tokens": 128000,
+          "native_multimodal": false
+        },
+        "glm-5.3": {
+          "id": "glm-5.3",
+          "context_length": 1000000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "max_output_tokens": 128000,
+          "native_multimodal": false,
+          "capabilities": {
+            "tools": true,
+            "structured_output": "json_schema",
+            "thinking": "always_enabled"
+          }
+        }
+      }
+    },
+    "mistral": {
+      "models": {
+        "open-mistral-7b": {
+          "id": "open-mistral-7b",
+          "context_length": 32000,
+          "function_call_available": false,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "open-mixtral-8x7b": {
+          "id": "open-mixtral-8x7b",
+          "context_length": 32000,
+          "function_call_available": false,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "open-mixtral-8x22b": {
+          "id": "open-mixtral-8x22b",
+          "context_length": 64000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "open-mistral-nemo": {
+          "id": "open-mistral-nemo",
+          "context_length": 128000,
+          "function_call_available": false,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "codestral-latest": {
+          "id": "codestral-latest",
+          "context_length": 32000,
+          "function_call_available": false,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "mistral-small-latest": {
+          "id": "mistral-small-latest",
+          "context_length": 30000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "mistral-medium-latest": {
+          "id": "mistral-medium-latest",
+          "context_length": 30000,
+          "function_call_available": false,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "mistral-large-latest": {
+          "id": "mistral-large-latest",
+          "context_length": 128000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        }
+      }
+    },
+    "openai": {
+      "models": {
+        "gpt-35-turbo": {
+          "id": "gpt-35-turbo",
+          "context_length": 16385,
+          "function_call_available": true,
+          "response_format_available": true,
+          "max_output_tokens": 4096,
+          "native_multimodal": false
+        },
+        "gpt-4-turbo": {
+          "id": "gpt-4-turbo",
+          "context_length": 128000,
+          "max_output_tokens": 4096,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "gpt-4": {
+          "id": "gpt-4",
+          "context_length": 8192,
+          "max_output_tokens": 4096,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "gpt-4o": {
+          "id": "gpt-4o",
+          "context_length": 128000,
+          "max_output_tokens": 4096,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "gpt-4o-mini": {
+          "id": "gpt-4o-mini",
+          "context_length": 128000,
+          "max_output_tokens": 16384,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "gpt-4v": {
+          "id": "gpt-4v",
+          "context_length": 128000,
+          "max_output_tokens": 4096,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "o1-mini": {
+          "id": "o1-mini",
+          "context_length": 128000,
+          "max_output_tokens": 65536,
+          "function_call_available": false,
+          "response_format_available": false,
+          "native_multimodal": false
+        },
+        "o1-preview": {
+          "id": "o1-preview",
+          "context_length": 128000,
+          "max_output_tokens": 32768,
+          "function_call_available": false,
+          "response_format_available": false,
+          "native_multimodal": false
+        },
+        "o3": {
+          "id": "o3",
+          "context_length": 200000,
+          "max_output_tokens": 100000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "o3-mini": {
+          "id": "o3-mini",
+          "context_length": 200000,
+          "max_output_tokens": 100000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "o4-mini": {
+          "id": "o4-mini",
+          "context_length": 200000,
+          "max_output_tokens": 100000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "gpt-4.1": {
+          "id": "gpt-4.1",
+          "context_length": 1047576,
+          "max_output_tokens": 32768,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "gpt-4.1-mini": {
+          "id": "gpt-4.1-mini",
+          "context_length": 1047576,
+          "max_output_tokens": 32768,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "gpt-4.1-nano": {
+          "id": "gpt-4.1-nano",
+          "context_length": 1047576,
+          "max_output_tokens": 32768,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "gpt-5": {
+          "id": "gpt-5",
+          "context_length": 400000,
+          "max_output_tokens": 128000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "gpt-5-mini": {
+          "id": "gpt-5-mini",
+          "context_length": 400000,
+          "max_output_tokens": 128000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "gpt-5-nano": {
+          "id": "gpt-5-nano",
+          "context_length": 400000,
+          "max_output_tokens": 128000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "gpt-5-chat-latest": {
+          "id": "gpt-5-chat-latest",
+          "context_length": 400000,
+          "max_output_tokens": 128000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "gpt-5-codex": {
+          "id": "gpt-5-codex",
+          "context_length": 400000,
+          "max_output_tokens": 128000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "gpt-5-pro": {
+          "id": "gpt-5-pro",
+          "context_length": 400000,
+          "max_output_tokens": 272000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "gpt-5.1": {
+          "id": "gpt-5.1",
+          "context_length": 400000,
+          "max_output_tokens": 128000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "gpt-5.1-codex": {
+          "id": "gpt-5.1-codex",
+          "context_length": 400000,
+          "max_output_tokens": 128000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "gpt-5.1-codex-mini": {
+          "id": "gpt-5.1-codex-mini",
+          "context_length": 400000,
+          "max_output_tokens": 128000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "gpt-5.1-codex-max": {
+          "id": "gpt-5.1-codex-max",
+          "context_length": 400000,
+          "max_output_tokens": 128000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "gpt-5.1-chat": {
+          "id": "gpt-5.1-chat",
+          "context_length": 400000,
+          "max_output_tokens": 128000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "gpt-5.2": {
+          "id": "gpt-5.2",
+          "context_length": 400000,
+          "max_output_tokens": 128000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "gpt-5.3-chat": {
+          "id": "gpt-5.3-chat",
+          "context_length": 400000,
+          "max_output_tokens": 128000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "gpt-5.3-codex": {
+          "id": "gpt-5.3-codex",
+          "context_length": 400000,
+          "max_output_tokens": 128000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "gpt-5.4": {
+          "id": "gpt-5.4",
+          "context_length": 1050000,
+          "max_output_tokens": 128000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "gpt-5.4-pro": {
+          "id": "gpt-5.4-pro",
+          "context_length": 1050000,
+          "max_output_tokens": 128000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "gpt-5.5": {
+          "id": "gpt-5.5",
+          "context_length": 1050000,
+          "max_output_tokens": 128000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "gpt-5.6-sol": {
+          "id": "gpt-5.6-sol",
+          "context_length": 1050000,
+          "max_output_tokens": 128000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "gpt-5.6-terra": {
+          "id": "gpt-5.6-terra",
+          "context_length": 1050000,
+          "max_output_tokens": 128000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "gpt-5.6-luna": {
+          "id": "gpt-5.6-luna",
+          "context_length": 1050000,
+          "max_output_tokens": 128000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        }
+      }
+    },
+    "anthropic": {
+      "models": {
+        "claude-3-5-haiku-20241022": {
+          "id": "claude-3-5-haiku-20241022",
+          "context_length": 200000,
+          "max_output_tokens": 8192,
+          "function_call_available": true,
+          "response_format_available": false,
+          "native_multimodal": false
+        },
+        "claude-3-5-sonnet-20240620": {
+          "id": "claude-3-5-sonnet-20240620",
+          "context_length": 200000,
+          "max_output_tokens": 8192,
+          "function_call_available": true,
+          "response_format_available": false,
+          "native_multimodal": true
+        },
+        "claude-3-5-sonnet-20241022": {
+          "id": "claude-3-5-sonnet-20241022",
+          "context_length": 200000,
+          "max_output_tokens": 8192,
+          "function_call_available": true,
+          "response_format_available": false,
+          "native_multimodal": true
+        },
+        "claude-3-7-sonnet-20250219": {
+          "id": "claude-3-7-sonnet-20250219",
+          "context_length": 200000,
+          "max_output_tokens": 64000,
+          "function_call_available": true,
+          "response_format_available": false,
+          "native_multimodal": true
+        },
+        "claude-sonnet-4-20250514": {
+          "id": "claude-sonnet-4-20250514",
+          "context_length": 200000,
+          "max_output_tokens": 64000,
+          "function_call_available": true,
+          "response_format_available": false,
+          "native_multimodal": true
+        },
+        "claude-opus-4-20250514": {
+          "id": "claude-opus-4-20250514",
+          "context_length": 200000,
+          "max_output_tokens": 32000,
+          "function_call_available": true,
+          "response_format_available": false,
+          "native_multimodal": true
+        },
+        "claude-opus-4-1-20250805": {
+          "id": "claude-opus-4-1-20250805",
+          "context_length": 200000,
+          "max_output_tokens": 32000,
+          "function_call_available": true,
+          "response_format_available": false,
+          "native_multimodal": true
+        },
+        "claude-sonnet-4-5-20250929": {
+          "id": "claude-sonnet-4-5-20250929",
+          "context_length": 200000,
+          "max_output_tokens": 64000,
+          "function_call_available": true,
+          "response_format_available": false,
+          "native_multimodal": true
+        },
+        "claude-haiku-4-5-20251001": {
+          "id": "claude-haiku-4-5-20251001",
+          "context_length": 200000,
+          "max_output_tokens": 64000,
+          "function_call_available": true,
+          "response_format_available": false,
+          "native_multimodal": true
+        },
+        "claude-opus-4-6": {
+          "id": "claude-opus-4-6",
+          "context_length": 1000000,
+          "max_output_tokens": 128000,
+          "function_call_available": true,
+          "response_format_available": false,
+          "native_multimodal": true
+        },
+        "claude-sonnet-4-6": {
+          "id": "claude-sonnet-4-6",
+          "context_length": 1000000,
+          "max_output_tokens": 64000,
+          "function_call_available": true,
+          "response_format_available": false,
+          "native_multimodal": true
+        },
+        "claude-opus-4-7": {
+          "id": "claude-opus-4-7",
+          "context_length": 1000000,
+          "max_output_tokens": 128000,
+          "function_call_available": true,
+          "response_format_available": false,
+          "native_multimodal": true
+        },
+        "claude-opus-4-8": {
+          "id": "claude-opus-4-8",
+          "context_length": 1000000,
+          "max_output_tokens": 128000,
+          "function_call_available": true,
+          "response_format_available": false,
+          "native_multimodal": true
+        },
+        "claude-fable-5": {
+          "id": "claude-fable-5",
+          "context_length": 1000000,
+          "max_output_tokens": 128000,
+          "function_call_available": true,
+          "response_format_available": false,
+          "native_multimodal": true
+        },
+        "claude-sonnet-5": {
+          "id": "claude-sonnet-5",
+          "context_length": 1000000,
+          "max_output_tokens": 128000,
+          "function_call_available": true,
+          "response_format_available": false,
+          "native_multimodal": true
+        },
+        "claude-opus-5": {
+          "id": "claude-opus-5",
+          "context_length": 1000000,
+          "max_output_tokens": 128000,
+          "function_call_available": true,
+          "response_format_available": false,
+          "native_multimodal": true
+        }
+      }
+    },
+    "minimax": {
+      "models": {
+        "MiniMax-M2.1": {
+          "id": "MiniMax-M2.1",
+          "context_length": 204800,
+          "max_output_tokens": 10240,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "MiniMax-M2.1-lightning": {
+          "id": "MiniMax-M2.1-lightning",
+          "context_length": 204800,
+          "max_output_tokens": 10240,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "MiniMax-M2.1-highspeed": {
+          "id": "MiniMax-M2.1-highspeed",
+          "context_length": 204800,
+          "max_output_tokens": 10240,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "MiniMax-M2.5": {
+          "id": "MiniMax-M2.5",
+          "context_length": 204800,
+          "max_output_tokens": 10240,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "MiniMax-M2.5-highspeed": {
+          "id": "MiniMax-M2.5-highspeed",
+          "context_length": 204800,
+          "max_output_tokens": 10240,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "MiniMax-M2.7": {
+          "id": "MiniMax-M2.7",
+          "context_length": 204800,
+          "max_output_tokens": 10240,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "MiniMax-M3": {
+          "id": "MiniMax-M3",
+          "context_length": 1000000,
+          "max_output_tokens": 10240,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "MiniMax-M2.7-highspeed": {
+          "id": "MiniMax-M2.7-highspeed",
+          "context_length": 204800,
+          "max_output_tokens": 10240,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        }
+      }
+    },
+    "gemini": {
+      "models": {
+        "gemini-2.5-pro": {
+          "id": "gemini-2.5-pro",
+          "context_length": 1048576,
+          "max_output_tokens": 65536,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "gemini-2.5-flash": {
+          "id": "gemini-2.5-flash",
+          "context_length": 1048576,
+          "max_output_tokens": 65536,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "gemini-2.5-flash-lite": {
+          "id": "gemini-2.5-flash-lite",
+          "context_length": 1048576,
+          "max_output_tokens": 65536,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "gemini-3-pro-preview": {
+          "id": "gemini-3-pro-preview",
+          "context_length": 1048576,
+          "max_output_tokens": 65536,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "gemini-3-pro": {
+          "id": "gemini-3-pro",
+          "context_length": 1048576,
+          "max_output_tokens": 65536,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "gemini-3-pro-image-preview": {
+          "id": "gemini-3-pro-image-preview",
+          "context_length": 65536,
+          "max_output_tokens": 32768,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "gemini-3-flash-preview": {
+          "id": "gemini-3-flash-preview",
+          "context_length": 1048576,
+          "max_output_tokens": 65536,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "gemini-3-flash": {
+          "id": "gemini-3-flash",
+          "context_length": 1048576,
+          "max_output_tokens": 65536,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "gemini-3.1-pro-preview": {
+          "id": "gemini-3.1-pro-preview",
+          "context_length": 1048576,
+          "max_output_tokens": 65536,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "gemini-3.1-flash-lite-preview": {
+          "id": "gemini-3.1-flash-lite-preview",
+          "context_length": 1048576,
+          "max_output_tokens": 65536,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "gemini-3.1-flash-lite": {
+          "id": "gemini-3.1-flash-lite",
+          "context_length": 1048576,
+          "max_output_tokens": 65536,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "gemini-3.5-flash": {
+          "id": "gemini-3.5-flash",
+          "context_length": 1048576,
+          "max_output_tokens": 65536,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "gemini-3.7-flash": {
+          "id": "gemini-3.7-flash",
+          "context_length": 1048576,
+          "max_output_tokens": 65536,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true,
+          "capabilities": {
+            "tools": true,
+            "structured_output": "json_schema",
+            "input_modalities": [
+              "text",
+              "image",
+              "video",
+              "audio"
+            ],
+            "thinking": "configurable"
+          }
+        }
+      }
+    },
+    "ernie": {
+      "models": {
+        "ernie-lite": {
+          "id": "ernie-lite",
+          "context_length": 6144,
+          "max_output_tokens": 2048,
+          "function_call_available": false,
+          "response_format_available": false,
+          "native_multimodal": false
+        },
+        "ernie-speed": {
+          "id": "ernie-speed",
+          "context_length": 126976,
+          "max_output_tokens": 4096,
+          "function_call_available": false,
+          "response_format_available": false,
+          "native_multimodal": false
+        },
+        "ernie-speed-pro-128k": {
+          "id": "ernie-speed-pro-128k",
+          "context_length": 126976,
+          "max_output_tokens": 4096,
+          "function_call_available": false,
+          "response_format_available": false,
+          "native_multimodal": false
+        },
+        "ernie-3.5-8k": {
+          "id": "ernie-3.5-8k",
+          "context_length": 5120,
+          "max_output_tokens": 2048,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "ernie-3.5-128k": {
+          "id": "ernie-3.5-128k",
+          "context_length": 126976,
+          "max_output_tokens": 8192,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "ernie-4.0-8k-latest": {
+          "id": "ernie-4.0-8k-latest",
+          "context_length": 5120,
+          "max_output_tokens": 2048,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "ernie-4.0-8k": {
+          "id": "ernie-4.0-8k",
+          "context_length": 5120,
+          "max_output_tokens": 2048,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "ernie-4.0-turbo-8k": {
+          "id": "ernie-4.0-turbo-8k",
+          "context_length": 5120,
+          "max_output_tokens": 2048,
+          "function_call_available": false,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "ernie-4.5-8k-preview": {
+          "id": "ernie-4.5-8k-preview",
+          "context_length": 5120,
+          "max_output_tokens": 2048,
+          "function_call_available": false,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "ernie-4.5-turbo-128k": {
+          "id": "ernie-4.5-turbo-128k",
+          "context_length": 128000,
+          "max_output_tokens": 65536,
+          "function_call_available": false,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "ernie-5.0": {
+          "id": "ernie-5.0",
+          "context_length": 128000,
+          "max_output_tokens": 65536,
+          "function_call_available": false,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "ernie-5.1": {
+          "id": "ernie-5.1",
+          "context_length": 128000,
+          "max_output_tokens": 65536,
+          "function_call_available": false,
+          "response_format_available": true,
+          "native_multimodal": false
+        }
+      }
+    },
+    "stepfun": {
+      "models": {
+        "step-2-mini": {
+          "id": "step-2-mini",
+          "context_length": 32768,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "step-3": {
+          "id": "step-3",
+          "context_length": 65536,
+          "function_call_available": true,
+          "response_format_available": false,
+          "native_multimodal": true
+        },
+        "step-3.5-flash": {
+          "id": "step-3.5-flash",
+          "context_length": 256000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        }
+      }
+    },
+    "xai": {
+      "models": {
+        "grok-4.20-0309-reasoning": {
+          "id": "grok-4.20-0309-reasoning",
+          "context_length": 2000000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "grok-4.20-0309-non-reasoning": {
+          "id": "grok-4.20-0309-non-reasoning",
+          "context_length": 2000000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "grok-4.20-multi-agent-0309": {
+          "id": "grok-4.20-multi-agent-0309",
+          "context_length": 2000000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "grok-4-1-fast-reasoning": {
+          "id": "grok-4-1-fast-reasoning",
+          "context_length": 2000000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "grok-4-1-fast-non-reasoning": {
+          "id": "grok-4-1-fast-non-reasoning",
+          "context_length": 2000000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "grok-4.6": {
+          "id": "grok-4.6",
+          "context_length": 500000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true,
+          "capabilities": {
+            "tools": true,
+            "structured_output": "json_schema",
+            "input_modalities": [
+              "text",
+              "image"
+            ],
+            "thinking": "configurable"
+          }
+        }
+      }
+    },
+    "xiaomi": {
+      "models": {
+        "mimo-v2-pro": {
+          "id": "mimo-v2-pro",
+          "context_length": 1000000,
+          "max_output_tokens": 128000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        },
+        "mimo-v2-omni": {
+          "id": "mimo-v2-omni",
+          "context_length": 256000,
+          "max_output_tokens": 128000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
+        },
+        "mimo-v2-tts": {
+          "id": "mimo-v2-tts",
+          "context_length": 8000,
+          "max_output_tokens": 8000,
+          "function_call_available": false,
+          "response_format_available": false,
+          "native_multimodal": false
+        },
+        "mimo-v2-flash": {
+          "id": "mimo-v2-flash",
+          "context_length": 256000,
+          "max_output_tokens": 64000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": false
+        }
+      }
+    }
+  }
+}

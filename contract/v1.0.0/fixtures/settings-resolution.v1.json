@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "settings": {
+    "VERSION": "2",
+    "endpoints": [
+      {
+        "id": "disabled-endpoint",
+        "enabled": false,
+        "api_base": "https://disabled.example.invalid/v1",
+        "api_key": "test-disabled"
+      },
+      {
+        "id": "shared-endpoint",
+        "api_base": "https://example.invalid/v1",
+        "api_key": "test-key",
+        "endpoint_type": "openai",
+        "headers": { "x-contract-fixture": "v1" }
+      }
+    ],
+    "backends": {
+      "deepseek": {
+        "models": {
+          "chat-alias": {
+            "id": "deepseek-chat",
+            "endpoints": [
+              { "endpoint_id": "disabled-endpoint", "enabled": false },
+              {
+                "endpoint_id": "shared-endpoint",
+                "model_id": "provider-chat-model",
+                "enabled": true
+              }
+            ],
+            "context_length": 128000,
+            "max_output_tokens": 8192,
+            "capabilities": {
+              "tools": true,
+              "structured_output": "json_schema",
+              "input_modalities": ["text"],
+              "output_modalities": ["text"],
+              "streaming": true,
+              "parallel_tool_calls": true,
+              "thinking": "configurable"
+            }
+          }
+        }
+      }
+    },
+    "embedding_backends": {
+      "openai": {
+        "models": {
+          "embedding-alias": {
+            "id": "text-embedding-model",
+            "endpoints": ["shared-endpoint"],
+            "protocol": "openai_embeddings",
+            "dimensions": 1536
+          }
+        }
+      }
+    },
+    "rerank_backends": {
+      "custom": {
+        "models": {
+          "rerank-alias": {
+            "id": "rerank-model",
+            "endpoints": ["shared-endpoint"],
+            "protocol": "custom_json_http",
+            "default_top_n": 5,
+            "request_mapping": { "method": "POST", "path": "/rerank" }
+          }
+        }
+      }
+    }
+  },
+  "cases": [
+    {
+      "kind": "chat",
+      "backend": "deepseek",
+      "model": "chat-alias",
+      "expected": {
+        "model_id": "provider-chat-model",
+        "endpoint_id": "shared-endpoint",
+        "endpoint_type": "openai"
+      }
+    },
+    {
+      "kind": "embedding",
+      "backend": "openai",
+      "model": "embedding-alias",
+      "expected": {
+        "model_id": "text-embedding-model",
+        "endpoint_id": "shared-endpoint",
+        "endpoint_type": "openai"
+      }
+    },
+    {
+      "kind": "rerank",
+      "backend": "custom",
+      "model": "rerank-alias",
+      "expected": {
+        "model_id": "rerank-model",
+        "endpoint_id": "shared-endpoint",
+        "endpoint_type": "openai"
+      }
+    }
+  ]
+}

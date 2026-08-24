@@ -1,0 +1,231 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:vv-llm-contract:settings:v2",
+  "title": "vv-llm shared settings V2",
+  "description": "Language-neutral representation of the shared VectorVein vv-llm settings shape.",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "VERSION": {
+      "type": "string",
+      "description": "The settings format version. V2 callers should use the value 2; omitted values are accepted for legacy/default settings."
+    },
+    "endpoints": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/EndpointConfig" },
+      "default": []
+    },
+    "token_server": {
+      "anyOf": [
+        { "$ref": "#/$defs/ServerConfig" },
+        { "type": "null" }
+      ]
+    },
+    "rate_limit": {
+      "anyOf": [
+        { "$ref": "#/$defs/RateLimitConfig" },
+        { "type": "null" }
+      ]
+    },
+    "backends": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/BackendConfig" },
+      "default": {}
+    },
+    "embedding_backends": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/BackendConfig" },
+      "default": {}
+    },
+    "rerank_backends": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/BackendConfig" },
+      "default": {}
+    }
+  },
+  "$defs": {
+    "JsonValue": {},
+    "EndpointConfig": {
+      "title": "Endpoint configuration",
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["id"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "enabled": { "type": "boolean", "default": true },
+        "api_base": { "type": ["string", "null"] },
+        "api_key": { "type": ["string", "null"] },
+        "organization": { "type": ["string", "null"] },
+        "response_api": { "type": "boolean", "default": false },
+        "endpoint_type": {
+          "type": ["string", "null"],
+          "enum": [
+            "default",
+            "openai",
+            "openai_azure",
+            "openai_vertex",
+            "anthropic",
+            "anthropic_vertex",
+            "anthropic_bedrock",
+            null
+          ]
+        },
+        "region": { "type": ["string", "null"] },
+        "is_azure": { "type": "boolean", "default": false },
+        "is_bedrock": { "type": "boolean", "default": false },
+        "is_vertex": { "type": "boolean", "default": false },
+        "credentials": {
+          "anyOf": [
+            { "type": "object" },
+            { "type": "null" }
+          ],
+          "description": "Provider credentials or transport metadata. Values must never be logged or committed."
+        },
+        "rpm": { "type": "integer", "minimum": 0, "default": 60 },
+        "tpm": { "type": "integer", "minimum": 0, "default": 300000 },
+        "concurrent_requests": { "type": "integer", "minimum": 0, "default": 20 },
+        "proxy": { "type": ["string", "null"] },
+        "headers": {
+          "type": ["object", "null"],
+          "additionalProperties": { "type": "string" }
+        },
+        "access_token": { "type": ["string", "null"] },
+        "access_token_expires_at": { "type": ["number", "null"] }
+      }
+    },
+    "EndpointBinding": {
+      "title": "Model-to-endpoint binding",
+      "description": "A binding may be the endpoint id string form or the object form with provider model and per-binding overrides.",
+      "oneOf": [
+        { "type": "string", "minLength": 1 },
+        {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["endpoint_id"],
+          "properties": {
+            "endpoint_id": { "type": "string", "minLength": 1 },
+            "model_id": { "type": ["string", "null"] },
+            "enabled": { "type": ["boolean", "null"], "default": true },
+            "rpm": { "type": ["integer", "null"], "minimum": 0 },
+            "tpm": { "type": ["integer", "null"], "minimum": 0 },
+            "concurrent_requests": { "type": ["integer", "null"], "minimum": 0 }
+          }
+        }
+      ]
+    },
+    "ModelCapabilities": {
+      "title": "Provider-neutral model capabilities",
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "tools": { "type": "boolean", "default": false },
+        "structured_output": {
+          "type": "string",
+          "enum": ["none", "json_object", "json_schema"],
+          "default": "none"
+        },
+        "input_modalities": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "enum": ["text", "image", "audio", "video"] },
+          "default": ["text"]
+        },
+        "output_modalities": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "enum": ["text", "image", "audio", "video"] },
+          "default": ["text"]
+        },
+        "streaming": { "type": "boolean", "default": true },
+        "parallel_tool_calls": { "type": "boolean", "default": false },
+        "thinking": {
+          "type": "string",
+          "enum": ["unknown", "unsupported", "configurable", "always_enabled"],
+          "default": "unknown"
+        }
+      }
+    },
+    "ModelConfig": {
+      "title": "Chat or retrieval model configuration",
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["id"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "enabled": { "type": "boolean", "default": true },
+        "endpoints": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/EndpointBinding" },
+          "default": []
+        },
+        "context_length": { "type": ["integer", "null"], "minimum": 0 },
+        "max_output_tokens": { "type": ["integer", "null"], "minimum": 0 },
+        "function_call_available": { "type": ["boolean", "null"] },
+        "response_format_available": { "type": ["boolean", "null"] },
+        "native_multimodal": { "type": ["boolean", "null"] },
+        "max_image_dimension": { "type": ["integer", "null"], "minimum": 1 },
+        "capabilities": { "$ref": "#/$defs/ModelCapabilities" },
+        "protocol": { "type": ["string", "null"] },
+        "dimensions": { "type": ["integer", "null"], "minimum": 0 },
+        "default_top_n": { "type": ["integer", "null"], "minimum": 0 },
+        "request_mapping": {
+          "anyOf": [
+            { "type": "object" },
+            { "type": "array" },
+            { "type": "string" },
+            { "type": "null" }
+          ]
+        },
+        "response_mapping": {
+          "anyOf": [
+            { "type": "object" },
+            { "type": "array" },
+            { "type": "string" },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "BackendConfig": {
+      "title": "Backend model collection",
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "models": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/ModelConfig" },
+          "default": {}
+        },
+        "default_endpoint": { "type": ["string", "null"] }
+      }
+    },
+    "ServerConfig": {
+      "title": "Token server configuration",
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["host", "port"],
+      "properties": {
+        "host": { "type": "string" },
+        "port": { "type": "integer", "minimum": 0, "maximum": 65535 },
+        "url": { "type": ["string", "null"] }
+      }
+    },
+    "RateLimitConfig": {
+      "title": "Rate-limit configuration",
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": { "type": "boolean", "default": false },
+        "backend": {
+          "type": "string",
+          "enum": ["memory", "redis", "diskcache"],
+          "default": "memory"
+        },
+        "redis": { "type": ["object", "null"] },
+        "diskcache": { "type": ["object", "null"] },
+        "default_rpm": { "type": "integer", "minimum": 0, "default": 60 },
+        "default_tpm": { "type": "integer", "minimum": 0, "default": 1000000 }
+      }
+    }
+  }
+}

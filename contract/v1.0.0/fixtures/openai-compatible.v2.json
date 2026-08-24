@@ -1,0 +1,339 @@
+{
+  "schema_version": 2,
+  "protocol": "openai_chat_completions",
+  "request_case": {
+    "canonical_request": {
+      "model": "deepseek-v4-pro",
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "look at both images",
+              "cache_control": {
+                "type": "ephemeral"
+              }
+            },
+            {
+              "type": "image_url",
+              "url": "https://example.com/flat.png",
+              "detail": "low",
+              "cache_control": {
+                "type": "ephemeral"
+              }
+            },
+            {
+              "type": "image_url",
+              "image_url": {
+                "url": "https://example.com/nested.png",
+                "detail": "high"
+              }
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_prior",
+              "name": "lookup",
+              "arguments": "{\"query\":\"prior\"}"
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "content": "prior result",
+          "tool_call_id": "call_prior"
+        },
+        {
+          "role": "user",
+          "content": "hello"
+        }
+      ],
+      "options": {
+        "temperature": 0.25,
+        "max_tokens": 64,
+        "max_tokens_details": {
+          "reasoning_tokens": 8
+        },
+        "stream": false,
+        "reasoning_effort": "medium",
+        "thinking": {
+          "type": "disabled"
+        }
+      },
+      "tools": [
+        {
+          "name": "lookup",
+          "description": "Look up a value",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "query": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "query"
+            ]
+          }
+        }
+      ],
+      "tool_choice": {
+        "type": "function",
+        "function": {
+          "name": "lookup"
+        }
+      },
+      "extra_body": {
+        "trace_id": "fixture-trace"
+      }
+    },
+    "expected_wire_request": {
+      "model": "deepseek-v4-pro",
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "look at both images",
+              "cache_control": {
+                "type": "ephemeral"
+              }
+            },
+            {
+              "type": "image_url",
+              "image_url": {
+                "url": "https://example.com/flat.png",
+                "detail": "low"
+              },
+              "cache_control": {
+                "type": "ephemeral"
+              }
+            },
+            {
+              "type": "image_url",
+              "image_url": {
+                "url": "https://example.com/nested.png",
+                "detail": "high"
+              }
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_prior",
+              "type": "function",
+              "function": {
+                "name": "lookup",
+                "arguments": "{\"query\":\"prior\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "content": "prior result",
+          "tool_call_id": "call_prior"
+        },
+        {
+          "role": "user",
+          "content": "hello"
+        }
+      ],
+      "temperature": 0.25,
+      "max_tokens": 64,
+      "max_tokens_details": {
+        "reasoning_tokens": 8
+      },
+      "stream": false,
+      "reasoning_effort": "medium",
+      "thinking": {
+        "type": "disabled"
+      },
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "lookup",
+            "description": "Look up a value",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "query": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "query"
+              ]
+            }
+          }
+        }
+      ],
+      "tool_choice": {
+        "type": "function",
+        "function": {
+          "name": "lookup"
+        }
+      },
+      "trace_id": "fixture-trace"
+    }
+  },
+  "completion_case": {
+    "raw_response": {
+      "id": "chatcmpl-fixture",
+      "object": "chat.completion",
+      "created": 0,
+      "model": "deepseek-v4-pro",
+      "choices": [
+        {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "answer",
+            "reasoning_content": "analysis",
+            "tool_calls": [
+              {
+                "id": "call_1",
+                "type": "function",
+                "function": {
+                  "name": "lookup",
+                  "arguments": "{\"query\":\"value\"}"
+                }
+              }
+            ]
+          },
+          "finish_reason": "tool_calls"
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 11,
+        "completion_tokens": 7,
+        "total_tokens": 18,
+        "prompt_tokens_details": {
+          "cached_tokens": 6
+        },
+        "cache_creation_tokens": 4
+      }
+    },
+    "expected_response": {
+      "content": "answer",
+      "reasoning_content": "analysis",
+      "tool_calls": [
+        {
+          "id": "call_1",
+          "name": "lookup",
+          "arguments": "{\"query\":\"value\"}"
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 11,
+        "completion_tokens": 7,
+        "total_tokens": 18,
+        "cache_read_input_tokens": 6,
+        "cache_creation_input_tokens": 4
+      }
+    }
+  },
+  "stream_case": {
+    "raw_chunks": [
+      {
+        "id": "chatcmpl-stream-fixture",
+        "object": "chat.completion.chunk",
+        "created": 0,
+        "model": "deepseek-v4-pro",
+        "choices": [
+          {
+            "index": 0,
+            "delta": {
+              "content": "hel",
+              "reasoning_content": "plan",
+              "tool_calls": [
+                {
+                  "index": 0,
+                  "id": "call_1",
+                  "type": "function",
+                  "function": {
+                    "name": "lookup",
+                    "arguments": "{\"query\""
+                  }
+                }
+              ]
+            },
+            "finish_reason": null
+          }
+        ]
+      },
+      {
+        "id": "chatcmpl-stream-fixture",
+        "object": "chat.completion.chunk",
+        "created": 0,
+        "model": "deepseek-v4-pro",
+        "choices": [
+          {
+            "index": 0,
+            "delta": {
+              "content": "lo"
+            },
+            "finish_reason": "stop"
+          }
+        ]
+      },
+      {
+        "id": "chatcmpl-stream-fixture",
+        "object": "chat.completion.chunk",
+        "created": 0,
+        "model": "deepseek-v4-pro",
+        "choices": [],
+        "usage": {
+          "prompt_tokens": 11,
+          "completion_tokens": 7,
+          "total_tokens": 18,
+          "prompt_tokens_details": {
+            "cached_tokens": 6
+          },
+          "cache_creation_tokens": 4
+        }
+      }
+    ],
+    "expected_deltas": [
+      {
+        "content": "hel",
+        "reasoning_content": "plan",
+        "tool_calls": [
+          {
+            "id": "call_1",
+            "name": "lookup",
+            "arguments": "{\"query\"",
+            "index": 0
+          }
+        ]
+      },
+      {
+        "content": "lo",
+        "reasoning_content": "",
+        "tool_calls": []
+      },
+      {
+        "content": "",
+        "reasoning_content": "",
+        "tool_calls": [],
+        "usage": {
+          "prompt_tokens": 11,
+          "completion_tokens": 7,
+          "total_tokens": 18,
+          "cache_read_input_tokens": 6,
+          "cache_creation_input_tokens": 4
+        }
+      }
+    ]
+  }
+}

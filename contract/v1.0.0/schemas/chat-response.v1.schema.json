@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:vv-llm-contract:chat-response:v1",
+  "title": "vv-llm canonical chat response v1",
+  "$comment": "Canonical objects are closed except for optional x_* provider-neutral extensions. Missing usage counters are distinct from an explicit numeric zero.",
+  "type": "object",
+  "required": [
+    "content",
+    "tool_calls"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "model": {
+      "type": "string"
+    },
+    "content": {
+      "type": "string"
+    },
+    "reasoning_content": {
+      "type": "string"
+    },
+    "raw_content": {
+      "$ref": "#/$defs/json_value"
+    },
+    "tool_calls": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/tool_call"
+      }
+    },
+    "usage": {
+      "$ref": "#/$defs/chat_usage"
+    }
+  },
+  "patternProperties": {
+    "^x_[a-z][a-z0-9_]*$": {}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "json_value": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/json_value"
+          }
+        },
+        {
+          "$ref": "#/$defs/json_object"
+        }
+      ]
+    },
+    "json_object": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/json_value"
+      }
+    },
+    "tool_call": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "arguments"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "arguments": {
+          "type": "string"
+        },
+        "index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "extra_content": {
+          "$ref": "#/$defs/json_value"
+        }
+      },
+      "patternProperties": {
+        "^x_[a-z][a-z0-9_]*$": {}
+      },
+      "additionalProperties": false
+    },
+    "chat_usage": {
+      "type": "object",
+      "properties": {
+        "prompt_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "completion_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "input_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "output_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cache_read_input_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cache_creation_input_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "raw_usage": {
+          "$ref": "#/$defs/json_value"
+        },
+        "completion_tokens_details": {
+          "$ref": "#/$defs/json_value"
+        },
+        "prompt_tokens_details": {
+          "$ref": "#/$defs/json_value"
+        }
+      },
+      "patternProperties": {
+        "^x_[a-z][a-z0-9_]*$": {}
+      },
+      "additionalProperties": false
+    }
+  }
+}

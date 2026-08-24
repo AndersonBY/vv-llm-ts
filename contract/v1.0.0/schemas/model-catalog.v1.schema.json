@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:vv-llm-contract:model-catalog:v1",
+  "title": "vv-llm default chat model catalog",
+  "description": "Schema for the catalog mirrored from vv-llm Python defaults into the Rust crate.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["default_models", "backends"],
+  "properties": {
+    "default_models": {
+      "type": "object",
+      "additionalProperties": { "type": "string", "minLength": 1 },
+      "default": {}
+    },
+    "backends": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/BackendConfig" },
+      "default": {}
+    }
+  },
+  "$defs": {
+    "EndpointBinding": {
+      "oneOf": [
+        { "type": "string", "minLength": 1 },
+        {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["endpoint_id"],
+          "properties": {
+            "endpoint_id": { "type": "string", "minLength": 1 },
+            "model_id": { "type": ["string", "null"] },
+            "enabled": { "type": ["boolean", "null"] },
+            "rpm": { "type": ["integer", "null"], "minimum": 0 },
+            "tpm": { "type": ["integer", "null"], "minimum": 0 },
+            "concurrent_requests": { "type": ["integer", "null"], "minimum": 0 }
+          }
+        }
+      ]
+    },
+    "Capabilities": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "tools": { "type": "boolean" },
+        "structured_output": { "type": "string", "enum": ["none", "json_object", "json_schema"] },
+        "input_modalities": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "enum": ["text", "image", "audio", "video"] }
+        },
+        "output_modalities": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "enum": ["text", "image", "audio", "video"] }
+        },
+        "streaming": { "type": "boolean" },
+        "parallel_tool_calls": { "type": "boolean" },
+        "thinking": { "type": "string", "enum": ["unknown", "unsupported", "configurable", "always_enabled"] }
+      }
+    },
+    "ModelConfig": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["id"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "enabled": { "type": "boolean" },
+        "endpoints": { "type": "array", "items": { "$ref": "#/$defs/EndpointBinding" } },
+        "context_length": { "type": "integer", "minimum": 0 },
+        "max_output_tokens": { "type": "integer", "minimum": 0 },
+        "function_call_available": { "type": "boolean" },
+        "response_format_available": { "type": "boolean" },
+        "native_multimodal": { "type": "boolean" },
+        "max_image_dimension": { "type": "integer", "minimum": 1 },
+        "capabilities": { "$ref": "#/$defs/Capabilities" },
+        "protocol": { "type": "string" },
+        "dimensions": { "type": "integer", "minimum": 0 },
+        "default_top_n": { "type": "integer", "minimum": 0 },
+        "request_mapping": { "type": ["object", "array", "string", "null"] },
+        "response_mapping": { "type": ["object", "array", "string", "null"] }
+      }
+    },
+    "BackendConfig": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "models": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/ModelConfig" }
+        },
+        "default_endpoint": { "type": ["string", "null"] }
+      }
+    }
+  }
+}

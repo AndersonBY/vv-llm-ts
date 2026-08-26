@@ -889,6 +889,24 @@
             "structured_output": "json_schema",
             "thinking": "always_enabled"
           }
+        },
+        "glm-5.3-flash": {
+          "id": "glm-5.3-flash",
+          "context_length": 1000000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "max_output_tokens": 128000,
+          "native_multimodal": true,
+          "capabilities": {
+            "tools": true,
+            "structured_output": "json_schema",
+            "input_modalities": [
+              "text",
+              "image",
+              "video"
+            ],
+            "thinking": "always_enabled"
+          }
         }
       }
     },

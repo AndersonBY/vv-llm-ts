@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.1 - 2026-08-27
+
+- Add the contract revision 2 catalog, including ZhiPuAI `glm-5.3-flash`.
+
 ## 0.1.0 - 2026-08-24
 
 - Node 20+ ESM client for chat, SSE streaming, tools, images, embeddings, and

@@ -7,12 +7,12 @@ import type { ModelConfig } from "../types.js";
 export const CONTRACT_VERSION = "1.0.1" as const;
 export const CONTRACT_SCHEMA_VERSION = 2 as const;
 export const CONTRACT_FIXTURE_VERSION = 2 as const;
-export const CONTRACT_CATALOG_REVISION = 1 as const;
-export const CONTRACT_CONSUMER_LOCK_SHA256 = "4b63dfb29d28212a7e591dad4ccaabdf0ad29940e3eaa80176a59c59b774f0cb" as const;
-export const CONTRACT_MANIFEST_SHA256 = "1cf53c31a9336d4a2ed45a880a156faf99cfd6f1ddaaf3c33331de3796d51a75" as const;
-export const CONTRACT_CHECKSUMS_SHA256 = "1ef2a7a1c5e1cfabca71d5973a0baac5805fe1f3c84ff4532fd83c48906d0f17" as const;
+export const CONTRACT_CATALOG_REVISION = 2 as const;
+export const CONTRACT_CONSUMER_LOCK_SHA256 = "3407cc7d398885284f32c453a8e71c6dbb2f40a10eb0cc9f2d21a0a7c7dc6b49" as const;
+export const CONTRACT_MANIFEST_SHA256 = "c1efec6bf979fac9576789fe9e740f942b927b2d632af15ccbcf1b4d1a54348c" as const;
+export const CONTRACT_CHECKSUMS_SHA256 = "4280188a8e27ff04efc9ba07d27727e7431f0a26bfbdae27ded6fd84a990637b" as const;
 export const CONTRACT_ARTIFACTS = {
-  "catalog/default-chat-catalog.json": "c2c62de65d9adef972936b5d47da465e7bea22b4d540e6afb7088318dc354f84",
+  "catalog/default-chat-catalog.json": "3f4a57ca4f36d7ae4fabf143bac3c2e19e8b880a766b89c24340308612c39eed",
   "fixtures/openai-compatible.v2.json": "7696b0c53b8d64ef1d5a483bfe12c2c8a4a372a18258244c862b7b52ad9ede99",
   "fixtures/retry-after.v1.json": "7920cc8935ca6b8b94bfc723e1df74ef65a36aa147768ca53a9102152dbf6013",
   "fixtures/settings-resolution.v1.json": "297171355c27e4055ae5c0e2c135903e3c832bd8720ea9c46d2656131b840ae4",
@@ -995,6 +995,25 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "capabilities": {
       "tools": true,
       "structured_output": "json_schema",
+      "thinking": "always_enabled"
+    }
+  },
+  {
+    "backend": "zhipuai",
+    "id": "glm-5.3-flash",
+    "context_length": 1000000,
+    "function_call_available": true,
+    "response_format_available": true,
+    "max_output_tokens": 128000,
+    "native_multimodal": true,
+    "capabilities": {
+      "tools": true,
+      "structured_output": "json_schema",
+      "input_modalities": [
+        "text",
+        "image",
+        "video"
+      ],
       "thinking": "always_enabled"
     }
   },

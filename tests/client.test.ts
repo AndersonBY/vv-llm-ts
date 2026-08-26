@@ -29,12 +29,24 @@ import { readContractFixture } from "./contract-fixtures.js";
 test("default client consumes the pinned contract catalog and metadata", () => {
   const client = new VvLlmClient({ fetch: jsonFetch({}) });
   const vision = client.getModelConfig("deepseek-v4-flash-vision-exp");
+  const glmFlash = client.getModelConfig("glm-5.3-flash");
   assert.equal(CONTRACT_VERSION, "1.0.1");
-  assert.equal(CONTRACT_CATALOG_REVISION, 1);
-  assert.equal(CONTRACT_CONSUMER_LOCK_SHA256, "4b63dfb29d28212a7e591dad4ccaabdf0ad29940e3eaa80176a59c59b774f0cb");
+  assert.equal(CONTRACT_CATALOG_REVISION, 2);
+  assert.equal(CONTRACT_CONSUMER_LOCK_SHA256, "3407cc7d398885284f32c453a8e71c6dbb2f40a10eb0cc9f2d21a0a7c7dc6b49");
   assert.equal(client.modelCatalog, DEFAULT_MODEL_CATALOG);
   assert.equal(vision?.max_image_dimension, 8192);
   assert.equal(vision?.capabilities?.thinking, "configurable");
+  assert.equal(glmFlash?.context_length, 1_000_000);
+  assert.equal(glmFlash?.max_output_tokens, 128_000);
+  assert.equal(glmFlash?.function_call_available, true);
+  assert.equal(glmFlash?.response_format_available, true);
+  assert.equal(glmFlash?.native_multimodal, true);
+  assert.deepEqual(glmFlash?.capabilities, {
+    tools: true,
+    structured_output: "json_schema",
+    input_modalities: ["text", "image", "video"],
+    thinking: "always_enabled",
+  });
 });
 
 function jsonFetch(value: unknown, status = 200, responseHeaders?: HeadersInit): FetchLike {

@@ -1243,6 +1243,14 @@
           "function_call_available": true,
           "response_format_available": true,
           "native_multimodal": true
+        },
+        "gpt-6-astra": {
+          "id": "gpt-6-astra",
+          "context_length": 1050000,
+          "max_output_tokens": 128000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true
         }
       }
     },

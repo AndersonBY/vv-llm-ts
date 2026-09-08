@@ -23,7 +23,7 @@ test("contract check rejects a tampered consumer lock before JSON trust", () => 
 
     const lockPath = join(vendorTarget, "consumer-lock.v1.json");
     const original = readFileSync(lockPath, "utf8");
-    const tampered = original.replace('"catalog_revision": 2', '"catalog_revision": 1');
+    const tampered = original.replace('"catalog_revision": 3', '"catalog_revision": 1');
     assert.notEqual(tampered, original);
     writeFileSync(lockPath, tampered, "utf8");
 

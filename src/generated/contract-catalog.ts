@@ -7,12 +7,12 @@ import type { ModelConfig } from "../types.js";
 export const CONTRACT_VERSION = "1.0.1" as const;
 export const CONTRACT_SCHEMA_VERSION = 2 as const;
 export const CONTRACT_FIXTURE_VERSION = 2 as const;
-export const CONTRACT_CATALOG_REVISION = 2 as const;
-export const CONTRACT_CONSUMER_LOCK_SHA256 = "3407cc7d398885284f32c453a8e71c6dbb2f40a10eb0cc9f2d21a0a7c7dc6b49" as const;
-export const CONTRACT_MANIFEST_SHA256 = "c1efec6bf979fac9576789fe9e740f942b927b2d632af15ccbcf1b4d1a54348c" as const;
-export const CONTRACT_CHECKSUMS_SHA256 = "4280188a8e27ff04efc9ba07d27727e7431f0a26bfbdae27ded6fd84a990637b" as const;
+export const CONTRACT_CATALOG_REVISION = 3 as const;
+export const CONTRACT_CONSUMER_LOCK_SHA256 = "2b72cec499a3766bfe0fb3bb612576cf984b11ebbfefe5086a094d840f5734ad" as const;
+export const CONTRACT_MANIFEST_SHA256 = "0a4792b3793702e14ec04d6c6e0343807954372f566a63b503017f5b3f2269f7" as const;
+export const CONTRACT_CHECKSUMS_SHA256 = "549587ce555a07f19ad3f01dfcb029ba136ff68d4a6e6c6ae50a3811f57ea07e" as const;
 export const CONTRACT_ARTIFACTS = {
-  "catalog/default-chat-catalog.json": "3f4a57ca4f36d7ae4fabf143bac3c2e19e8b880a766b89c24340308612c39eed",
+  "catalog/default-chat-catalog.json": "9eec12b85be23c9f9317391bb3a5aae328656c9e09598fe89f41c07b49dd58b4",
   "fixtures/openai-compatible.v2.json": "7696b0c53b8d64ef1d5a483bfe12c2c8a4a372a18258244c862b7b52ad9ede99",
   "fixtures/retry-after.v1.json": "7920cc8935ca6b8b94bfc723e1df74ef65a36aa147768ca53a9102152dbf6013",
   "fixtures/settings-resolution.v1.json": "297171355c27e4055ae5c0e2c135903e3c832bd8720ea9c46d2656131b840ae4",
@@ -1381,6 +1381,15 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
   {
     "backend": "openai",
     "id": "gpt-5.6-luna",
+    "context_length": 1050000,
+    "max_output_tokens": 128000,
+    "function_call_available": true,
+    "response_format_available": true,
+    "native_multimodal": true
+  },
+  {
+    "backend": "openai",
+    "id": "gpt-6-astra",
     "context_length": 1050000,
     "max_output_tokens": 128000,
     "function_call_available": true,

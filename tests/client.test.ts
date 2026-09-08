@@ -31,8 +31,8 @@ test("default client consumes the pinned contract catalog and metadata", () => {
   const vision = client.getModelConfig("deepseek-v4-flash-vision-exp");
   const glmFlash = client.getModelConfig("glm-5.3-flash");
   assert.equal(CONTRACT_VERSION, "1.0.1");
-  assert.equal(CONTRACT_CATALOG_REVISION, 2);
-  assert.equal(CONTRACT_CONSUMER_LOCK_SHA256, "3407cc7d398885284f32c453a8e71c6dbb2f40a10eb0cc9f2d21a0a7c7dc6b49");
+  assert.equal(CONTRACT_CATALOG_REVISION, 3);
+  assert.equal(CONTRACT_CONSUMER_LOCK_SHA256, "2b72cec499a3766bfe0fb3bb612576cf984b11ebbfefe5086a094d840f5734ad");
   assert.equal(client.modelCatalog, DEFAULT_MODEL_CATALOG);
   assert.equal(vision?.max_image_dimension, 8192);
   assert.equal(vision?.capabilities?.thinking, "configurable");

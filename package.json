@@ -1,6 +1,6 @@
 {
   "name": "vv-llm-ts",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Strict, dependency-light TypeScript client for OpenAI-compatible chat, embeddings, and rerank APIs",
   "license": "MIT",
   "author": "VV LLM contributors",

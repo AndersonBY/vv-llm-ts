@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.2 - 2026-09-08
+
+- Add `gpt-6-astra` from shared contract catalog revision 3.
+
 ## 0.1.1 - 2026-08-27
 
 - Add the contract revision 2 catalog, including ZhiPuAI `glm-5.3-flash`.

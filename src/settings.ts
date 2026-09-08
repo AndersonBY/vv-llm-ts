@@ -33,6 +33,7 @@ export interface EndpointConfig {
 export interface EndpointBinding {
   endpoint_id: string;
   model_id?: string;
+  priority?: number;
   enabled?: boolean;
   rpm?: number;
   tpm?: number;
@@ -94,6 +95,21 @@ export interface SettingsClientResult {
   resolved: ResolvedModelConfig;
 }
 
+/** Return endpoint bindings in stable ascending-priority order. */
+export function orderEndpoints(
+  endpoints: readonly EndpointBindingInput[],
+  preferredEndpointId?: string,
+): EndpointBindingInput[] {
+  return endpoints
+    .map((endpoint) => ({
+      endpoint,
+      priority: typeof endpoint === "string" ? 1 : endpoint.priority ?? 1,
+      preferred: endpointIdOf(endpoint) === preferredEndpointId,
+    }))
+    .sort((left, right) => left.priority - right.priority || Number(right.preferred) - Number(left.preferred))
+    .map(({ endpoint }) => endpoint);
+}
+
 /** Resolve a settings model and its first enabled endpoint without making a request. */
 export function resolveSettingsModel(
   settings: Settings,
@@ -101,6 +117,7 @@ export function resolveSettingsModel(
   backend: string,
   modelId: string,
 ): ResolvedModelConfig {
+  validateSettings(settings);
   const backendMap = getBackendMap(settings, kind);
   const backendConfig = backendMap[backend];
   if (!backendConfig) {
@@ -124,7 +141,14 @@ export function resolveSettingsModel(
     : backendConfig.default_endpoint
       ? [backendConfig.default_endpoint]
       : [];
-  const bindingInput = fallbackBindings.find((candidate) => bindingEnabled(candidate));
+  const bindingInput = orderEndpoints(
+    fallbackBindings.filter((candidate) => bindingEnabled(candidate)).filter((candidate) => {
+      const candidateEndpointId = endpointIdOf(candidate);
+      return (settings.endpoints ?? []).some(
+        (endpoint) => endpoint.id === candidateEndpointId && endpoint.enabled !== false,
+      );
+    }),
+  )[0];
   if (!bindingInput) {
     throw new VvLlmError(`Model '${modelId}' has no enabled endpoint binding`, {
       kind: "configuration",
@@ -217,4 +241,26 @@ function bindingEnabled(value: EndpointBindingInput): boolean {
 
 function normalizeBinding(value: EndpointBindingInput): EndpointBinding {
   return typeof value === "string" ? { endpoint_id: value } : { ...value };
+}
+
+function endpointIdOf(value: EndpointBindingInput): string {
+  return typeof value === "string" ? value : value.endpoint_id;
+}
+
+function validateSettings(settings: Settings): void {
+  if (!settings || typeof settings !== "object" || Array.isArray(settings)) {
+    throw new TypeError("settings must be an object");
+  }
+  for (const backendMap of [settings.backends, settings.embedding_backends, settings.rerank_backends]) {
+    for (const backend of Object.values(backendMap ?? {})) {
+      for (const model of Object.values(backend.models ?? {})) {
+        for (const binding of model.endpoints ?? []) {
+          if (typeof binding === "string" || binding.priority === undefined) continue;
+          if (!Number.isInteger(binding.priority) || binding.priority < 1) {
+            throw new TypeError("endpoint binding priority must be a strict integer >= 1");
+          }
+        }
+      }
+    }
+  }
 }

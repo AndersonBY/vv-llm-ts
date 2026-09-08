@@ -7,6 +7,7 @@ import {
   createRerankClientFromSettings,
   decodeChatRequest,
   ChatRequestDecodeError,
+  orderEndpoints,
   CONTRACT_CATALOG_REVISION,
   CONTRACT_CONSUMER_LOCK_SHA256,
   CONTRACT_VERSION,
@@ -19,6 +20,7 @@ import {
   type FetchLike,
   type CanonicalImageUrlContentPart,
   type CanonicalTextContentPart,
+  type EndpointBindingInput,
   type JsonObject,
   type Settings,
   VvLlmClient,
@@ -30,9 +32,9 @@ test("default client consumes the pinned contract catalog and metadata", () => {
   const client = new VvLlmClient({ fetch: jsonFetch({}) });
   const vision = client.getModelConfig("deepseek-v4-flash-vision-exp");
   const glmFlash = client.getModelConfig("glm-5.3-flash");
-  assert.equal(CONTRACT_VERSION, "1.0.1");
+  assert.equal(CONTRACT_VERSION, "1.1.0");
   assert.equal(CONTRACT_CATALOG_REVISION, 3);
-  assert.equal(CONTRACT_CONSUMER_LOCK_SHA256, "2b72cec499a3766bfe0fb3bb612576cf984b11ebbfefe5086a094d840f5734ad");
+  assert.equal(CONTRACT_CONSUMER_LOCK_SHA256, "88040f2f41e84c45bad0e7ff70239df4ba33424246db2305dcf411babdcb7396");
   assert.equal(client.modelCatalog, DEFAULT_MODEL_CATALOG);
   assert.equal(vision?.max_image_dimension, 8192);
   assert.equal(vision?.capabilities?.thinking, "configurable");
@@ -406,6 +408,81 @@ test("settings rejects top-level provider config", () => {
         && error.code === "UNSUPPORTED_SETTINGS_SHAPE"
         && error.message.includes("backends.openai"),
     );
+  }
+});
+
+function prioritySettings(section: "backends" | "embedding_backends" | "rerank_backends"): Settings {
+  return {
+    endpoints: [
+      { id: "low", enabled: true },
+      { id: "high", enabled: true },
+      { id: "peer", enabled: true },
+    ],
+    [section]: {
+      openai: {
+        models: {
+          test: {
+            id: "test",
+            endpoints: [
+              { endpoint_id: "low", model_id: "low-model", priority: 2 },
+              { endpoint_id: "high", model_id: "high-model" },
+              "peer",
+            ],
+          },
+        },
+      },
+    },
+  };
+}
+
+function priorityBindings(
+  settings: Settings,
+  section: "backends" | "embedding_backends" | "rerank_backends",
+): readonly EndpointBindingInput[] {
+  const backendMap = section === "backends"
+    ? settings.backends
+    : section === "embedding_backends"
+      ? settings.embedding_backends
+      : settings.rerank_backends;
+  return backendMap?.openai?.models?.test?.endpoints ?? [];
+}
+
+test("endpoint binding priority validates, round-trips, and orders stably", () => {
+  for (const section of ["backends", "embedding_backends", "rerank_backends"] as const) {
+    const settings = JSON.parse(JSON.stringify(prioritySettings(section))) as Settings;
+    const bindings = priorityBindings(settings, section);
+    assert.deepEqual(bindings, priorityBindings(prioritySettings(section), section));
+    assert.equal((bindings[0] as { priority?: number }).priority, 2);
+
+    for (const priority of [0, -1, true, false, "2", 1.5, null]) {
+      const invalid = prioritySettings(section);
+      (priorityBindings(invalid, section) as unknown as Array<Record<string, unknown>>)[0]!.priority = priority;
+      const kind = section === "backends" ? "chat" : section === "embedding_backends" ? "embedding" : "rerank";
+      assert.throws(() => resolveSettingsModel(invalid, kind, "openai", "test"), /priority/);
+    }
+  }
+
+  const endpoints = priorityBindings(prioritySettings("backends"), "backends");
+  const original = structuredClone(endpoints);
+  assert.deepEqual(orderEndpoints(endpoints), [endpoints[1], endpoints[2], endpoints[0]]);
+  assert.deepEqual(orderEndpoints(endpoints, "low"), [endpoints[1], endpoints[2], endpoints[0]]);
+  assert.deepEqual(orderEndpoints(endpoints, "peer"), [endpoints[2], endpoints[1], endpoints[0]]);
+  assert.deepEqual(orderEndpoints(endpoints, "missing"), orderEndpoints(endpoints));
+  assert.deepEqual(endpoints, original);
+  assert.notEqual(orderEndpoints(endpoints), endpoints);
+  assert.deepEqual(orderEndpoints([]), []);
+});
+
+test("chat and retrieval auto-selection filters before priority", () => {
+  for (const section of ["backends", "embedding_backends", "rerank_backends"] as const) {
+    const settings = prioritySettings(section);
+    const kind = section === "backends" ? "chat" : section === "embedding_backends" ? "embedding" : "rerank";
+    const automatic = resolveSettingsModel(settings, kind, "openai", "test");
+    assert.equal(automatic.endpoint.id, "high", section);
+    assert.equal(automatic.model_id, "high-model", section);
+
+    settings.endpoints = settings.endpoints!.map((endpoint) => endpoint.id === "high" ? { ...endpoint, enabled: false } : endpoint);
+    assert.equal(resolveSettingsModel(settings, kind, "openai", "test").endpoint.id, "peer", section);
   }
 });
 

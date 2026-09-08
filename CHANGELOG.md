@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.3 - 2026-09-08
+
+- Add validated endpoint priorities and stable `orderEndpoints` ordering for chat, embeddings, and rerank.
+- Adopt shared contract 1.1.0.
+
 ## 0.1.2 - 2026-09-08
 
 - Add `gpt-6-astra` from shared contract catalog revision 3.

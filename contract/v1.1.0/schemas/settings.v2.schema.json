@@ -106,6 +106,7 @@
             "endpoint_id": { "type": "string", "minLength": 1 },
             "model_id": { "type": ["string", "null"] },
             "enabled": { "type": ["boolean", "null"], "default": true },
+            "priority": { "type": "integer", "minimum": 1, "default": 1 },
             "rpm": { "type": ["integer", "null"], "minimum": 0 },
             "tpm": { "type": ["integer", "null"], "minimum": 0 },
             "concurrent_requests": { "type": ["integer", "null"], "minimum": 0 }

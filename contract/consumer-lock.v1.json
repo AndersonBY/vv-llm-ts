@@ -1,16 +1,16 @@
 {
   "format": "vv-llm-contract-consumer-lock.v1",
-  "contract_version": "1.0.1",
+  "contract_version": "1.1.0",
   "schema_version": 2,
   "fixture_version": 2,
   "catalog_revision": 3,
-  "manifest_sha256": "0a4792b3793702e14ec04d6c6e0343807954372f566a63b503017f5b3f2269f7",
-  "checksums_sha256": "549587ce555a07f19ad3f01dfcb029ba136ff68d4a6e6c6ae50a3811f57ea07e",
+  "manifest_sha256": "afcad611484936ef3a4d3d9902ae8b88855794bc4ea42617c09ba510cd5dc31a",
+  "checksums_sha256": "b3471fd557d2ce6001ea6f2f76dda645e7064af1e511a614f3972e75c79eccdc",
   "artifacts": {
     "catalog/default-chat-catalog.json": "9eec12b85be23c9f9317391bb3a5aae328656c9e09598fe89f41c07b49dd58b4",
     "fixtures/openai-compatible.v2.json": "7696b0c53b8d64ef1d5a483bfe12c2c8a4a372a18258244c862b7b52ad9ede99",
     "fixtures/retry-after.v1.json": "7920cc8935ca6b8b94bfc723e1df74ef65a36aa147768ca53a9102152dbf6013",
-    "fixtures/settings-resolution.v1.json": "297171355c27e4055ae5c0e2c135903e3c832bd8720ea9c46d2656131b840ae4",
+    "fixtures/settings-resolution.v1.json": "dedd56cd1d44a8a1767557d855dfa7f3bf652ae98ca114c2b607b3a83349e642",
     "schemas/chat-request.v1.schema.json": "74e7b9e66152596fc90f5913f21329c7888ab8f5e2a36f9a957cb99f780be348",
     "schemas/chat-response.v1.schema.json": "23153b94fd48f97ea20cc8eb1aefa5726a150fea0c08a95487f6a86ea7f517ee",
     "schemas/chat-stream-delta.v1.schema.json": "7f565e6ba625b74e29aec7ff6268aebadcce03e390f27845eb6225a9257c3d3e",
@@ -20,6 +20,6 @@
     "schemas/openai-compatible-fixture.v2.schema.json": "73f08143d6bc3606ee0eb488b7244b738570af99f393a64073ee9f6f42406e83",
     "schemas/rerank.v1.schema.json": "5dc9b51b0b0b6221532092fce4a2701b33f0ee255badadb714f86ad0027f09e6",
     "schemas/retry-after.v1.schema.json": "5cb52b988cada4585fb3c37c640ca607025a0ce53879e6796f106a146fa264ae",
-    "schemas/settings.v2.schema.json": "6d7b5d00a715b96addbfd68a84cbae82873020b74cc3dceee2a35da489dfc28f"
+    "schemas/settings.v2.schema.json": "78891b2385eafc4f63fa1e5a27a259bf8c11686de5e29179bef8252d5ab0f648"
   }
 }

@@ -22,11 +22,12 @@ native `fetch` API and has no runtime dependencies.
 - Typed `ModelConfig`/`ModelCatalog` and a settings resolver covering
   `endpoints`, `backends`, `embedding_backends`, `rerank_backends`, string or
   object endpoint bindings, disabled entries, binding `model_id` overrides,
-  endpoint headers, and transport metadata.
+  binding priorities, endpoint headers, and transport metadata. Automatic
+  endpoint selection uses stable ascending priority.
 - Stable `VvLlmError` classification with status, request ID, retry hints, and
   `retry-after-ms` precedence matching the Python/Rust protocol fixture.
 - The default `ModelCatalog` is generated from the pinned
-  `vv-llm-contract` v1.0.1 catalog and exposes contract version, schema,
+  `vv-llm-contract` v1.1.0 catalog and exposes contract version, schema,
   fixture, catalog-revision, and artifact-hash metadata.
 
 ## Canonical request API
@@ -174,7 +175,7 @@ The language-neutral contract is maintained in the independent
 
 ## Contract consumption
 
-The checked-in `contract/v1.0.1/` tree is a byte-for-byte vendor snapshot of
+The checked-in `contract/v1.1.0/` tree is a byte-for-byte vendor snapshot of
 the canonical release: `consumer-lock.v1.json`, `manifest.json`,
 `checksums.sha256`, the catalog, the v2 OpenAI-compatible fixture, the
 independent retry fixture, and ten schemas.

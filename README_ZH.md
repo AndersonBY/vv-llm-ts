@@ -19,6 +19,9 @@ tool calls、多模态内容、embeddings 和标准化 rerank。
 `RetryPolicy`、`MiddlewareChatClient` 和 `FallbackChatClient`；流式 fallback
 只允许在首个可见 chunk 之前切换，已产生可见输出后不会 replay 到其它 provider。
 
+Settings 的 endpoint binding 支持 `priority`（严格整数且不小于 1，缺省为 1）。
+自动选择先过滤禁用或不可用端点，再按 priority 稳定排序。
+
 ## Canonical ChatRequest
 
 跨语言公共入口使用嵌套 `options`；客户端会通过纯 adapter 映射到
@@ -54,7 +57,7 @@ multimodal、contract JSON、middleware、metadata 和 fallback 示例。
 ## Contract 与模型目录
 
 canonical language-neutral contract 位于独立的 `vv-llm-contract` 仓库。
-本仓库 vendor 了锁定的 `contract/v1.0.1/` artifact tree，
+本仓库 vendor 了锁定的 `contract/v1.1.0/` artifact tree，
 并生成 `src/generated/contract-catalog.ts`。默认 `ModelCatalog` 使用该目录，
 同时导出 contract version、revision 和 SHA-256 metadata。该 release 使用
 OpenAI fixture v2，并将 retry fixture/schema 独立锁定。

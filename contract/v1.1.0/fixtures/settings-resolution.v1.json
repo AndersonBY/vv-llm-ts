@@ -27,7 +27,8 @@
               {
                 "endpoint_id": "shared-endpoint",
                 "model_id": "provider-chat-model",
-                "enabled": true
+                "enabled": true,
+                "priority": 2
               }
             ],
             "context_length": 128000,

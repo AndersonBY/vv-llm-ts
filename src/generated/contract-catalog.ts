@@ -7,12 +7,12 @@ import type { ModelConfig } from "../types.js";
 export const CONTRACT_VERSION = "1.1.0" as const;
 export const CONTRACT_SCHEMA_VERSION = 2 as const;
 export const CONTRACT_FIXTURE_VERSION = 2 as const;
-export const CONTRACT_CATALOG_REVISION = 3 as const;
-export const CONTRACT_CONSUMER_LOCK_SHA256 = "88040f2f41e84c45bad0e7ff70239df4ba33424246db2305dcf411babdcb7396" as const;
-export const CONTRACT_MANIFEST_SHA256 = "afcad611484936ef3a4d3d9902ae8b88855794bc4ea42617c09ba510cd5dc31a" as const;
-export const CONTRACT_CHECKSUMS_SHA256 = "b3471fd557d2ce6001ea6f2f76dda645e7064af1e511a614f3972e75c79eccdc" as const;
+export const CONTRACT_CATALOG_REVISION = 4 as const;
+export const CONTRACT_CONSUMER_LOCK_SHA256 = "6302abb901f91d05db75f4970e7102d426217d003d772f4364c4126f2e350fa9" as const;
+export const CONTRACT_MANIFEST_SHA256 = "9205418bba7c5f7b45a8cd179a6ff1fbd5e6b32908b1c2f4494a6b7356780672" as const;
+export const CONTRACT_CHECKSUMS_SHA256 = "7ae22c2e17b6cf7b842f59392b8659b9d45ff74d4da0d055ce009c1cb2c8a4a9" as const;
 export const CONTRACT_ARTIFACTS = {
-  "catalog/default-chat-catalog.json": "9eec12b85be23c9f9317391bb3a5aae328656c9e09598fe89f41c07b49dd58b4",
+  "catalog/default-chat-catalog.json": "ac289887048c1db19e9bfa7d0d5621062eb02b77afb763b65487927520ba8fd9",
   "fixtures/openai-compatible.v2.json": "7696b0c53b8d64ef1d5a483bfe12c2c8a4a372a18258244c862b7b52ad9ede99",
   "fixtures/retry-after.v1.json": "7920cc8935ca6b8b94bfc723e1df74ef65a36aa147768ca53a9102152dbf6013",
   "fixtures/settings-resolution.v1.json": "dedd56cd1d44a8a1767557d855dfa7f3bf652ae98ca114c2b607b3a83349e642",
@@ -191,6 +191,44 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "capabilities": {
       "tools": true,
       "structured_output": "json_schema",
+      "thinking": "configurable"
+    }
+  },
+  {
+    "backend": "deepseek",
+    "id": "deepseek-v4.1-flash",
+    "context_length": 1000000,
+    "max_output_tokens": 384000,
+    "function_call_available": true,
+    "response_format_available": true,
+    "native_multimodal": true,
+    "max_image_dimension": 8192,
+    "capabilities": {
+      "tools": true,
+      "structured_output": "json_schema",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "thinking": "configurable"
+    }
+  },
+  {
+    "backend": "deepseek",
+    "id": "deepseek-flash",
+    "context_length": 1000000,
+    "max_output_tokens": 384000,
+    "function_call_available": true,
+    "response_format_available": true,
+    "native_multimodal": true,
+    "max_image_dimension": 8192,
+    "capabilities": {
+      "tools": true,
+      "structured_output": "json_schema",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
       "thinking": "configurable"
     }
   },

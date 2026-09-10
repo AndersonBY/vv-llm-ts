@@ -152,6 +152,42 @@
             "structured_output": "json_schema",
             "thinking": "configurable"
           }
+        },
+        "deepseek-v4.1-flash": {
+          "id": "deepseek-v4.1-flash",
+          "context_length": 1000000,
+          "max_output_tokens": 384000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true,
+          "max_image_dimension": 8192,
+          "capabilities": {
+            "tools": true,
+            "structured_output": "json_schema",
+            "input_modalities": [
+              "text",
+              "image"
+            ],
+            "thinking": "configurable"
+          }
+        },
+        "deepseek-flash": {
+          "id": "deepseek-flash",
+          "context_length": 1000000,
+          "max_output_tokens": 384000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true,
+          "max_image_dimension": 8192,
+          "capabilities": {
+            "tools": true,
+            "structured_output": "json_schema",
+            "input_modalities": [
+              "text",
+              "image"
+            ],
+            "thinking": "configurable"
+          }
         }
       }
     },

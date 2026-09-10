@@ -31,10 +31,13 @@ import { readContractFixture } from "./contract-fixtures.js";
 test("default client consumes the pinned contract catalog and metadata", () => {
   const client = new VvLlmClient({ fetch: jsonFetch({}) });
   const vision = client.getModelConfig("deepseek-v4-flash-vision-exp");
+  for (const id of ["deepseek-v4.1-flash", "deepseek-flash"]) {
+    assert.deepEqual(client.getModelConfig(id), { ...vision, id });
+  }
   const glmFlash = client.getModelConfig("glm-5.3-flash");
   assert.equal(CONTRACT_VERSION, "1.1.0");
-  assert.equal(CONTRACT_CATALOG_REVISION, 3);
-  assert.equal(CONTRACT_CONSUMER_LOCK_SHA256, "88040f2f41e84c45bad0e7ff70239df4ba33424246db2305dcf411babdcb7396");
+  assert.equal(CONTRACT_CATALOG_REVISION, 4);
+  assert.equal(CONTRACT_CONSUMER_LOCK_SHA256, "6302abb901f91d05db75f4970e7102d426217d003d772f4364c4126f2e350fa9");
   assert.equal(client.modelCatalog, DEFAULT_MODEL_CATALOG);
   assert.equal(vision?.max_image_dimension, 8192);
   assert.equal(vision?.capabilities?.thinking, "configurable");

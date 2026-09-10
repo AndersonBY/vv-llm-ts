@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.4 - 2026-09-10
+
+- Add `deepseek-v4.1-flash` and `deepseek-flash` with image input, tool calling, structured output, and configurable thinking from catalog revision 4.
+
 ## 0.1.3 - 2026-09-08
 
 - Add validated endpoint priorities and stable `orderEndpoints` ordering for chat, embeddings, and rerank.

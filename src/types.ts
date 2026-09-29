@@ -187,6 +187,7 @@ export interface ChatRequest {
 
 /** Runtime-only transport controls kept separate from the canonical JSON shape. */
 export interface ChatRequestTransportOptions {
+  capability_policy?: CapabilityPolicy;
   signal?: AbortSignal;
   timeout_ms?: number;
 }
@@ -200,6 +201,7 @@ export type StreamingChatRequest = ChatRequest & {
 };
 
 export type StructuredOutputCapability = "none" | "json_object" | "json_schema";
+export type CapabilityPolicy = "strict" | "warn" | "passthrough";
 export type ThinkingCapability = "unknown" | "unsupported" | "configurable" | "always_enabled";
 export type Modality = "text" | "image" | "audio" | "video";
 
@@ -211,6 +213,8 @@ export interface ModelCapabilities {
   streaming?: boolean;
   parallel_tool_calls?: boolean;
   thinking?: ThinkingCapability;
+  reasoning_efforts?: readonly string[] | null;
+  reasoning_effort_aliases?: Readonly<Record<string, string>> | null;
 }
 
 /** Provider-neutral model metadata, kept close to the Python/Rust fields. */
@@ -328,6 +332,7 @@ export interface ChatCompletionCreateParamsBase {
   prediction?: JsonValue;
   presence_penalty?: number | null;
   reasoning_effort?: string | null;
+  capability_policy?: CapabilityPolicy;
   thinking?: JsonObject | ThinkingPreference | null;
   seed?: number | null;
   service_tier?: string | null;
@@ -412,6 +417,7 @@ export function toChatCompletionCreateParams(
     tool_choice: request.tool_choice,
     extra_body: Object.keys(extraBody).length > 0 ? extraBody : undefined,
     signal: transport.signal,
+    capability_policy: transport.capability_policy,
     timeout_ms: transport.timeout_ms,
   };
 

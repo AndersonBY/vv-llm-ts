@@ -27,7 +27,7 @@ native `fetch` API and has no runtime dependencies.
 - Stable `VvLlmError` classification with status, request ID, retry hints, and
   `retry-after-ms` precedence matching the Python/Rust protocol fixture.
 - The default `ModelCatalog` is generated from the pinned
-  `vv-llm-contract` v1.1.0 catalog and exposes contract version, schema,
+  `vv-llm-contract` v1.2.0 catalog and exposes contract version, schema,
   fixture, catalog-revision, and artifact-hash metadata.
 
 ## Canonical request API
@@ -129,6 +129,33 @@ The methods are Promise based because Node's safe native HTTP API is
 asynchronous. “Synchronous completion” here means a non-streaming completion;
 the stream variant is an async iterator.
 
+## Reasoning effort
+
+Model `capabilities.reasoning_efforts` lists effective choices; omitted/null means
+unknown and `[]` means unsupported. Omitted request effort uses the server default.
+Set `new VvLlmClient({ capabilityPolicy: "strict" })` or per-request
+`capability_policy: "strict"` to validate before sending. The default is `"warn"`;
+`"passthrough"` skips model support checks. Conflicting controls always fail.
+
+Select a different model through the request `model` or an endpoint binding's
+`model_id`. A conflicting `extra_body.model` is rejected even with passthrough.
+
+Settings inherit effort metadata from the pinned catalog when local model metadata
+omits it, then apply the selected binding's partial `capabilities` overrides.
+An explicit `modelCatalog` retains its metadata; local capability fields and binding
+overrides still take precedence.
+Registry `model_capabilities` supplies per-model fallback metadata. Unsupported
+routes are skipped without downgrading effort. Gemini effort cannot be combined
+with native thinking level/budget controls. This runtime uses Chat Completions;
+settings factories reject `response_api: true` for chat.
+
+`reasoning_effort_aliases` maps documented compatibility inputs to effective choices.
+Aliases are accepted only when their target remains in `reasoning_efforts`; requests
+retain the original input. Both lists and alias maps on bindings replace inherited
+fields. DeepSeek exposes low/high/max, plus none for off, with minimal → low,
+medium/xhigh → high and ultra → max. Aliases are not extra selectable intensities.
+
+
 ## Settings
 
 ```ts
@@ -175,7 +202,7 @@ The language-neutral contract is maintained in the independent
 
 ## Contract consumption
 
-The checked-in `contract/v1.1.0/` tree is a byte-for-byte vendor snapshot of
+The checked-in `contract/v1.2.0/` tree is a byte-for-byte vendor snapshot of
 the canonical release: `consumer-lock.v1.json`, `manifest.json`,
 `checksums.sha256`, the catalog, the v2 OpenAI-compatible fixture, the
 independent retry fixture, and ten schemas.
@@ -215,6 +242,9 @@ for settings also set `VV_LLM_BACKEND` and `VV_LLM_MODEL`. The output only
 contains model name, content/reasoning/tool-call presence flags, and usage
 counts. API keys and prompts are never printed. Without
 `VV_LLM_RUN_LIVE_TESTS=1`, the command exits without making a request.
+
+Set `VV_LLM_REASONING_EFFORT=xhigh` when running `npm run live:test` to exercise
+strict validation and effort in both completion and streaming requests.
 
 ## Quality gates
 

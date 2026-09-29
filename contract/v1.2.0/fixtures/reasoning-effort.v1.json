@@ -1,0 +1,178 @@
+{
+  "schema_version": 1,
+  "capability_cases": [
+    {
+      "model": "unknown",
+      "reasoning_efforts": null,
+      "reasoning_effort": null,
+      "valid": true
+    },
+    {
+      "model": "unknown",
+      "reasoning_efforts": null,
+      "reasoning_effort": "high",
+      "valid": false
+    },
+    {
+      "model": "unsupported",
+      "reasoning_efforts": [],
+      "reasoning_effort": "none",
+      "valid": false
+    },
+    {
+      "model": "supported",
+      "reasoning_efforts": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "reasoning_effort": "high",
+      "valid": true
+    },
+    {
+      "model": "supported",
+      "reasoning_efforts": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "reasoning_effort": "xhigh",
+      "valid": false
+    },
+    {
+      "model": "no-none",
+      "reasoning_efforts": [
+        "minimal",
+        "low",
+        "high"
+      ],
+      "reasoning_effort": "none",
+      "valid": false
+    },
+    {
+      "model": "with-none",
+      "reasoning_efforts": [
+        "none",
+        "low",
+        "high"
+      ],
+      "reasoning_effort": "none",
+      "valid": true
+    },
+    {
+      "model": "provider-extension",
+      "reasoning_efforts": [
+        "ultra"
+      ],
+      "reasoning_effort": "ultra",
+      "valid": true
+    },
+    {
+      "model": "deepseek-alias-minimal",
+      "reasoning_efforts": [
+        "none",
+        "low",
+        "high",
+        "max"
+      ],
+      "reasoning_effort_aliases": {
+        "minimal": "low",
+        "medium": "high",
+        "xhigh": "high",
+        "ultra": "max"
+      },
+      "reasoning_effort": "minimal",
+      "valid": true
+    },
+    {
+      "model": "deepseek-alias-medium",
+      "reasoning_efforts": [
+        "none",
+        "low",
+        "high",
+        "max"
+      ],
+      "reasoning_effort_aliases": {
+        "minimal": "low",
+        "medium": "high",
+        "xhigh": "high",
+        "ultra": "max"
+      },
+      "reasoning_effort": "medium",
+      "valid": true
+    },
+    {
+      "model": "deepseek-alias-xhigh",
+      "reasoning_efforts": [
+        "none",
+        "low",
+        "high",
+        "max"
+      ],
+      "reasoning_effort_aliases": {
+        "minimal": "low",
+        "medium": "high",
+        "xhigh": "high",
+        "ultra": "max"
+      },
+      "reasoning_effort": "xhigh",
+      "valid": true
+    },
+    {
+      "model": "deepseek-alias-ultra",
+      "reasoning_efforts": [
+        "none",
+        "low",
+        "high",
+        "max"
+      ],
+      "reasoning_effort_aliases": {
+        "minimal": "low",
+        "medium": "high",
+        "xhigh": "high",
+        "ultra": "max"
+      },
+      "reasoning_effort": "ultra",
+      "valid": true
+    },
+    {
+      "model": "alias-target-overridden",
+      "reasoning_efforts": [
+        "low"
+      ],
+      "reasoning_effort_aliases": {
+        "xhigh": "high"
+      },
+      "reasoning_effort": "xhigh",
+      "valid": false
+    },
+    {
+      "model": "alias-unsupported",
+      "reasoning_efforts": [],
+      "reasoning_effort_aliases": {
+        "medium": "high"
+      },
+      "reasoning_effort": "medium",
+      "valid": false
+    },
+    {
+      "model": "alias-unknown",
+      "reasoning_efforts": null,
+      "reasoning_effort_aliases": {
+        "medium": "high"
+      },
+      "reasoning_effort": "medium",
+      "valid": false
+    },
+    {
+      "model": "gemini-3.1-pro-preview",
+      "reasoning_efforts": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "reasoning_effort": "minimal",
+      "valid": false
+    }
+  ]
+}

@@ -32,7 +32,8 @@
             "enabled": { "type": ["boolean", "null"] },
             "rpm": { "type": ["integer", "null"], "minimum": 0 },
             "tpm": { "type": ["integer", "null"], "minimum": 0 },
-            "concurrent_requests": { "type": ["integer", "null"], "minimum": 0 }
+            "concurrent_requests": { "type": ["integer", "null"], "minimum": 0 },
+            "capabilities": { "$ref": "#/$defs/Capabilities" }
           }
         }
       ]
@@ -55,6 +56,18 @@
         },
         "streaming": { "type": "boolean" },
         "parallel_tool_calls": { "type": "boolean" },
+        "reasoning_efforts": {
+          "type": ["array", "null"],
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1, "pattern": "\\S" },
+          "description": "Canonical selectable values in display order. Missing/null means unknown; [] means unsupported. none, when present, represents an explicit off request."
+        },
+        "reasoning_effort_aliases": {
+          "type": ["object", "null"],
+          "propertyNames": { "type": "string", "minLength": 1, "pattern": "\\S" },
+          "additionalProperties": { "type": "string", "minLength": 1, "pattern": "\\S" },
+          "description": "Accepted compatibility aliases mapped to canonical reasoning_efforts; aliases are not additional selectable levels."
+        },
         "thinking": { "type": "string", "enum": ["unknown", "unsupported", "configurable", "always_enabled"] }
       }
     },

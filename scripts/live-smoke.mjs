@@ -82,26 +82,30 @@ try {
   }
 
   const messages = [{ role: "user", content: prompt }];
-  const maxTokens = 64;
+  const reasoningEffort = process.env.VV_LLM_REASONING_EFFORT;
+  const maxTokens = reasoningEffort ? 256 : 64;
   const liveTimeoutMs = 60_000;
   const completion = await client.create({
     model,
     messages,
-    options: { max_tokens: maxTokens, stream: false },
+    options: { max_tokens: maxTokens, stream: false, reasoning_effort: reasoningEffort },
   }, {
     signal: AbortSignal.timeout(liveTimeoutMs),
+    capability_policy: reasoningEffort ? "strict" : undefined,
   });
   const stream = await client.create({
     model,
     messages,
-    options: { max_tokens: maxTokens, stream: true },
+    options: { max_tokens: maxTokens, stream: true, reasoning_effort: reasoningEffort },
   }, {
     signal: AbortSignal.timeout(liveTimeoutMs),
+    capability_policy: reasoningEffort ? "strict" : undefined,
   });
   const chunks = [];
   for await (const chunk of stream) chunks.push(chunk);
   console.log(JSON.stringify({
     model,
+    reasoning_effort: reasoningEffort,
     completion: completionFlags(completion),
     stream: streamFlags(chunks),
   }, null, 2));

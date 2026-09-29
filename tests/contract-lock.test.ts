@@ -23,7 +23,7 @@ test("contract check rejects a tampered consumer lock before JSON trust", () => 
 
     const lockPath = join(vendorTarget, "consumer-lock.v1.json");
     const original = readFileSync(lockPath, "utf8");
-    const tampered = original.replace('"catalog_revision": 4', '"catalog_revision": 1');
+    const tampered = JSON.stringify({ ...JSON.parse(original), catalog_revision: 1 });
     assert.notEqual(tampered, original);
     writeFileSync(lockPath, tampered, "utf8");
 
@@ -52,7 +52,7 @@ test("contract check rejects an extra unlocked artifact", () => {
     cpSync(scriptSource, scriptTarget);
     cpSync(vendorSource, vendorTarget, { recursive: true });
     cpSync(generatedSource, generatedTarget, { recursive: true });
-    writeFileSync(join(vendorTarget, "v1.1.0", "fixtures", "unlocked.json"), "{}", "utf8");
+    writeFileSync(join(vendorTarget, "v1.2.0", "fixtures", "unlocked.json"), "{}", "utf8");
 
     const result = spawnSync(process.execPath, [scriptTarget, "--check"], {
       cwd: tempRoot,
@@ -75,7 +75,7 @@ test("contract check is vendor-only by default and compares an explicit source",
     const vendorTarget = join(tempRoot, "contract");
     const generatedTarget = join(tempRoot, "src", "generated");
     const sourceTarget = join(tempRoot, "contract-source");
-    const releaseTarget = join(vendorTarget, "v1.1.0");
+    const releaseTarget = join(vendorTarget, "v1.2.0");
     mkdirSync(join(tempRoot, "scripts"), { recursive: true });
     mkdirSync(generatedTarget, { recursive: true });
     mkdirSync(sourceTarget, { recursive: true });

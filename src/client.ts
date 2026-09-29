@@ -1,3 +1,5 @@
+import { mergeProviderBody, mergeReasoningBody, resolveReasoningEffort, validateReasoningEffort } from "./reasoning.js";
+import type { CapabilityPolicy } from "./types.js";
 import { DEFAULT_MODEL_CATALOG, ModelCatalog } from "./catalog.js";
 import {
   type ChatCompletion,
@@ -42,6 +44,8 @@ export interface ClientOptions {
   fetch?: FetchLike;
   modelCatalog?: ModelCatalog;
   model_catalog?: ModelCatalog;
+  capabilityPolicy?: CapabilityPolicy;
+  capability_policy?: CapabilityPolicy;
 }
 
 export interface ChatCreateMethod {
@@ -111,6 +115,7 @@ export class VvLlmClient {
   private readonly defaultHeaders: Headers;
   private readonly timeoutMs: number;
   private readonly fetchImpl: FetchLike;
+  private readonly capabilityPolicy: CapabilityPolicy;
 
   public constructor(options: ClientOptions = {}) {
     const base = options.baseURL ?? options.base_url ?? DEFAULT_BASE_URL;
@@ -120,6 +125,7 @@ export class VvLlmClient {
     this.timeoutMs = options.timeoutMs ?? options.timeout_ms ?? DEFAULT_TIMEOUT_MS;
     this.fetchImpl = options.fetch ?? ((input, init) => fetch(input, init));
     this.modelCatalog = options.modelCatalog ?? options.model_catalog ?? DEFAULT_MODEL_CATALOG;
+    this.capabilityPolicy = options.capabilityPolicy ?? options.capability_policy ?? "warn";
 
     this.chat = {
       completions: {
@@ -194,6 +200,7 @@ export class VvLlmClient {
   ): Promise<ChatCompletion | AsyncIterable<ChatCompletionChunk>> {
     const stream = params.stream === true;
     const body = buildChatBody(params);
+    validateReasoningEffort(params.model, body.reasoning_effort, this.modelCatalog.capabilities(params.model), params.capability_policy ?? this.capabilityPolicy);
     const response = await this.send("/chat/completions", body, {
       headers: params.extra_headers,
       query: params.extra_query,
@@ -451,12 +458,12 @@ function buildChatBody(params: ChatCompletionCreateParams | ChatCompletionStream
     body.stream_options = { include_usage: true };
   }
 
-  const extraBody: Record<string, unknown> = {
-    ...(params.extra_body ?? {}),
-    ...(params.provider_options ?? {}),
-  };
+  const extraBody = mergeProviderBody(params.extra_body ?? {}, params.provider_options ?? {});
   const thinking = resolveThinking(params.thinking);
-  if (thinking !== undefined) extraBody.thinking = thinking;
+  if (thinking !== undefined) Object.assign(extraBody, mergeReasoningBody(extraBody, { thinking }));
+  const effort = resolveReasoningEffort(params.reasoning_effort, extraBody, params.model);
+  if (effort !== undefined) extraBody.reasoning_effort = effort;
+  else delete body.reasoning_effort;
   Object.assign(body, extraBody);
   return body;
 }

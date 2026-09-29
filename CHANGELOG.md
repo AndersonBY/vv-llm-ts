@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.2.0 - 2026-09-29
+
+- Adopt vv-llm-contract 1.2.0 and catalog revision 10 with per-model effort choices, compatibility aliases, and binding overrides.
+- Add configurable effort validation, capability-aware fallback, and preservation of caller-supplied model catalogs.
+- Preserve alias values on the wire, omit null top-level effort, and reject conflicting reasoning controls and model overrides.
+- Reject Responses endpoints in the Chat Completions settings factory.
+
+### Compatibility
+
+Validation defaults to warn; strict is opt-in. Conflicting controls are rejected even with passthrough. Applications that relied on extra-body overrides of model or reasoning parameters must send one consistent value. This release is distributed as a GitHub Release tarball by the repository workflow.
+
 ## 0.1.4 - 2026-09-10
 
 - Add `deepseek-v4.1-flash` and `deepseek-flash` with image input, tool calling, structured output, and configurable thinking from catalog revision 4.

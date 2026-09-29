@@ -27,17 +27,132 @@ import {
   VvLlmError,
 } from "../src/index.js";
 import { readContractFixture } from "./contract-fixtures.js";
+import { validateReasoningEffort } from "../src/reasoning.js";
+
+test("shared reasoning-effort cases distinguish defaults, unknown and unsupported", () => {
+  const fixture = readContractFixture<{ capability_cases: Array<{ model: string; reasoning_efforts: string[] | null; reasoning_effort_aliases?: Record<string, string>; reasoning_effort: string | null; valid: boolean }> }>("fixtures/reasoning-effort.v1.json");
+  for (const item of fixture.capability_cases) {
+    const run = () => validateReasoningEffort(item.model, item.reasoning_effort, { reasoning_efforts: item.reasoning_efforts, reasoning_effort_aliases: item.reasoning_effort_aliases }, "strict");
+    if (item.valid) assert.doesNotThrow(run);
+    else assert.throws(run, /reasoning_effort/);
+    validateReasoningEffort(item.model, item.reasoning_effort, { reasoning_efforts: item.reasoning_efforts }, "passthrough");
+  }
+});
+
+test("all TypeScript chat entries validate the request model and preserve explicit none", async () => {
+  const bodies: Record<string, unknown>[] = [];
+  const catalog = new ModelCatalog([
+    { id: "first", capabilities: { reasoning_efforts: ["low"] } },
+    { id: "second", capabilities: { reasoning_efforts: ["none", "high"] } },
+  ]);
+  const client = new VvLlmClient({ modelCatalog: catalog, capabilityPolicy: "strict", fetch: async (_input, init) => {
+    bodies.push(JSON.parse(String(init?.body)) as Record<string, unknown>);
+    return new Response(JSON.stringify({ choices: [] }), { headers: { "content-type": "application/json" } });
+  } });
+  await client.create({ model: "second", messages: [], options: { reasoning_effort: "none" } });
+  await client.chat.completions.create({ model: "first", messages: [] });
+  assert.equal(bodies[0]?.reasoning_effort, "none");
+  assert.equal(Object.hasOwn(bodies[1] ?? {}, "reasoning_effort"), false);
+  await assert.rejects(client.createChatRequest({ model: "first", messages: [], options: { reasoning_effort: "high" } }), /Supported values: low/);
+  await assert.rejects(client.streamChatCompletion({ model: "first", messages: [], reasoning_effort: "high" }), /reasoning_effort/);
+  await assert.rejects(client.completeChat({ model: "unknown", messages: [], reasoning_effort: "high" }), /support is unknown/);
+  await client.completeChat({ model: "unknown", messages: [], reasoning_effort: "ultra", capability_policy: "passthrough" });
+  assert.equal(bodies[2]?.reasoning_effort, "ultra");
+  assert.equal(bodies.length, 3);
+});
+
+test("reasoning conflicts fail before sending, including provider options and zero budgets", async () => {
+  const client = new VvLlmClient({ fetch: async () => { assert.fail("must not send"); } });
+  for (const extra_body of [
+    { reasoning_effort: "low" },
+    { google: { thinking_config: { thinking_budget: 0 } } },
+    { extra_body: { google: { thinking_config: { thinking_level: "low" } } } },
+  ] as JsonObject[]) {
+    await assert.rejects(client.completeChat({ model: "model", messages: [], reasoning_effort: "high", extra_body }), /[Cc]onflict/);
+  }
+  await assert.rejects(client.completeChat({ model: "model", messages: [], reasoning_effort: "high", provider_options: { reasoning_effort: "low" } }), /[Cc]onflict/);
+});
+
+test("settings apply binding capability overrides without changing model defaults", async () => {
+  const fixture = readContractFixture<{ settings: Settings }>("fixtures/settings-resolution.v1.json");
+  const resolved = resolveSettingsModel(fixture.settings, "chat", "deepseek", "chat-alias");
+  assert.deepEqual(resolved.model.capabilities?.reasoning_efforts, ["low", "high"]);
+  assert.deepEqual(resolved.model.capabilities?.reasoning_effort_aliases, { ultra: "low" });
+  validateReasoningEffort(resolved.model_id, "ultra", resolved.model.capabilities, "strict");
+  assert.throws(() => validateReasoningEffort(resolved.model_id, "max", resolved.model.capabilities, "strict"), /reasoning_effort/);
+  assert.deepEqual(fixture.settings.backends?.deepseek?.models?.["chat-alias"]?.capabilities?.reasoning_efforts, ["low", "medium", "high"]);
+  const { client } = createChatClientFromSettings(fixture.settings, { backend: "deepseek", model: "chat-alias", capabilityPolicy: "strict", fetch: async () => { assert.fail("must not send"); } });
+  await assert.rejects(client.completeChat({ model: resolved.model_id, messages: [], reasoning_effort: "medium" }), /Supported values: low, high/);
+});
+
+test("settings inherit catalog efforts and preserve alias inputs without local capability copies", async () => {
+  const bodies: Array<Record<string, unknown>> = [];
+  const settings: Settings = {
+    endpoints: [{ id: "test", api_base: "https://example.invalid", api_key: "test-key" }],
+    backends: { deepseek: { models: { "deepseek-flash": { id: "deepseek-flash", endpoints: ["test"] } } } },
+  };
+  const { client, resolved } = createChatClientFromSettings(settings, { backend: "deepseek", model: "deepseek-flash", fetch: async (_url, init) => {
+    bodies.push(JSON.parse(String(init?.body)) as Record<string, unknown>);
+    return new Response(JSON.stringify({ choices: [] }), { headers: { "content-type": "application/json" } });
+  } });
+  assert.deepEqual(resolved.model.capabilities?.reasoning_efforts, ["none", "low", "high", "max"]);
+  await client.create({ model: resolved.model_id, messages: [], options: { reasoning_effort: "xhigh" } }, { capability_policy: "strict" });
+  assert.equal(bodies[0]?.reasoning_effort, "xhigh");
+  settings.backends!.deepseek!.models!["deepseek-flash"]!.endpoints = [{ endpoint_id: "test", capabilities: { reasoning_efforts: [], reasoning_effort_aliases: {} } }];
+  const overridden = resolveSettingsModel(settings, "chat", "deepseek", "deepseek-flash");
+  assert.throws(() => validateReasoningEffort(overridden.model_id, "xhigh", overridden.model.capabilities, "strict"), /reasoning_effort/);
+});
+
+test("ZhiPuAI catalog distinguishes ordinary API efforts, aliases and thinking", async () => {
+  const bodies: Array<Record<string, unknown>> = [];
+  const client = new VvLlmClient({ capabilityPolicy: "strict", fetch: async (_url, init) => {
+    bodies.push(JSON.parse(String(init?.body)) as Record<string, unknown>);
+    return new Response(JSON.stringify({ choices: [] }), { headers: { "content-type": "application/json" } });
+  } });
+  for (const model of ["glm-5.2", "glm-5.3", "glm-5.3-flash"]) {
+    const capabilities = client.getModelConfig(model)?.capabilities;
+    const aliases = model === "glm-5.2" ? { minimal: "none", low: "high", medium: "high", xhigh: "max" } : {};
+    assert.deepEqual(capabilities?.reasoning_efforts, model === "glm-5.2" ? ["none", "high", "max"] : ["low", "high", "max"]);
+    assert.deepEqual(capabilities?.reasoning_effort_aliases ?? {}, aliases);
+    assert.equal(capabilities?.thinking, model === "glm-5.2" ? "configurable" : "always_enabled");
+    const settings: Settings = {
+      endpoints: [{ id: "test", api_base: "https://example.invalid", api_key: "test-key" }],
+      backends: { zhipuai: { models: { [model]: { id: model, endpoints: ["test"] } } } },
+    };
+    const resolved = resolveSettingsModel(settings, "chat", "zhipuai", model);
+    assert.equal(resolved.model.capabilities?.thinking, capabilities?.thinking);
+    assert.deepEqual(resolved.model.capabilities?.reasoning_efforts, capabilities?.reasoning_efforts);
+    assert.deepEqual(resolved.model.capabilities?.reasoning_effort_aliases, capabilities?.reasoning_effort_aliases);
+    settings.backends!.zhipuai!.models![model]!.capabilities = { thinking: "unknown" };
+    assert.equal(resolveSettingsModel(settings, "chat", "zhipuai", model).model.capabilities?.thinking, "unknown");
+    settings.backends!.zhipuai!.models![model]!.endpoints = [{ endpoint_id: "test", capabilities: { thinking: "always_enabled" } }];
+    assert.equal(resolveSettingsModel(settings, "chat", "zhipuai", model).model.capabilities?.thinking, "always_enabled");
+    await client.completeChat({ model, messages: [], thinking: { mode: "enabled" } });
+    assert.equal(Object.hasOwn(bodies.at(-1) ?? {}, "reasoning_effort"), false);
+    for (const effort of [...capabilities!.reasoning_efforts!, ...Object.keys(aliases)]) {
+      await client.completeChat({ model, messages: [], reasoning_effort: effort, thinking: { mode: "enabled" } });
+      assert.equal(bodies.at(-1)?.reasoning_effort, effort);
+      assert.deepEqual(bodies.at(-1)?.thinking, { type: "enabled" });
+    }
+    for (const effort of model === "glm-5.2" ? ["ultra"] : ["none", "minimal", "medium", "xhigh", "ultra"]) {
+      await assert.rejects(client.completeChat({ model, messages: [], reasoning_effort: effort }), /reasoning_effort/);
+    }
+  }
+});
 
 test("default client consumes the pinned contract catalog and metadata", () => {
   const client = new VvLlmClient({ fetch: jsonFetch({}) });
   const vision = client.getModelConfig("deepseek-v4-flash-vision-exp");
   for (const id of ["deepseek-v4.1-flash", "deepseek-flash"]) {
-    assert.deepEqual(client.getModelConfig(id), { ...vision, id });
+    const expected = { ...vision, id, capabilities: { ...vision?.capabilities } };
+    expected.capabilities.reasoning_efforts = ["none", "low", "high", "max"];
+    expected.capabilities.reasoning_effort_aliases = { minimal: "low", medium: "high", xhigh: "high", ultra: "max" };
+    assert.deepEqual(client.getModelConfig(id), expected);
   }
   const glmFlash = client.getModelConfig("glm-5.3-flash");
-  assert.equal(CONTRACT_VERSION, "1.1.0");
-  assert.equal(CONTRACT_CATALOG_REVISION, 4);
-  assert.equal(CONTRACT_CONSUMER_LOCK_SHA256, "6302abb901f91d05db75f4970e7102d426217d003d772f4364c4126f2e350fa9");
+  assert.equal(CONTRACT_VERSION, "1.2.0");
+  assert.equal(CONTRACT_CATALOG_REVISION, 10);
+  assert.equal(CONTRACT_CONSUMER_LOCK_SHA256, "f6a1c18c71555686abf3797e132c4f53cfc0c08ddd60c6ce4e7e89d30544793a");
   assert.equal(client.modelCatalog, DEFAULT_MODEL_CATALOG);
   assert.equal(vision?.max_image_dimension, 8192);
   assert.equal(vision?.capabilities?.thinking, "configurable");
@@ -50,7 +165,7 @@ test("default client consumes the pinned contract catalog and metadata", () => {
     tools: true,
     structured_output: "json_schema",
     input_modalities: ["text", "image", "video"],
-    thinking: "always_enabled",
+    thinking: "always_enabled", reasoning_efforts: ["low", "high", "max"],
   });
 });
 
@@ -544,4 +659,34 @@ test("timeout and caller AbortSignal are distinguishable", async () => {
 
   const nativeTimeoutRequest = callerTimeoutClient.completeChat({ model: "m", messages: [], signal: AbortSignal.timeout(10) });
   await assert.rejects(nativeTimeoutRequest, (error: unknown) => error instanceof VvLlmError && error.kind === "timeout");
+});
+
+
+test("settings preserve an explicit catalog and binding overrides", async () => {
+  const catalog = new ModelCatalog([{ id: "custom", context_length: 1234, capabilities: { tools: true, reasoning_efforts: ["high"] } }]);
+  const settings: Settings = { endpoints: [{ id: "test", api_base: "https://example.invalid", api_key: "test-key" }], backends: { openai: { models: { custom: { id: "custom", endpoints: ["test"] } } } } };
+  const first = createChatClientFromSettings(settings, { backend: "openai", model: "custom", modelCatalog: catalog, fetch: jsonFetch({ choices: [] }) });
+  assert.deepEqual(first.client.getModelConfig("custom")?.capabilities?.reasoning_efforts, ["high"]);
+  assert.equal(first.client.getModelConfig("custom")?.context_length, 1234);
+  assert.equal(first.client.getModelConfig("custom")?.capabilities?.tools, true);
+  await first.client.completeChat({ model: "custom", messages: [], reasoning_effort: "high", capability_policy: "strict" });
+  settings.backends!.openai!.models!.custom!.endpoints = [{ endpoint_id: "test", capabilities: { reasoning_efforts: ["low"] } }];
+  const overridden = createChatClientFromSettings(settings, { backend: "openai", model: "custom", modelCatalog: catalog, fetch: jsonFetch({ choices: [] }) });
+  await assert.rejects(overridden.client.completeChat({ model: "custom", messages: [], reasoning_effort: "high", capability_policy: "strict" }), /reasoning_effort/);
+  assert.deepEqual(catalog.get("custom")?.capabilities?.reasoning_efforts, ["high"]);
+});
+
+test("extra fields cannot change the validated model and null effort stays omitted", async () => {
+  const bodies: Record<string, unknown>[] = [];
+  const client = new VvLlmClient({ fetch: async (_url, init) => {
+    bodies.push(JSON.parse(String(init?.body)) as Record<string, unknown>);
+    return new Response(JSON.stringify({ choices: [] }), { headers: { "content-type": "application/json" } });
+  } });
+  for (const field of ["extra_body", "provider_options"] as const) {
+    await assert.rejects(client.completeChat({ model: "gpt-5", messages: [], [field]: { model: "other" }, capability_policy: "passthrough" }), /model/);
+  }
+  assert.equal(bodies.length, 0);
+  await client.completeChat({ model: "gpt-5", messages: [], reasoning_effort: null });
+  assert.equal(Object.hasOwn(bodies[0]!, "reasoning_effort"), false);
+  await assert.rejects(client.completeChat({ model: "gpt-5", messages: [], extra_body: { reasoning_effort: null } }), /non-empty string/);
 });

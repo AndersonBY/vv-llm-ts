@@ -1,18 +1,18 @@
 {
   "format": "vv-llm-contract-manifest.v1",
-  "contract_version": "1.1.0",
+  "contract_version": "1.2.0",
   "schema_version": 2,
   "fixture_version": 2,
-  "catalog_revision": 4,
+  "catalog_revision": 10,
   "checksums": "checksums.sha256",
   "contract": {
     "name": "vv-llm-contract",
-    "version": "1.1.0"
+    "version": "1.2.0"
   },
   "revisions": {
     "schema": "v2",
     "fixture": "v2",
-    "catalog": "v4"
+    "catalog": "v10"
   },
   "provenance": {
     "openai_compatible_fixture": {
@@ -21,7 +21,7 @@
     },
     "default_chat_catalog": {
       "source": "vv-llm-contract/catalog/default-chat-catalog.json",
-      "sha256": "ac289887048c1db19e9bfa7d0d5621062eb02b77afb763b65487927520ba8fd9"
+      "sha256": "17a02d89902d3347c1cec088d97997cdc878c7352fa07d17d7c0d3268f022460"
     }
   },
   "artifacts": {
@@ -40,7 +40,8 @@
     "fixtures": [
       "fixtures/openai-compatible.v2.json",
       "fixtures/retry-after.v1.json",
-      "fixtures/settings-resolution.v1.json"
+      "fixtures/settings-resolution.v1.json",
+      "fixtures/reasoning-effort.v1.json"
     ],
     "catalog": [
       "catalog/default-chat-catalog.json"

@@ -4,28 +4,29 @@
  */
 import type { ModelConfig } from "../types.js";
 
-export const CONTRACT_VERSION = "1.1.0" as const;
+export const CONTRACT_VERSION = "1.2.0" as const;
 export const CONTRACT_SCHEMA_VERSION = 2 as const;
 export const CONTRACT_FIXTURE_VERSION = 2 as const;
-export const CONTRACT_CATALOG_REVISION = 4 as const;
-export const CONTRACT_CONSUMER_LOCK_SHA256 = "6302abb901f91d05db75f4970e7102d426217d003d772f4364c4126f2e350fa9" as const;
-export const CONTRACT_MANIFEST_SHA256 = "9205418bba7c5f7b45a8cd179a6ff1fbd5e6b32908b1c2f4494a6b7356780672" as const;
-export const CONTRACT_CHECKSUMS_SHA256 = "7ae22c2e17b6cf7b842f59392b8659b9d45ff74d4da0d055ce009c1cb2c8a4a9" as const;
+export const CONTRACT_CATALOG_REVISION = 10 as const;
+export const CONTRACT_CONSUMER_LOCK_SHA256 = "f6a1c18c71555686abf3797e132c4f53cfc0c08ddd60c6ce4e7e89d30544793a" as const;
+export const CONTRACT_MANIFEST_SHA256 = "6509ce60c9638ab8c0a5147459344dbce5cae76c0ea95db6324a8dca2180e8cc" as const;
+export const CONTRACT_CHECKSUMS_SHA256 = "59b5e7abe92711af785ea39f03cd80a142358ddc3a8ec9c44b444542ed4975bf" as const;
 export const CONTRACT_ARTIFACTS = {
-  "catalog/default-chat-catalog.json": "ac289887048c1db19e9bfa7d0d5621062eb02b77afb763b65487927520ba8fd9",
+  "catalog/default-chat-catalog.json": "17a02d89902d3347c1cec088d97997cdc878c7352fa07d17d7c0d3268f022460",
   "fixtures/openai-compatible.v2.json": "7696b0c53b8d64ef1d5a483bfe12c2c8a4a372a18258244c862b7b52ad9ede99",
+  "fixtures/reasoning-effort.v1.json": "943d77546491f68132ab7f4e777b65bdd1cd8dea34804347da379faa5b6e4228",
   "fixtures/retry-after.v1.json": "7920cc8935ca6b8b94bfc723e1df74ef65a36aa147768ca53a9102152dbf6013",
-  "fixtures/settings-resolution.v1.json": "dedd56cd1d44a8a1767557d855dfa7f3bf652ae98ca114c2b607b3a83349e642",
+  "fixtures/settings-resolution.v1.json": "616ecffa4b2e9b9d01bae633ecc3787894493ace437c706465815bf34ec16d2c",
   "schemas/chat-request.v1.schema.json": "74e7b9e66152596fc90f5913f21329c7888ab8f5e2a36f9a957cb99f780be348",
   "schemas/chat-response.v1.schema.json": "23153b94fd48f97ea20cc8eb1aefa5726a150fea0c08a95487f6a86ea7f517ee",
   "schemas/chat-stream-delta.v1.schema.json": "7f565e6ba625b74e29aec7ff6268aebadcce03e390f27845eb6225a9257c3d3e",
   "schemas/embedding.v1.schema.json": "562ed61955536f6255f5da7565fa4f1f54a6c014218da28f39e468a9ef656a53",
   "schemas/error-details.v1.schema.json": "6a3d91f4e86bf08d2faa943897c4f276991227b1eb3c242e0134751a662c70ca",
-  "schemas/model-catalog.v1.schema.json": "b2f63142cb3334f2ae80fdfdbde1e34e7261f521475b7e8666d45d5783963fd3",
+  "schemas/model-catalog.v1.schema.json": "ce834a2826919c4f1c43ad22d42cbe8f865503be0e0d38d373b11ebce40b65d9",
   "schemas/openai-compatible-fixture.v2.schema.json": "73f08143d6bc3606ee0eb488b7244b738570af99f393a64073ee9f6f42406e83",
   "schemas/rerank.v1.schema.json": "5dc9b51b0b0b6221532092fce4a2701b33f0ee255badadb714f86ad0027f09e6",
   "schemas/retry-after.v1.schema.json": "5cb52b988cada4585fb3c37c640ca607025a0ce53879e6796f106a146fa264ae",
-  "schemas/settings.v2.schema.json": "78891b2385eafc4f63fa1e5a27a259bf8c11686de5e29179bef8252d5ab0f648"
+  "schemas/settings.v2.schema.json": "e7beb6b8814c38334e30ab21b690f028c7f1084e153d7e264186ecdb6adbbd80"
 } as const;
 export const CONTRACT_DEFAULT_MODELS = {
   "moonshot": "kimi-k2.6",
@@ -105,7 +106,10 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "context_length": 256000,
     "function_call_available": true,
     "response_format_available": true,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "reasoning_efforts": []
+    }
   },
   {
     "backend": "moonshot",
@@ -113,7 +117,10 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "context_length": 256000,
     "function_call_available": true,
     "response_format_available": true,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "reasoning_efforts": []
+    }
   },
   {
     "backend": "moonshot",
@@ -122,7 +129,14 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 1048576,
     "function_call_available": true,
     "response_format_available": true,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "reasoning_efforts": [
+        "low",
+        "high",
+        "max"
+      ]
+    }
   },
   {
     "backend": "deepseek",
@@ -191,7 +205,19 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "capabilities": {
       "tools": true,
       "structured_output": "json_schema",
-      "thinking": "configurable"
+      "thinking": "configurable",
+      "reasoning_efforts": [
+        "none",
+        "low",
+        "high",
+        "max"
+      ],
+      "reasoning_effort_aliases": {
+        "minimal": "low",
+        "medium": "high",
+        "xhigh": "high",
+        "ultra": "max"
+      }
     }
   },
   {
@@ -210,7 +236,19 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
         "text",
         "image"
       ],
-      "thinking": "configurable"
+      "thinking": "configurable",
+      "reasoning_efforts": [
+        "none",
+        "low",
+        "high",
+        "max"
+      ],
+      "reasoning_effort_aliases": {
+        "minimal": "low",
+        "medium": "high",
+        "xhigh": "high",
+        "ultra": "max"
+      }
     }
   },
   {
@@ -229,7 +267,19 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
         "text",
         "image"
       ],
-      "thinking": "configurable"
+      "thinking": "configurable",
+      "reasoning_efforts": [
+        "none",
+        "low",
+        "high",
+        "max"
+      ],
+      "reasoning_effort_aliases": {
+        "minimal": "low",
+        "medium": "high",
+        "xhigh": "high",
+        "ultra": "max"
+      }
     }
   },
   {
@@ -829,7 +879,18 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
         "video"
       ],
       "parallel_tool_calls": true,
-      "thinking": "configurable"
+      "thinking": "configurable",
+      "reasoning_efforts": [
+        "none",
+        "low",
+        "medium",
+        "xhigh"
+      ],
+      "reasoning_effort_aliases": {
+        "minimal": "low",
+        "high": "xhigh",
+        "max": "xhigh"
+      }
     }
   },
   {
@@ -848,7 +909,18 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
         "image",
         "video"
       ],
-      "thinking": "configurable"
+      "thinking": "configurable",
+      "reasoning_efforts": [
+        "none",
+        "low",
+        "medium",
+        "xhigh"
+      ],
+      "reasoning_effort_aliases": {
+        "minimal": "low",
+        "high": "xhigh",
+        "max": "xhigh"
+      }
     }
   },
   {
@@ -876,7 +948,10 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "function_call_available": true,
     "response_format_available": true,
     "max_output_tokens": 96000,
-    "native_multimodal": false
+    "native_multimodal": false,
+    "capabilities": {
+      "reasoning_efforts": []
+    }
   },
   {
     "backend": "zhipuai",
@@ -885,7 +960,10 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "function_call_available": true,
     "response_format_available": true,
     "max_output_tokens": 96000,
-    "native_multimodal": false
+    "native_multimodal": false,
+    "capabilities": {
+      "reasoning_efforts": []
+    }
   },
   {
     "backend": "zhipuai",
@@ -894,7 +972,10 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "function_call_available": true,
     "response_format_available": true,
     "max_output_tokens": 96000,
-    "native_multimodal": false
+    "native_multimodal": false,
+    "capabilities": {
+      "reasoning_efforts": []
+    }
   },
   {
     "backend": "zhipuai",
@@ -903,7 +984,10 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "function_call_available": true,
     "response_format_available": true,
     "max_output_tokens": 96000,
-    "native_multimodal": false
+    "native_multimodal": false,
+    "capabilities": {
+      "reasoning_efforts": []
+    }
   },
   {
     "backend": "zhipuai",
@@ -912,7 +996,10 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "function_call_available": true,
     "response_format_available": true,
     "max_output_tokens": 96000,
-    "native_multimodal": false
+    "native_multimodal": false,
+    "capabilities": {
+      "reasoning_efforts": []
+    }
   },
   {
     "backend": "zhipuai",
@@ -921,7 +1008,10 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "function_call_available": true,
     "response_format_available": true,
     "max_output_tokens": 16384,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "reasoning_efforts": []
+    }
   },
   {
     "backend": "zhipuai",
@@ -930,7 +1020,10 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "function_call_available": true,
     "response_format_available": true,
     "max_output_tokens": 128000,
-    "native_multimodal": false
+    "native_multimodal": false,
+    "capabilities": {
+      "reasoning_efforts": []
+    }
   },
   {
     "backend": "zhipuai",
@@ -939,7 +1032,10 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "function_call_available": true,
     "response_format_available": true,
     "max_output_tokens": 32000,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "reasoning_efforts": []
+    }
   },
   {
     "backend": "zhipuai",
@@ -948,7 +1044,10 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "function_call_available": true,
     "response_format_available": true,
     "max_output_tokens": 32000,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "reasoning_efforts": []
+    }
   },
   {
     "backend": "zhipuai",
@@ -957,7 +1056,10 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "function_call_available": true,
     "response_format_available": true,
     "max_output_tokens": 128000,
-    "native_multimodal": false
+    "native_multimodal": false,
+    "capabilities": {
+      "reasoning_efforts": []
+    }
   },
   {
     "backend": "zhipuai",
@@ -966,7 +1068,10 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "function_call_available": true,
     "response_format_available": true,
     "max_output_tokens": 128000,
-    "native_multimodal": false
+    "native_multimodal": false,
+    "capabilities": {
+      "reasoning_efforts": []
+    }
   },
   {
     "backend": "zhipuai",
@@ -975,7 +1080,10 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "function_call_available": true,
     "response_format_available": true,
     "max_output_tokens": 128000,
-    "native_multimodal": false
+    "native_multimodal": false,
+    "capabilities": {
+      "reasoning_efforts": []
+    }
   },
   {
     "backend": "zhipuai",
@@ -984,7 +1092,10 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "function_call_available": true,
     "response_format_available": true,
     "max_output_tokens": 128000,
-    "native_multimodal": false
+    "native_multimodal": false,
+    "capabilities": {
+      "reasoning_efforts": []
+    }
   },
   {
     "backend": "zhipuai",
@@ -993,7 +1104,10 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "function_call_available": true,
     "response_format_available": true,
     "max_output_tokens": 128000,
-    "native_multimodal": false
+    "native_multimodal": false,
+    "capabilities": {
+      "reasoning_efforts": []
+    }
   },
   {
     "backend": "zhipuai",
@@ -1002,7 +1116,10 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "function_call_available": true,
     "response_format_available": true,
     "max_output_tokens": 128000,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "reasoning_efforts": []
+    }
   },
   {
     "backend": "zhipuai",
@@ -1011,7 +1128,10 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "function_call_available": true,
     "response_format_available": true,
     "max_output_tokens": 128000,
-    "native_multimodal": false
+    "native_multimodal": false,
+    "capabilities": {
+      "reasoning_efforts": []
+    }
   },
   {
     "backend": "zhipuai",
@@ -1020,7 +1140,21 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "function_call_available": true,
     "response_format_available": true,
     "max_output_tokens": 128000,
-    "native_multimodal": false
+    "native_multimodal": false,
+    "capabilities": {
+      "thinking": "configurable",
+      "reasoning_efforts": [
+        "none",
+        "high",
+        "max"
+      ],
+      "reasoning_effort_aliases": {
+        "minimal": "none",
+        "low": "high",
+        "medium": "high",
+        "xhigh": "max"
+      }
+    }
   },
   {
     "backend": "zhipuai",
@@ -1033,7 +1167,12 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "capabilities": {
       "tools": true,
       "structured_output": "json_schema",
-      "thinking": "always_enabled"
+      "thinking": "always_enabled",
+      "reasoning_efforts": [
+        "low",
+        "high",
+        "max"
+      ]
     }
   },
   {
@@ -1052,7 +1191,12 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
         "image",
         "video"
       ],
-      "thinking": "always_enabled"
+      "thinking": "always_enabled",
+      "reasoning_efforts": [
+        "low",
+        "high",
+        "max"
+      ]
     }
   },
   {
@@ -1101,7 +1245,13 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "context_length": 30000,
     "function_call_available": true,
     "response_format_available": true,
-    "native_multimodal": false
+    "native_multimodal": false,
+    "capabilities": {
+      "reasoning_efforts": [
+        "none",
+        "high"
+      ]
+    }
   },
   {
     "backend": "mistral",
@@ -1180,7 +1330,10 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 65536,
     "function_call_available": false,
     "response_format_available": false,
-    "native_multimodal": false
+    "native_multimodal": false,
+    "capabilities": {
+      "reasoning_efforts": []
+    }
   },
   {
     "backend": "openai",
@@ -1198,7 +1351,14 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 100000,
     "function_call_available": true,
     "response_format_available": true,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "reasoning_efforts": [
+        "low",
+        "medium",
+        "high"
+      ]
+    }
   },
   {
     "backend": "openai",
@@ -1207,7 +1367,14 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 100000,
     "function_call_available": true,
     "response_format_available": true,
-    "native_multimodal": false
+    "native_multimodal": false,
+    "capabilities": {
+      "reasoning_efforts": [
+        "low",
+        "medium",
+        "high"
+      ]
+    }
   },
   {
     "backend": "openai",
@@ -1216,7 +1383,14 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 100000,
     "function_call_available": true,
     "response_format_available": true,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "reasoning_efforts": [
+        "low",
+        "medium",
+        "high"
+      ]
+    }
   },
   {
     "backend": "openai",
@@ -1252,7 +1426,21 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 128000,
     "function_call_available": true,
     "response_format_available": true,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "tools": true,
+      "structured_output": "json_schema",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "reasoning_efforts": [
+        "minimal",
+        "low",
+        "medium",
+        "high"
+      ]
+    }
   },
   {
     "backend": "openai",
@@ -1261,7 +1449,15 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 128000,
     "function_call_available": true,
     "response_format_available": true,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "reasoning_efforts": [
+        "minimal",
+        "low",
+        "medium",
+        "high"
+      ]
+    }
   },
   {
     "backend": "openai",
@@ -1270,7 +1466,15 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 128000,
     "function_call_available": true,
     "response_format_available": true,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "reasoning_efforts": [
+        "minimal",
+        "low",
+        "medium",
+        "high"
+      ]
+    }
   },
   {
     "backend": "openai",
@@ -1297,7 +1501,12 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 272000,
     "function_call_available": true,
     "response_format_available": true,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "reasoning_efforts": [
+        "high"
+      ]
+    }
   },
   {
     "backend": "openai",
@@ -1306,7 +1515,21 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 128000,
     "function_call_available": true,
     "response_format_available": true,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "tools": true,
+      "structured_output": "json_schema",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "reasoning_efforts": [
+        "none",
+        "low",
+        "medium",
+        "high"
+      ]
+    }
   },
   {
     "backend": "openai",
@@ -1351,7 +1574,22 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 128000,
     "function_call_available": true,
     "response_format_available": true,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "tools": true,
+      "structured_output": "json_schema",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "reasoning_efforts": [
+        "none",
+        "low",
+        "medium",
+        "high",
+        "xhigh"
+      ]
+    }
   },
   {
     "backend": "openai",
@@ -1369,7 +1607,15 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 128000,
     "function_call_available": true,
     "response_format_available": true,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "reasoning_efforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh"
+      ]
+    }
   },
   {
     "backend": "openai",
@@ -1378,7 +1624,22 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 128000,
     "function_call_available": true,
     "response_format_available": true,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "tools": true,
+      "structured_output": "json_schema",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "reasoning_efforts": [
+        "none",
+        "low",
+        "medium",
+        "high",
+        "xhigh"
+      ]
+    }
   },
   {
     "backend": "openai",
@@ -1387,7 +1648,14 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 128000,
     "function_call_available": true,
     "response_format_available": true,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "reasoning_efforts": [
+        "medium",
+        "high",
+        "xhigh"
+      ]
+    }
   },
   {
     "backend": "openai",
@@ -1396,7 +1664,22 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 128000,
     "function_call_available": true,
     "response_format_available": true,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "tools": true,
+      "structured_output": "json_schema",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "reasoning_efforts": [
+        "none",
+        "low",
+        "medium",
+        "high",
+        "xhigh"
+      ]
+    }
   },
   {
     "backend": "openai",
@@ -1405,7 +1688,17 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 128000,
     "function_call_available": true,
     "response_format_available": true,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "reasoning_efforts": [
+        "none",
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ]
+    }
   },
   {
     "backend": "openai",
@@ -1414,7 +1707,17 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 128000,
     "function_call_available": true,
     "response_format_available": true,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "reasoning_efforts": [
+        "none",
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ]
+    }
   },
   {
     "backend": "openai",
@@ -1423,7 +1726,17 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 128000,
     "function_call_available": true,
     "response_format_available": true,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "reasoning_efforts": [
+        "none",
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ]
+    }
   },
   {
     "backend": "openai",
@@ -1432,7 +1745,22 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 128000,
     "function_call_available": true,
     "response_format_available": true,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "tools": true,
+      "structured_output": "json_schema",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "reasoning_efforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ]
+    }
   },
   {
     "backend": "anthropic",
@@ -1441,7 +1769,10 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 8192,
     "function_call_available": true,
     "response_format_available": false,
-    "native_multimodal": false
+    "native_multimodal": false,
+    "capabilities": {
+      "reasoning_efforts": []
+    }
   },
   {
     "backend": "anthropic",
@@ -1450,7 +1781,10 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 8192,
     "function_call_available": true,
     "response_format_available": false,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "reasoning_efforts": []
+    }
   },
   {
     "backend": "anthropic",
@@ -1459,7 +1793,10 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 8192,
     "function_call_available": true,
     "response_format_available": false,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "reasoning_efforts": []
+    }
   },
   {
     "backend": "anthropic",
@@ -1468,7 +1805,10 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 64000,
     "function_call_available": true,
     "response_format_available": false,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "reasoning_efforts": []
+    }
   },
   {
     "backend": "anthropic",
@@ -1477,7 +1817,10 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 64000,
     "function_call_available": true,
     "response_format_available": false,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "reasoning_efforts": []
+    }
   },
   {
     "backend": "anthropic",
@@ -1486,7 +1829,10 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 32000,
     "function_call_available": true,
     "response_format_available": false,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "reasoning_efforts": []
+    }
   },
   {
     "backend": "anthropic",
@@ -1495,7 +1841,10 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 32000,
     "function_call_available": true,
     "response_format_available": false,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "reasoning_efforts": []
+    }
   },
   {
     "backend": "anthropic",
@@ -1504,7 +1853,10 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 64000,
     "function_call_available": true,
     "response_format_available": false,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "reasoning_efforts": []
+    }
   },
   {
     "backend": "anthropic",
@@ -1513,7 +1865,10 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 64000,
     "function_call_available": true,
     "response_format_available": false,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "reasoning_efforts": []
+    }
   },
   {
     "backend": "anthropic",
@@ -1522,7 +1877,15 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 128000,
     "function_call_available": true,
     "response_format_available": false,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "reasoning_efforts": [
+        "low",
+        "medium",
+        "high",
+        "max"
+      ]
+    }
   },
   {
     "backend": "anthropic",
@@ -1531,7 +1894,14 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 64000,
     "function_call_available": true,
     "response_format_available": false,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "reasoning_efforts": [
+        "low",
+        "medium",
+        "high"
+      ]
+    }
   },
   {
     "backend": "anthropic",
@@ -1540,7 +1910,16 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 128000,
     "function_call_available": true,
     "response_format_available": false,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "reasoning_efforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ]
+    }
   },
   {
     "backend": "anthropic",
@@ -1549,7 +1928,16 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 128000,
     "function_call_available": true,
     "response_format_available": false,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "reasoning_efforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ]
+    }
   },
   {
     "backend": "anthropic",
@@ -1558,7 +1946,16 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 128000,
     "function_call_available": true,
     "response_format_available": false,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "reasoning_efforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ]
+    }
   },
   {
     "backend": "anthropic",
@@ -1567,7 +1964,16 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 128000,
     "function_call_available": true,
     "response_format_available": false,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "reasoning_efforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ]
+    }
   },
   {
     "backend": "anthropic",
@@ -1576,7 +1982,16 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 128000,
     "function_call_available": true,
     "response_format_available": false,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "reasoning_efforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ]
+    }
   },
   {
     "backend": "minimax",
@@ -1585,7 +2000,10 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 10240,
     "function_call_available": true,
     "response_format_available": true,
-    "native_multimodal": false
+    "native_multimodal": false,
+    "capabilities": {
+      "reasoning_efforts": []
+    }
   },
   {
     "backend": "minimax",
@@ -1603,7 +2021,10 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 10240,
     "function_call_available": true,
     "response_format_available": true,
-    "native_multimodal": false
+    "native_multimodal": false,
+    "capabilities": {
+      "reasoning_efforts": []
+    }
   },
   {
     "backend": "minimax",
@@ -1612,7 +2033,10 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 10240,
     "function_call_available": true,
     "response_format_available": true,
-    "native_multimodal": false
+    "native_multimodal": false,
+    "capabilities": {
+      "reasoning_efforts": []
+    }
   },
   {
     "backend": "minimax",
@@ -1621,7 +2045,10 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 10240,
     "function_call_available": true,
     "response_format_available": true,
-    "native_multimodal": false
+    "native_multimodal": false,
+    "capabilities": {
+      "reasoning_efforts": []
+    }
   },
   {
     "backend": "minimax",
@@ -1630,7 +2057,10 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 10240,
     "function_call_available": true,
     "response_format_available": true,
-    "native_multimodal": false
+    "native_multimodal": false,
+    "capabilities": {
+      "reasoning_efforts": []
+    }
   },
   {
     "backend": "minimax",
@@ -1639,7 +2069,10 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 10240,
     "function_call_available": true,
     "response_format_available": true,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "reasoning_efforts": []
+    }
   },
   {
     "backend": "minimax",
@@ -1648,7 +2081,10 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 10240,
     "function_call_available": true,
     "response_format_available": true,
-    "native_multimodal": false
+    "native_multimodal": false,
+    "capabilities": {
+      "reasoning_efforts": []
+    }
   },
   {
     "backend": "gemini",
@@ -1657,7 +2093,23 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 65536,
     "function_call_available": true,
     "response_format_available": true,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "tools": true,
+      "structured_output": "json_schema",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "reasoning_efforts": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "reasoning_effort_aliases": {
+        "minimal": "low"
+      }
+    }
   },
   {
     "backend": "gemini",
@@ -1666,7 +2118,24 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 65536,
     "function_call_available": true,
     "response_format_available": true,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "tools": true,
+      "structured_output": "json_schema",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "reasoning_efforts": [
+        "none",
+        "low",
+        "medium",
+        "high"
+      ],
+      "reasoning_effort_aliases": {
+        "minimal": "low"
+      }
+    }
   },
   {
     "backend": "gemini",
@@ -1675,7 +2144,24 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 65536,
     "function_call_available": true,
     "response_format_available": true,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "tools": true,
+      "structured_output": "json_schema",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "reasoning_efforts": [
+        "none",
+        "low",
+        "medium",
+        "high"
+      ],
+      "reasoning_effort_aliases": {
+        "minimal": "low"
+      }
+    }
   },
   {
     "backend": "gemini",
@@ -1720,7 +2206,21 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 65536,
     "function_call_available": true,
     "response_format_available": true,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "tools": true,
+      "structured_output": "json_schema",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "reasoning_efforts": [
+        "minimal",
+        "low",
+        "medium",
+        "high"
+      ]
+    }
   },
   {
     "backend": "gemini",
@@ -1729,7 +2229,20 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 65536,
     "function_call_available": true,
     "response_format_available": true,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "tools": true,
+      "structured_output": "json_schema",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "reasoning_efforts": [
+        "low",
+        "medium",
+        "high"
+      ]
+    }
   },
   {
     "backend": "gemini",
@@ -1747,7 +2260,21 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "max_output_tokens": 65536,
     "function_call_available": true,
     "response_format_available": true,
-    "native_multimodal": true
+    "native_multimodal": true,
+    "capabilities": {
+      "tools": true,
+      "structured_output": "json_schema",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "reasoning_efforts": [
+        "minimal",
+        "low",
+        "medium",
+        "high"
+      ]
+    }
   },
   {
     "backend": "gemini",
@@ -1964,7 +2491,13 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
         "text",
         "image"
       ],
-      "thinking": "configurable"
+      "thinking": "configurable",
+      "reasoning_efforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh"
+      ]
     }
   },
   {

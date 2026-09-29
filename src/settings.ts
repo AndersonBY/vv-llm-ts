@@ -1,5 +1,5 @@
-import { ModelCatalog, type ModelConfig } from "./catalog.js";
-import type { JsonObject } from "./types.js";
+import { DEFAULT_MODEL_CATALOG, DEFAULT_MODEL_CONFIGS, ModelCatalog, type ModelConfig } from "./catalog.js";
+import type { JsonObject, ModelCapabilities } from "./types.js";
 import { VvLlmError } from "./errors.js";
 import { type ClientOptions, VvLlmClient } from "./client.js";
 
@@ -31,6 +31,7 @@ export interface EndpointConfig {
 }
 
 export interface EndpointBinding {
+  capabilities?: ModelCapabilities;
   endpoint_id: string;
   model_id?: string;
   priority?: number;
@@ -116,6 +117,7 @@ export function resolveSettingsModel(
   kind: SettingsKind,
   backend: string,
   modelId: string,
+  modelCatalog?: ModelCatalog,
 ): ResolvedModelConfig {
   validateSettings(settings);
   const backendMap = getBackendMap(settings, kind);
@@ -135,6 +137,9 @@ export function resolveSettingsModel(
     });
   }
 
+  const catalogModel = modelCatalog?.get(modelId) ?? modelCatalog?.get(entry.id);
+  const defaults = kind === "chat" && modelCatalog === undefined ? DEFAULT_MODEL_CONFIGS.find((model) => model.backend === backend && (model.id === modelId || model.id === entry.id))?.capabilities : undefined;
+  const reasoningDefaults = defaults ? { thinking: defaults.thinking, reasoning_efforts: defaults.reasoning_efforts, reasoning_effort_aliases: defaults.reasoning_effort_aliases } : {};
   const configuredBindings = entry.endpoints ?? [];
   const fallbackBindings = configuredBindings.length > 0
     ? configuredBindings
@@ -165,10 +170,11 @@ export function resolveSettingsModel(
       code: "ENDPOINT_NOT_FOUND",
     });
   }
+  const model = { ...catalogModel, ...entry, capabilities: { ...reasoningDefaults, ...catalogModel?.capabilities, ...entry.capabilities, ...binding.capabilities } };
   return {
     kind,
     backend,
-    model: { ...entry },
+    model: { ...model, capabilities: new ModelCatalog([model]).capabilities(model.id) },
     model_id: binding.model_id ?? entry.id,
     endpoint: { ...endpoint, headers: endpoint.headers ? { ...endpoint.headers } : undefined },
     binding,
@@ -201,7 +207,13 @@ function createClientFromSettings(
   kind: SettingsKind,
   options: SettingsFactoryOptions,
 ): SettingsClientResult {
-  const resolved = resolveSettingsModel(settings, kind, options.backend, options.model);
+  const resolved = resolveSettingsModel(settings, kind, options.backend, options.model, options.modelCatalog ?? options.model_catalog);
+  if (kind === "chat" && resolved.endpoint.response_api) {
+    throw new VvLlmError("Responses endpoints are not supported by the TypeScript OpenAI-compatible client", { kind: "configuration" });
+  }
+  const catalog = new ModelCatalog((options.modelCatalog ?? options.model_catalog ?? DEFAULT_MODEL_CATALOG).list());
+  catalog.add({ ...resolved.model, id: resolved.model_id });
+  catalog.add({ ...resolved.model, id: options.model });
   const endpointHeaders = resolved.endpoint.headers ?? {};
   const clientHeaders = options.headers ? new Headers(options.headers) : new Headers();
   for (const [key, value] of Object.entries(endpointHeaders)) {
@@ -212,7 +224,7 @@ function createClientFromSettings(
     baseURL: options.baseURL ?? options.base_url ?? resolved.endpoint.api_base ?? undefined,
     apiKey: options.apiKey ?? options.api_key ?? resolved.endpoint.api_key,
     headers: clientHeaders,
-    modelCatalog: options.modelCatalog ?? options.model_catalog,
+    modelCatalog: catalog,
   };
   delete (clientOptions as Record<string, unknown>).backend;
   delete (clientOptions as Record<string, unknown>).model;

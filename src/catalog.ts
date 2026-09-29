@@ -53,6 +53,14 @@ export class ModelCatalog {
     if (!config.id.trim()) {
       throw new TypeError("ModelConfig.id must not be empty");
     }
+    const levels = config.capabilities?.reasoning_efforts;
+    if (levels != null && (!Array.isArray(levels) || levels.some((level) => typeof level !== "string" || !level.trim()) || new Set(levels).size !== levels.length)) {
+      throw new TypeError("reasoning_efforts must contain unique non-empty strings");
+    }
+    const aliases = config.capabilities?.reasoning_effort_aliases;
+    if (aliases != null && (typeof aliases !== "object" || Array.isArray(aliases) || Object.entries(aliases).some(([alias, target]) => !alias.trim() || typeof target !== "string" || !target.trim()))) {
+      throw new TypeError("reasoning_effort_aliases must map non-empty strings to non-empty strings");
+    }
     this.entries.set(config.id, { enabled: true, ...config });
     return this;
   }
@@ -78,9 +86,6 @@ export class ModelCatalog {
     if (!config) {
       return undefined;
     }
-    if (config.capabilities) {
-      return config.capabilities;
-    }
     const modalities: Modality[] = ["text"];
     if (config.native_multimodal) {
       modalities.push("image");
@@ -91,6 +96,7 @@ export class ModelCatalog {
       input_modalities: modalities,
       output_modalities: ["text"],
       streaming: true,
+      ...config.capabilities,
     };
   }
 }

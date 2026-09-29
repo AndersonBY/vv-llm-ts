@@ -55,6 +55,21 @@ const request: ChatCompletionCreateParams = {
   messages: [{ role: "user", content: "hello" }],
 };
 
+test("fallback checks each model of one provider without downgrading effort", async () => {
+  const scripted = new ScriptedChatClient([completion("ok")]);
+  const registry = new ProviderRegistry();
+  registry.register("provider", () => scripted, { capabilities: {}, model_capabilities: {
+    low: { reasoning_efforts: ["low"] },
+    high: { reasoning_efforts: ["high"] },
+  } });
+  const client = new FallbackChatClient(registry, [new FallbackRoute("provider", "low"), new FallbackRoute("provider", "high")]);
+  const result = await client.createWithMetadata({ ...request, reasoning_effort: "high" });
+  assert.equal(result.metadata.fallback_index, 1);
+  assert.equal(scripted.requests.length, 1);
+  assert.equal(scripted.requests[0]?.model, "high");
+  assert.equal(scripted.requests[0]?.reasoning_effort, "high");
+});
+
 test("RetryPolicy retries classified transient errors and honors Retry-After", async () => {
   let calls = 0;
   const delays: number[] = [];

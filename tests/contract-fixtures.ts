@@ -2,6 +2,6 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
 export function readContractFixture<T>(relativePath: string): T {
-  const path = fileURLToPath(new URL(relativePath, new URL("../../contract/v1.1.0/", import.meta.url)));
+  const path = fileURLToPath(new URL(relativePath, new URL("../../contract/v1.2.0/", import.meta.url)));
   return JSON.parse(readFileSync(path, "utf8")) as T;
 }

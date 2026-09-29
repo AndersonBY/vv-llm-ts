@@ -1,3 +1,4 @@
+import { mergeProviderBody, validateReasoningEffort, resolveReasoningEffort } from "./reasoning.js";
 import { ModelCatalog } from "./catalog.js";
 import {
   classifyError,
@@ -293,6 +294,7 @@ export class MiddlewareChatClient implements ChatClientLike {
 }
 
 export interface ProviderRegistration {
+  model_capabilities?: Readonly<Record<string, ModelCapabilities>>;
   name: string;
   factory: () => ChatClientLike;
   capabilities: ModelCapabilities;
@@ -304,10 +306,10 @@ export class ProviderRegistry {
   public register(
     name: string,
     factory: () => ChatClientLike,
-    options: { capabilities: ModelCapabilities; replace?: boolean },
+    options: { capabilities: ModelCapabilities; model_capabilities?: Readonly<Record<string, ModelCapabilities>>; replace?: boolean },
   ): this {
     if (this.providers.has(name) && !options.replace) throw new VvLlmError(`provider is already registered: ${name}`, { kind: "configuration", provider: name });
-    this.providers.set(name, { name, factory, capabilities: options.capabilities });
+    this.providers.set(name, { name, factory, capabilities: options.capabilities, model_capabilities: options.model_capabilities });
     return this;
   }
 
@@ -523,7 +525,13 @@ export class ScriptedChatClient implements ChatClientLike {
 }
 
 function capabilityErrorFor(registration: ProviderRegistration, request: ChatExecutionRequest): VvLlmError | undefined {
-  const capabilities = registration.capabilities;
+  const capabilities = registration.model_capabilities?.[request.model] ?? registration.capabilities;
+  try {
+    const effort = resolveReasoningEffort(request.reasoning_effort, mergeProviderBody(request.extra_body ?? {}, request.provider_options ?? {}), request.model);
+    validateReasoningEffort(request.model, effort, capabilities, "strict");
+  } catch (cause) {
+    return classifyError(cause, { provider: registration.name, model: request.model });
+  }
   const conflicts: string[] = [];
   if (request.tools && request.tools.length > 0 && capabilities.tools === false) conflicts.push("the model does not support tools");
   if (request.response_format !== undefined && capabilities.structured_output === "none") conflicts.push("the model does not support structured output");

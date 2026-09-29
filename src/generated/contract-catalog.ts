@@ -7,12 +7,12 @@ import type { ModelConfig } from "../types.js";
 export const CONTRACT_VERSION = "1.2.0" as const;
 export const CONTRACT_SCHEMA_VERSION = 2 as const;
 export const CONTRACT_FIXTURE_VERSION = 2 as const;
-export const CONTRACT_CATALOG_REVISION = 10 as const;
-export const CONTRACT_CONSUMER_LOCK_SHA256 = "f6a1c18c71555686abf3797e132c4f53cfc0c08ddd60c6ce4e7e89d30544793a" as const;
-export const CONTRACT_MANIFEST_SHA256 = "6509ce60c9638ab8c0a5147459344dbce5cae76c0ea95db6324a8dca2180e8cc" as const;
-export const CONTRACT_CHECKSUMS_SHA256 = "59b5e7abe92711af785ea39f03cd80a142358ddc3a8ec9c44b444542ed4975bf" as const;
+export const CONTRACT_CATALOG_REVISION = 13 as const;
+export const CONTRACT_CONSUMER_LOCK_SHA256 = "3bbb215efebc8d9b50e3c4fd4646239fc08d1cc2a33bb8aa872cb886c67d90c6" as const;
+export const CONTRACT_MANIFEST_SHA256 = "6935ae977a81a70238314998554090c3809ee05858f22e063900a057dc6a675b" as const;
+export const CONTRACT_CHECKSUMS_SHA256 = "e7917a690a4641785bd47eb277447ba19628028bb5fbe8a3509918d312da0c10" as const;
 export const CONTRACT_ARTIFACTS = {
-  "catalog/default-chat-catalog.json": "17a02d89902d3347c1cec088d97997cdc878c7352fa07d17d7c0d3268f022460",
+  "catalog/default-chat-catalog.json": "539adb5d122fa078ae1ba350bbca8bda4ccf25b58ba3a8ffe87d903e747e75b8",
   "fixtures/openai-compatible.v2.json": "7696b0c53b8d64ef1d5a483bfe12c2c8a4a372a18258244c862b7b52ad9ede99",
   "fixtures/reasoning-effort.v1.json": "943d77546491f68132ab7f4e777b65bdd1cd8dea34804347da379faa5b6e4228",
   "fixtures/retry-after.v1.json": "7920cc8935ca6b8b94bfc723e1df74ef65a36aa147768ca53a9102152dbf6013",
@@ -1763,6 +1763,56 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     }
   },
   {
+    "backend": "openai",
+    "id": "gpt-6-sol",
+    "context_length": 1050000,
+    "max_output_tokens": 128000,
+    "function_call_available": true,
+    "response_format_available": true,
+    "native_multimodal": true,
+    "capabilities": {
+      "tools": true,
+      "structured_output": "json_schema",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "reasoning_efforts": [
+        "none",
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ]
+    }
+  },
+  {
+    "backend": "openai",
+    "id": "gpt-6-luna",
+    "context_length": 1050000,
+    "max_output_tokens": 128000,
+    "function_call_available": true,
+    "response_format_available": true,
+    "native_multimodal": true,
+    "capabilities": {
+      "tools": true,
+      "structured_output": "json_schema",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "reasoning_efforts": [
+        "none",
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ]
+    }
+  },
+  {
     "backend": "anthropic",
     "id": "claude-3-5-haiku-20241022",
     "context_length": 200000,
@@ -1978,6 +2028,42 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
   {
     "backend": "anthropic",
     "id": "claude-opus-5",
+    "context_length": 1000000,
+    "max_output_tokens": 128000,
+    "function_call_available": true,
+    "response_format_available": false,
+    "native_multimodal": true,
+    "capabilities": {
+      "reasoning_efforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ]
+    }
+  },
+  {
+    "backend": "anthropic",
+    "id": "claude-opus-5-5",
+    "context_length": 1000000,
+    "max_output_tokens": 128000,
+    "function_call_available": true,
+    "response_format_available": false,
+    "native_multimodal": true,
+    "capabilities": {
+      "reasoning_efforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ]
+    }
+  },
+  {
+    "backend": "anthropic",
+    "id": "claude-sonnet-5-5",
     "context_length": 1000000,
     "max_output_tokens": 128000,
     "function_call_available": true,
@@ -2288,6 +2374,26 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
   {
     "backend": "gemini",
     "id": "gemini-3.7-flash",
+    "context_length": 1048576,
+    "max_output_tokens": 65536,
+    "function_call_available": true,
+    "response_format_available": true,
+    "native_multimodal": true,
+    "capabilities": {
+      "tools": true,
+      "structured_output": "json_schema",
+      "input_modalities": [
+        "text",
+        "image",
+        "video",
+        "audio"
+      ],
+      "thinking": "configurable"
+    }
+  },
+  {
+    "backend": "gemini",
+    "id": "gemini-3.8-flash",
     "context_length": 1048576,
     "max_output_tokens": 65536,
     "function_call_available": true,

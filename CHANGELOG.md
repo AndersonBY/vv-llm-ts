@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1 - 2026-09-29
+
+- Adopt catalog revision 13 with Claude Opus 5.5, Claude Sonnet 5.5, Gemini 3.8 Flash, GPT-6 Sol, and GPT-6 Luna.
+
 ## 0.2.0 - 2026-09-29
 
 - Adopt vv-llm-contract 1.2.0 and catalog revision 10 with per-model effort choices, compatibility aliases, and binding overrides.

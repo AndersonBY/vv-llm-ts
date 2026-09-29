@@ -1614,6 +1614,54 @@
               "max"
             ]
           }
+        },
+        "gpt-6-sol": {
+          "id": "gpt-6-sol",
+          "context_length": 1050000,
+          "max_output_tokens": 128000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true,
+          "capabilities": {
+            "tools": true,
+            "structured_output": "json_schema",
+            "input_modalities": [
+              "text",
+              "image"
+            ],
+            "reasoning_efforts": [
+              "none",
+              "low",
+              "medium",
+              "high",
+              "xhigh",
+              "max"
+            ]
+          }
+        },
+        "gpt-6-luna": {
+          "id": "gpt-6-luna",
+          "context_length": 1050000,
+          "max_output_tokens": 128000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true,
+          "capabilities": {
+            "tools": true,
+            "structured_output": "json_schema",
+            "input_modalities": [
+              "text",
+              "image"
+            ],
+            "reasoning_efforts": [
+              "none",
+              "low",
+              "medium",
+              "high",
+              "xhigh",
+              "max"
+            ]
+          }
         }
       }
     },
@@ -1819,6 +1867,40 @@
         },
         "claude-opus-5": {
           "id": "claude-opus-5",
+          "context_length": 1000000,
+          "max_output_tokens": 128000,
+          "function_call_available": true,
+          "response_format_available": false,
+          "native_multimodal": true,
+          "capabilities": {
+            "reasoning_efforts": [
+              "low",
+              "medium",
+              "high",
+              "xhigh",
+              "max"
+            ]
+          }
+        },
+        "claude-opus-5-5": {
+          "id": "claude-opus-5-5",
+          "context_length": 1000000,
+          "max_output_tokens": 128000,
+          "function_call_available": true,
+          "response_format_available": false,
+          "native_multimodal": true,
+          "capabilities": {
+            "reasoning_efforts": [
+              "low",
+              "medium",
+              "high",
+              "xhigh",
+              "max"
+            ]
+          }
+        },
+        "claude-sonnet-5-5": {
+          "id": "claude-sonnet-5-5",
           "context_length": 1000000,
           "max_output_tokens": 128000,
           "function_call_available": true,
@@ -2116,6 +2198,25 @@
         },
         "gemini-3.7-flash": {
           "id": "gemini-3.7-flash",
+          "context_length": 1048576,
+          "max_output_tokens": 65536,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true,
+          "capabilities": {
+            "tools": true,
+            "structured_output": "json_schema",
+            "input_modalities": [
+              "text",
+              "image",
+              "video",
+              "audio"
+            ],
+            "thinking": "configurable"
+          }
+        },
+        "gemini-3.8-flash": {
+          "id": "gemini-3.8-flash",
           "context_length": 1048576,
           "max_output_tokens": 65536,
           "function_call_available": true,

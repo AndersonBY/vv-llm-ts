@@ -151,8 +151,8 @@ test("default client consumes the pinned contract catalog and metadata", () => {
   }
   const glmFlash = client.getModelConfig("glm-5.3-flash");
   assert.equal(CONTRACT_VERSION, "1.2.0");
-  assert.equal(CONTRACT_CATALOG_REVISION, 10);
-  assert.equal(CONTRACT_CONSUMER_LOCK_SHA256, "f6a1c18c71555686abf3797e132c4f53cfc0c08ddd60c6ce4e7e89d30544793a");
+  assert.equal(CONTRACT_CATALOG_REVISION, 13);
+  assert.equal(CONTRACT_CONSUMER_LOCK_SHA256, "3bbb215efebc8d9b50e3c4fd4646239fc08d1cc2a33bb8aa872cb886c67d90c6");
   assert.equal(client.modelCatalog, DEFAULT_MODEL_CATALOG);
   assert.equal(vision?.max_image_dimension, 8192);
   assert.equal(vision?.capabilities?.thinking, "configurable");

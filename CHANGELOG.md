@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.3 - 2026-10-03
+
+- Adopt contract 1.2.1, catalog revision 16 with the single public ID `qwen3.8-flash-next`;
+  DashScope uses endpoint `model_id` to select `qwen3.8-flash`.
+
 ## 0.2.2 - 2026-09-30
 
 - Adopt catalog revision 14 with OpenAI `gpt-6.1-sol`.

@@ -52,7 +52,7 @@ test("contract check rejects an extra unlocked artifact", () => {
     cpSync(scriptSource, scriptTarget);
     cpSync(vendorSource, vendorTarget, { recursive: true });
     cpSync(generatedSource, generatedTarget, { recursive: true });
-    writeFileSync(join(vendorTarget, "v1.2.0", "fixtures", "unlocked.json"), "{}", "utf8");
+    writeFileSync(join(vendorTarget, "v1.2.1", "fixtures", "unlocked.json"), "{}", "utf8");
 
     const result = spawnSync(process.execPath, [scriptTarget, "--check"], {
       cwd: tempRoot,
@@ -75,7 +75,7 @@ test("contract check is vendor-only by default and compares an explicit source",
     const vendorTarget = join(tempRoot, "contract");
     const generatedTarget = join(tempRoot, "src", "generated");
     const sourceTarget = join(tempRoot, "contract-source");
-    const releaseTarget = join(vendorTarget, "v1.2.0");
+    const releaseTarget = join(vendorTarget, "v1.2.1");
     mkdirSync(join(tempRoot, "scripts"), { recursive: true });
     mkdirSync(generatedTarget, { recursive: true });
     mkdirSync(sourceTarget, { recursive: true });

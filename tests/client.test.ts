@@ -150,9 +150,9 @@ test("default client consumes the pinned contract catalog and metadata", () => {
     assert.deepEqual(client.getModelConfig(id), expected);
   }
   const glmFlash = client.getModelConfig("glm-5.3-flash");
-  assert.equal(CONTRACT_VERSION, "1.2.0");
-  assert.equal(CONTRACT_CATALOG_REVISION, 14);
-  assert.equal(CONTRACT_CONSUMER_LOCK_SHA256, "9c5fc789639fa012be081523a3581e9ac1e1c6e357d51c84962a8cf7723c7b1e");
+  assert.equal(CONTRACT_VERSION, "1.2.1");
+  assert.equal(CONTRACT_CATALOG_REVISION, 16);
+  assert.equal(CONTRACT_CONSUMER_LOCK_SHA256, "3a5a73c8e7e1a64a6d47d80326dbab3bf7d9c2f2fcb3af81c8309a83aa9d3950");
   assert.equal(client.modelCatalog, DEFAULT_MODEL_CATALOG);
   assert.equal(vision?.max_image_dimension, 8192);
   assert.equal(vision?.capabilities?.thinking, "configurable");
@@ -167,6 +167,37 @@ test("default client consumes the pinned contract catalog and metadata", () => {
     input_modalities: ["text", "image", "video"],
     thinking: "always_enabled", reasoning_efforts: ["low", "high", "max"],
   });
+  const flashNext = client.getModelConfig("qwen3.8-flash-next");
+  assert.equal(flashNext?.id, "qwen3.8-flash-next");
+  assert.equal(client.getModelConfig("qwen3.8-flash"), undefined);
+  assert.equal(flashNext?.context_length, 262_144);
+  assert.equal(flashNext?.max_output_tokens, undefined);
+  assert.equal(flashNext?.response_format_available, undefined);
+  assert.equal(flashNext?.capabilities?.tools, true);
+  assert.equal(flashNext?.capabilities?.thinking, "configurable");
+  assert.deepEqual(flashNext?.capabilities?.input_modalities, ["text", "image", "video"]);
+  assert.deepEqual(flashNext?.capabilities?.reasoning_efforts, ["low", "medium", "xhigh"]);
+});
+
+test("Qwen Flash-Next keeps its public ID while using the DashScope wire alias", async () => {
+  const settings: Settings = {
+    endpoints: [{ id: "dashscope-test", api_base: "https://example.invalid/v1", api_key: "test-key" }],
+    backends: { qwen: { models: { "qwen3.8-flash-next": {
+      id: "qwen3.8-flash-next",
+      endpoints: [{ endpoint_id: "dashscope-test", model_id: "qwen3.8-flash" }],
+    } } } },
+  };
+  const { client, resolved } = createChatClientFromSettings(settings, {
+    backend: "qwen", model: "qwen3.8-flash-next",
+    fetch: async (_url, init) => {
+      const body = JSON.parse(String(init?.body)) as Record<string, unknown>;
+      assert.equal(body.model, "qwen3.8-flash");
+      return new Response(JSON.stringify({ choices: [] }), { headers: { "content-type": "application/json" } });
+    },
+  });
+  assert.equal(resolved.model.id, "qwen3.8-flash-next");
+  assert.equal(resolved.model_id, "qwen3.8-flash");
+  await client.completeChat({ model: resolved.model_id, messages: [], reasoning_effort: "low" });
 });
 
 function jsonFetch(value: unknown, status = 200, responseHeaders?: HeadersInit): FetchLike {

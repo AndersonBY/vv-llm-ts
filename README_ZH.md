@@ -69,7 +69,7 @@ settings 在本地未声明档位时继承固定目录的推理能力，再应�
 ## Contract 与模型目录
 
 canonical language-neutral contract 位于独立的 `vv-llm-contract` 仓库。
-本仓库 vendor 了锁定的 `contract/v1.2.0/` artifact tree，
+本仓库 vendor 了锁定的 `contract/v1.2.1/` artifact tree，
 并生成 `src/generated/contract-catalog.ts`。默认 `ModelCatalog` 使用该目录，
 同时导出 contract version、revision 和 SHA-256 metadata。该 release 使用
 OpenAI fixture v2，并将 retry fixture/schema 独立锁定。

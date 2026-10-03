@@ -4,15 +4,15 @@
  */
 import type { ModelConfig } from "../types.js";
 
-export const CONTRACT_VERSION = "1.2.0" as const;
+export const CONTRACT_VERSION = "1.2.1" as const;
 export const CONTRACT_SCHEMA_VERSION = 2 as const;
 export const CONTRACT_FIXTURE_VERSION = 2 as const;
-export const CONTRACT_CATALOG_REVISION = 14 as const;
-export const CONTRACT_CONSUMER_LOCK_SHA256 = "9c5fc789639fa012be081523a3581e9ac1e1c6e357d51c84962a8cf7723c7b1e" as const;
-export const CONTRACT_MANIFEST_SHA256 = "d66a525a70cc566cf64142d91bb5bca1cb0d1214da53e3a2afea84d2183d6694" as const;
-export const CONTRACT_CHECKSUMS_SHA256 = "74a3d1f4623d13ae7fda4ce90a57b501db918eeaf224859b5e759cd626c48e04" as const;
+export const CONTRACT_CATALOG_REVISION = 16 as const;
+export const CONTRACT_CONSUMER_LOCK_SHA256 = "3a5a73c8e7e1a64a6d47d80326dbab3bf7d9c2f2fcb3af81c8309a83aa9d3950" as const;
+export const CONTRACT_MANIFEST_SHA256 = "0c9a5c381d57346bbd1ea665ffe105fa2c4111b8f0623cc0555ad70ac51de478" as const;
+export const CONTRACT_CHECKSUMS_SHA256 = "81d137d3a34b7f32f5cd72f1610f34c882c6e375d218e93a9dfc5e6e8e995e14" as const;
 export const CONTRACT_ARTIFACTS = {
-  "catalog/default-chat-catalog.json": "9836d181a75e15e3b63a38cc7d6017d709f513c7dd3c3ef207afbc57ed30d772",
+  "catalog/default-chat-catalog.json": "6e294779253a8b5a08559480aef9e809eeff608729dc21d731401e154f8dee12",
   "fixtures/openai-compatible.v2.json": "7696b0c53b8d64ef1d5a483bfe12c2c8a4a372a18258244c862b7b52ad9ede99",
   "fixtures/reasoning-effort.v1.json": "943d77546491f68132ab7f4e777b65bdd1cd8dea34804347da379faa5b6e4228",
   "fixtures/retry-after.v1.json": "7920cc8935ca6b8b94bfc723e1df74ef65a36aa147768ca53a9102152dbf6013",
@@ -861,6 +861,27 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "function_call_available": true,
     "response_format_available": true,
     "native_multimodal": false
+  },
+  {
+    "backend": "qwen",
+    "id": "qwen3.8-flash-next",
+    "context_length": 262144,
+    "function_call_available": true,
+    "native_multimodal": true,
+    "capabilities": {
+      "tools": true,
+      "input_modalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "thinking": "configurable",
+      "reasoning_efforts": [
+        "low",
+        "medium",
+        "xhigh"
+      ]
+    }
   },
   {
     "backend": "qwen",

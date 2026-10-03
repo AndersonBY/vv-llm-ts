@@ -765,6 +765,18 @@
           "response_format_available": true,
           "native_multimodal": false
         },
+        "qwen3.8-flash-next": {
+          "id": "qwen3.8-flash-next",
+          "context_length": 262144,
+          "function_call_available": true,
+          "native_multimodal": true,
+          "capabilities": {
+            "tools": true,
+            "input_modalities": ["text", "image", "video"],
+            "thinking": "configurable",
+            "reasoning_efforts": ["low", "medium", "xhigh"]
+          }
+        },
         "qwen3.8-max": {
           "id": "qwen3.8-max",
           "context_length": 1000000,

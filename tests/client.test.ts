@@ -150,9 +150,9 @@ test("default client consumes the pinned contract catalog and metadata", () => {
     assert.deepEqual(client.getModelConfig(id), expected);
   }
   const glmFlash = client.getModelConfig("glm-5.3-flash");
-  assert.equal(CONTRACT_VERSION, "1.2.1");
-  assert.equal(CONTRACT_CATALOG_REVISION, 16);
-  assert.equal(CONTRACT_CONSUMER_LOCK_SHA256, "3a5a73c8e7e1a64a6d47d80326dbab3bf7d9c2f2fcb3af81c8309a83aa9d3950");
+  assert.equal(CONTRACT_VERSION, "1.2.2");
+  assert.equal(CONTRACT_CATALOG_REVISION, 17);
+  assert.equal(CONTRACT_CONSUMER_LOCK_SHA256, "3c46ac48a35886c03e367e5bab06b31835f5475b72e83bcb7af8f2be4eccfde6");
   assert.equal(client.modelCatalog, DEFAULT_MODEL_CATALOG);
   assert.equal(vision?.max_image_dimension, 8192);
   assert.equal(vision?.capabilities?.thinking, "configurable");
@@ -720,4 +720,41 @@ test("extra fields cannot change the validated model and null effort stays omitt
   await client.completeChat({ model: "gpt-5", messages: [], reasoning_effort: null });
   assert.equal(Object.hasOwn(bodies[0]!, "reasoning_effort"), false);
   await assert.rejects(client.completeChat({ model: "gpt-5", messages: [], extra_body: { reasoning_effort: null } }), /non-empty string/);
+});
+
+
+test("Gemini wire requests omit deprecated parameters without mutating inputs", async () => {
+  for (const model of ["gemini-3.8-flash", "google/gemini-4-flash", "gemini-2.5-flash", "gpt-5.5"]) {
+    for (const stream of [false, true]) {
+      for (const nested of [false, true]) {
+        const modern = model.includes("gemini-3") || model.includes("gemini-4");
+        const google = { google: { thinking_config: { thinkingBudget: 1024, thinkingLevel: "high", include_thoughts: true } } };
+        const extra: JsonObject = { ...(nested ? { extra_body: google } : google), temperature: 0.4, top_p: 0.8, top_k: 20, topP: 0.8, topK: 20 };
+        const original = structuredClone(extra);
+        const client = new VvLlmClient({ fetch: async (_url, init) => {
+          const sent = JSON.parse(String(init?.body));
+          for (const key of ["temperature", "top_p", "top_k", "topP", "topK"]) assert.equal(Object.hasOwn(sent, key), !modern);
+          assert.deepEqual((nested ? sent.extra_body : sent).google.thinking_config,
+            modern ? { thinking_level: "high", include_thoughts: true } : google.google.thinking_config);
+          return stream ? new Response("data: [DONE]\n\n", { headers: { "content-type": "text/event-stream" } }) : new Response(JSON.stringify({ choices: [] }), { headers: { "content-type": "application/json" } });
+        } });
+        if (stream) {
+          for await (const _chunk of await client.streamChatCompletion({ model, messages: [], temperature: 0.3, top_p: 0.7, extra_body: extra })) { /* drain */ }
+        } else {
+          await client.completeChat({ model, messages: [], temperature: 0.3, top_p: 0.7, extra_body: extra });
+        }
+        assert.deepEqual(extra, original);
+      }
+    }
+  }
+});
+
+test("Gemini level conflicts and unsupported minimal fail before transport", async () => {
+  const client = new VvLlmClient({ capabilityPolicy: "strict", fetch: async () => { assert.fail("must not send"); } });
+  for (const model of ["gemini-3.7-flash", "gemini-3.8-flash"]) {
+    assert.deepEqual(client.getModelConfig(model)?.capabilities?.reasoning_efforts, ["low", "medium", "high"]);
+    await assert.rejects(client.completeChat({ model, messages: [], reasoning_effort: "minimal" }), /reasoning_effort/);
+  }
+  await assert.rejects(client.completeChat({ model: "gemini-3.8-flash", messages: [], extra_body: { google: { thinking_config: { thinking_level: "low", thinkingLevel: "high" } } } }), /Conflicting Gemini/);
+  await assert.rejects(client.completeChat({ model: "gemini-3.8-flash", messages: [], reasoning_effort: "high", extra_body: { google: { thinking_config: { thinkingLevel: "high" } } } }), /conflicts/);
 });

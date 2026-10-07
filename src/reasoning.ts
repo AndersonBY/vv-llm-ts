@@ -49,10 +49,28 @@ export function resolveReasoningEffort(effort: string | null | undefined, body: 
     for (const container of [body, body.extra_body]) {
       if (!isRecord(container) || !isRecord(container.google)) continue;
       const thinking = container.google.thinking_config;
-      if (isRecord(thinking) && (Object.hasOwn(thinking, "thinking_level") || Object.hasOwn(thinking, "thinking_budget"))) {
+      if (isRecord(thinking) && ["thinking_level", "thinking_budget", "thinkingLevel", "thinkingBudget"].some((key) => Object.hasOwn(thinking, key))) {
         throw new VvLlmError("reasoning_effort conflicts with Gemini thinking_level/thinking_budget", { kind: "configuration" });
       }
     }
   }
   return resolved;
+}
+
+export function normalizeGeminiBody(model: string, body: Record<string, unknown>): Record<string, unknown> {
+  const match = /^gemini-(\d+)(?:[.-]|$)/i.exec(model.split("/").at(-1) ?? "");
+  if (!match || Number(match[1]) < 3) return body;
+  const result = { ...body };
+  for (const key of ["temperature", "top_p", "top_k", "topP", "topK", "thinking_budget", "thinkingBudget"]) delete result[key];
+  if (Object.hasOwn(result, "thinkingLevel")) {
+    if (Object.hasOwn(result, "thinking_level") && result.thinking_level !== result.thinkingLevel) {
+      throw new VvLlmError("Conflicting Gemini thinking_level values", { kind: "configuration" });
+    }
+    result.thinking_level = result.thinkingLevel;
+    delete result.thinkingLevel;
+  }
+  for (const key of ["extra_body", "google", "thinking_config"]) {
+    if (isRecord(result[key])) result[key] = normalizeGeminiBody(model, result[key]);
+  }
+  return result;
 }

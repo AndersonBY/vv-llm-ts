@@ -772,9 +772,17 @@
           "native_multimodal": true,
           "capabilities": {
             "tools": true,
-            "input_modalities": ["text", "image", "video"],
+            "input_modalities": [
+              "text",
+              "image",
+              "video"
+            ],
             "thinking": "configurable",
-            "reasoning_efforts": ["low", "medium", "xhigh"]
+            "reasoning_efforts": [
+              "low",
+              "medium",
+              "xhigh"
+            ]
           }
         },
         "qwen3.8-max": {
@@ -2247,7 +2255,12 @@
               "video",
               "audio"
             ],
-            "thinking": "configurable"
+            "thinking": "configurable",
+            "reasoning_efforts": [
+              "low",
+              "medium",
+              "high"
+            ]
           }
         },
         "gemini-3.8-flash": {
@@ -2266,7 +2279,12 @@
               "video",
               "audio"
             ],
-            "thinking": "configurable"
+            "thinking": "configurable",
+            "reasoning_efforts": [
+              "low",
+              "medium",
+              "high"
+            ]
           }
         }
       }

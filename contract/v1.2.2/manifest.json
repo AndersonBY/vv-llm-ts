@@ -1,18 +1,18 @@
 {
   "format": "vv-llm-contract-manifest.v1",
-  "contract_version": "1.2.1",
+  "contract_version": "1.2.2",
   "schema_version": 2,
   "fixture_version": 2,
-  "catalog_revision": 16,
+  "catalog_revision": 17,
   "checksums": "checksums.sha256",
   "contract": {
     "name": "vv-llm-contract",
-    "version": "1.2.1"
+    "version": "1.2.2"
   },
   "revisions": {
     "schema": "v2",
     "fixture": "v2",
-    "catalog": "v16"
+    "catalog": "v17"
   },
   "provenance": {
     "openai_compatible_fixture": {
@@ -21,7 +21,7 @@
     },
     "default_chat_catalog": {
       "source": "vv-llm-contract/catalog/default-chat-catalog.json",
-      "sha256": "6e294779253a8b5a08559480aef9e809eeff608729dc21d731401e154f8dee12"
+      "sha256": "3546456510bd754c120cb41f9f447345a19cff684cf5e0b38122d5b279bcc2bb"
     }
   },
   "artifacts": {

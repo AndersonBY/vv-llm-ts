@@ -4,15 +4,15 @@
  */
 import type { ModelConfig } from "../types.js";
 
-export const CONTRACT_VERSION = "1.2.1" as const;
+export const CONTRACT_VERSION = "1.2.2" as const;
 export const CONTRACT_SCHEMA_VERSION = 2 as const;
 export const CONTRACT_FIXTURE_VERSION = 2 as const;
-export const CONTRACT_CATALOG_REVISION = 16 as const;
-export const CONTRACT_CONSUMER_LOCK_SHA256 = "3a5a73c8e7e1a64a6d47d80326dbab3bf7d9c2f2fcb3af81c8309a83aa9d3950" as const;
-export const CONTRACT_MANIFEST_SHA256 = "0c9a5c381d57346bbd1ea665ffe105fa2c4111b8f0623cc0555ad70ac51de478" as const;
-export const CONTRACT_CHECKSUMS_SHA256 = "81d137d3a34b7f32f5cd72f1610f34c882c6e375d218e93a9dfc5e6e8e995e14" as const;
+export const CONTRACT_CATALOG_REVISION = 17 as const;
+export const CONTRACT_CONSUMER_LOCK_SHA256 = "3c46ac48a35886c03e367e5bab06b31835f5475b72e83bcb7af8f2be4eccfde6" as const;
+export const CONTRACT_MANIFEST_SHA256 = "dd845f4ef0b1fe88d8878b742e67467e8b422af9c15437d4d9d3fad7d7c59ed1" as const;
+export const CONTRACT_CHECKSUMS_SHA256 = "572d8e88148359e5202d2d0cbe7f4110ff86abc13317407a8c1da46696967118" as const;
 export const CONTRACT_ARTIFACTS = {
-  "catalog/default-chat-catalog.json": "6e294779253a8b5a08559480aef9e809eeff608729dc21d731401e154f8dee12",
+  "catalog/default-chat-catalog.json": "3546456510bd754c120cb41f9f447345a19cff684cf5e0b38122d5b279bcc2bb",
   "fixtures/openai-compatible.v2.json": "7696b0c53b8d64ef1d5a483bfe12c2c8a4a372a18258244c862b7b52ad9ede99",
   "fixtures/reasoning-effort.v1.json": "943d77546491f68132ab7f4e777b65bdd1cd8dea34804347da379faa5b6e4228",
   "fixtures/retry-after.v1.json": "7920cc8935ca6b8b94bfc723e1df74ef65a36aa147768ca53a9102152dbf6013",
@@ -2433,7 +2433,12 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
         "video",
         "audio"
       ],
-      "thinking": "configurable"
+      "thinking": "configurable",
+      "reasoning_efforts": [
+        "low",
+        "medium",
+        "high"
+      ]
     }
   },
   {
@@ -2453,7 +2458,12 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
         "video",
         "audio"
       ],
-      "thinking": "configurable"
+      "thinking": "configurable",
+      "reasoning_efforts": [
+        "low",
+        "medium",
+        "high"
+      ]
     }
   },
   {

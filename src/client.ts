@@ -1,4 +1,4 @@
-import { mergeProviderBody, mergeReasoningBody, resolveReasoningEffort, validateReasoningEffort } from "./reasoning.js";
+import { normalizeGeminiBody, mergeProviderBody, mergeReasoningBody, resolveReasoningEffort, validateReasoningEffort } from "./reasoning.js";
 import type { CapabilityPolicy } from "./types.js";
 import { DEFAULT_MODEL_CATALOG, ModelCatalog } from "./catalog.js";
 import {
@@ -465,7 +465,7 @@ function buildChatBody(params: ChatCompletionCreateParams | ChatCompletionStream
   if (effort !== undefined) extraBody.reasoning_effort = effort;
   else delete body.reasoning_effort;
   Object.assign(body, extraBody);
-  return body;
+  return normalizeGeminiBody(params.model, body);
 }
 
 function normalizeTools(tools: readonly unknown[]): readonly unknown[] {

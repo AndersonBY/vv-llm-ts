@@ -69,7 +69,7 @@ settings 在本地未声明档位时继承固定目录的推理能力，再应�
 ## Contract 与模型目录
 
 canonical language-neutral contract 位于独立的 `vv-llm-contract` 仓库。
-本仓库 vendor 了锁定的 `contract/v1.2.1/` artifact tree，
+本仓库 vendor 了锁定的 `contract/v1.2.2/` artifact tree，
 并生成 `src/generated/contract-catalog.ts`。默认 `ModelCatalog` 使用该目录，
 同时导出 contract version、revision 和 SHA-256 metadata。该 release 使用
 OpenAI fixture v2，并将 retry fixture/schema 独立锁定。
@@ -100,3 +100,12 @@ tool-call 是否存在和 usage 数量，不输出 key 或 prompt。没有
 `VV_LLM_RUN_LIVE_TESTS=1` 时不会发请求。
 
 运行 `npm run live:test` 时可设置 `VV_LLM_REASONING_EFFORT=xhigh`，用严格策略验证非流式和流式请求的推理参数。
+
+
+### Gemini 生成参数
+
+Gemini 3 及后续模型的请求会省略 `temperature`、`top_p`、`top_k` 和旧的
+`thinking_budget`，包括驼峰拼写与嵌套 provider 参数。只设置 budget 时使用模型默认值，
+不会猜测数值到档位的映射。需要指定思考强度时使用 `reasoning_effort` 或
+Google 的 `thinking_config.thinking_level`，不要同时设置两者。3.7 Flash 和 3.8 Flash
+支持 low/medium/high，不支持 minimal；Gemini 2.5 保留原有预算与采样行为。

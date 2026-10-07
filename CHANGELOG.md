@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.2.4 - 2026-10-07
+
+- Omit temperature, top_p, top_k and legacy thinking budgets from Gemini 3+
+  requests, including nested provider overrides; preserve Gemini 2.5 behavior.
+- Normalize thinkingLevel to thinking_level and reject conflicting controls.
+  Budget-only requests use the provider default; select reasoning_effort or
+  thinking_level explicitly when an effort level is required.
+- Adopt contract 1.2.2, catalog revision 17 with low/medium/high efforts for
+  Gemini 3.7 Flash and 3.8 Flash.
+
+
 ## 0.2.3 - 2026-10-03
 
 - Adopt contract 1.2.1, catalog revision 16 with the single public ID `qwen3.8-flash-next`;

@@ -27,7 +27,7 @@ native `fetch` API and has no runtime dependencies.
 - Stable `VvLlmError` classification with status, request ID, retry hints, and
   `retry-after-ms` precedence matching the Python/Rust protocol fixture.
 - The default `ModelCatalog` is generated from the pinned
-  `vv-llm-contract` v1.2.1 catalog and exposes contract version, schema,
+  `vv-llm-contract` v1.2.2 catalog and exposes contract version, schema,
   fixture, catalog-revision, and artifact-hash metadata.
 
 ## Canonical request API
@@ -202,7 +202,7 @@ The language-neutral contract is maintained in the independent
 
 ## Contract consumption
 
-The checked-in `contract/v1.2.1/` tree is a byte-for-byte vendor snapshot of
+The checked-in `contract/v1.2.2/` tree is a byte-for-byte vendor snapshot of
 the canonical release: `consumer-lock.v1.json`, `manifest.json`,
 `checksums.sha256`, the catalog, the v2 OpenAI-compatible fixture, the
 independent retry fixture, and ten schemas.
@@ -263,3 +263,14 @@ exercise JSON, SSE, tool calls, multimodal request bodies, embeddings, rerank,
 settings resolution, retry headers, middleware, metadata, capability skips,
 fallback boundaries, errors, timeout, cancellation, and contract-lock tamper
 rejection.
+
+
+### Gemini generation parameters
+
+For Gemini 3 and later, chat adapters omit `temperature`, `top_p`, `top_k`,
+and `thinking_budget` (including camelCase spellings and nested provider
+overrides). Budget-only requests use the model default; no numeric budget-to-level
+mapping is inferred. Use `reasoning_effort` or Google `thinking_config.thinking_level`
+for explicit control, but not both. Gemini 3.7 Flash and 3.8 Flash expose
+low/medium/high; minimal is unsupported. Gemini 2.5 retains its budget and sampling
+behavior. Input objects are not mutated.

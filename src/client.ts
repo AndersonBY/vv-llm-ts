@@ -1,3 +1,4 @@
+import { HttpTransport, type TransportOptions } from "./transport.js";
 import { normalizeGeminiBody, mergeProviderBody, mergeReasoningBody, resolveReasoningEffort, validateReasoningEffort } from "./reasoning.js";
 import type { CapabilityPolicy } from "./types.js";
 import { DEFAULT_MODEL_CATALOG, ModelCatalog } from "./catalog.js";
@@ -29,19 +30,8 @@ import {
 import { isJsonValue, isRecord, VvLlmError } from "./errors.js";
 import type { ChatExecutionRequest, ChatExecutionResponse } from "./execution.js";
 
-export type FetchLike = (input: string, init?: RequestInit) => Promise<Response>;
-
-export interface ClientOptions {
-  /** OpenAI-compatible API key. Either camelCase or wire-style spelling is accepted. */
-  apiKey?: string;
-  api_key?: string;
-  /** Base URL including an optional `/v1` prefix. */
-  baseURL?: string;
-  base_url?: string;
-  headers?: HeadersInit;
-  timeoutMs?: number;
-  timeout_ms?: number;
-  fetch?: FetchLike;
+export type { FetchLike } from "./transport.js";
+export interface ClientOptions extends TransportOptions {
   modelCatalog?: ModelCatalog;
   model_catalog?: ModelCatalog;
   capabilityPolicy?: CapabilityPolicy;
@@ -67,8 +57,6 @@ export interface VvLlmRerankNamespace {
   create: (params: RerankCreateParams) => Promise<RerankResponse>;
 }
 
-const DEFAULT_BASE_URL = "https://api.openai.com/v1";
-const DEFAULT_TIMEOUT_MS = 60_000;
 
 const CHAT_OPTION_KEYS = [
   "temperature",
@@ -110,20 +98,11 @@ export class VvLlmClient {
   public readonly modelCatalog: ModelCatalog;
   public readonly providerName = "openai-compatible";
 
-  private readonly baseURL: string;
-  private readonly apiKey?: string;
-  private readonly defaultHeaders: Headers;
-  private readonly timeoutMs: number;
-  private readonly fetchImpl: FetchLike;
+  private readonly transport: HttpTransport;
   private readonly capabilityPolicy: CapabilityPolicy;
 
   public constructor(options: ClientOptions = {}) {
-    const base = options.baseURL ?? options.base_url ?? DEFAULT_BASE_URL;
-    this.baseURL = base.replace(/\/+$/, "");
-    this.apiKey = options.apiKey ?? options.api_key;
-    this.defaultHeaders = new Headers(options.headers);
-    this.timeoutMs = options.timeoutMs ?? options.timeout_ms ?? DEFAULT_TIMEOUT_MS;
-    this.fetchImpl = options.fetch ?? ((input, init) => fetch(input, init));
+    this.transport = new HttpTransport(options);
     this.modelCatalog = options.modelCatalog ?? options.model_catalog ?? DEFAULT_MODEL_CATALOG;
     this.capabilityPolicy = options.capabilityPolicy ?? options.capability_policy ?? "warn";
 
@@ -201,7 +180,7 @@ export class VvLlmClient {
     const stream = params.stream === true;
     const body = buildChatBody(params);
     validateReasoningEffort(params.model, body.reasoning_effort, this.modelCatalog.capabilities(params.model), params.capability_policy ?? this.capabilityPolicy);
-    const response = await this.send("/chat/completions", body, {
+    const response = await this.transport.send("/chat/completions", body, {
       headers: params.extra_headers,
       query: params.extra_query,
       timeoutMs: params.timeout_ms,
@@ -210,12 +189,12 @@ export class VvLlmClient {
     });
 
     if (!response.ok) {
-      throw await this.errorFromResponse(response);
+      throw await this.transport.errorFromResponse(response);
     }
     if (stream) {
       return parseSseStream(response);
     }
-    const raw = await this.readJson(response);
+    const raw = await this.transport.readJson(response);
     return normalizeChatCompletion(raw, params.model);
   }
 
@@ -238,16 +217,16 @@ export class VvLlmClient {
     };
   copyDefined(body, params as unknown as Record<string, unknown>, ["encoding_format", "dimensions", "user"]);
     Object.assign(body, params.extra_body ?? {});
-    const response = await this.send("/embeddings", body, {
+    const response = await this.transport.send("/embeddings", body, {
       headers: params.extra_headers,
       query: params.extra_query,
       timeoutMs: params.timeout_ms,
       signal: params.signal,
     });
     if (!response.ok) {
-      throw await this.errorFromResponse(response);
+      throw await this.transport.errorFromResponse(response);
     }
-    const raw = await this.readJson(response);
+    const raw = await this.transport.readJson(response);
     return normalizeEmbeddingResponse(raw, params.model);
   }
 
@@ -270,16 +249,16 @@ export class VvLlmClient {
     };
     if (params.top_n !== undefined) body.top_n = params.top_n;
     Object.assign(body, params.extra_body ?? {});
-    const response = await this.send("/rerank", body, {
+    const response = await this.transport.send("/rerank", body, {
       headers: params.extra_headers,
       query: params.extra_query,
       timeoutMs: params.timeout_ms,
       signal: params.signal,
     });
     if (!response.ok) {
-      throw await this.errorFromResponse(response);
+      throw await this.transport.errorFromResponse(response);
     }
-    const raw = await this.readJson(response);
+    const raw = await this.transport.readJson(response);
     return normalizeRerankResponse(raw, params.model);
   }
 
@@ -287,103 +266,7 @@ export class VvLlmClient {
     return this.createRerank(params);
   }
 
-  private async send(
-    path: string,
-    body: Record<string, unknown>,
-    request: {
-      headers?: HeadersInit;
-      query?: Record<string, string | number | boolean | null | undefined>;
-      timeoutMs?: number;
-      signal?: AbortSignal;
-      accept?: string;
-    },
-  ): Promise<Response> {
-    const url = new URL(`${this.baseURL}${path}`);
-    for (const [key, value] of Object.entries(request.query ?? {})) {
-      if (value !== undefined && value !== null) url.searchParams.set(key, String(value));
-    }
 
-    const headers = new Headers(this.defaultHeaders);
-    if (!headers.has("accept")) headers.set("accept", request.accept ?? "application/json");
-    if (!headers.has("content-type")) headers.set("content-type", "application/json");
-    if (this.apiKey && !headers.has("authorization")) {
-      headers.set("authorization", `Bearer ${this.apiKey}`);
-    }
-    new Headers(request.headers).forEach((value, key) => headers.set(key, value));
-
-    const controller = new AbortController();
-    let timeoutTriggered = false;
-    const timeoutMs = request.timeoutMs ?? this.timeoutMs;
-    const callerSignal = request.signal;
-    const abortFromCaller = () => controller.abort(callerSignal?.reason);
-    if (callerSignal) {
-      if (callerSignal.aborted) {
-        abortFromCaller();
-      } else {
-        callerSignal.addEventListener("abort", abortFromCaller, { once: true });
-      }
-    }
-    const timeoutId = timeoutMs > 0 ? setTimeout(() => {
-      timeoutTriggered = true;
-      controller.abort(new DOMException("Request timed out", "TimeoutError"));
-    }, timeoutMs) : undefined;
-
-    try {
-      return await this.fetchImpl(url.toString(), {
-        method: "POST",
-        headers,
-        body: JSON.stringify(body),
-        signal: controller.signal,
-      });
-    } catch (error) {
-      if (timeoutTriggered) {
-        throw new VvLlmError(`Request timed out after ${timeoutMs} ms`, {
-          kind: "timeout",
-          cause: error,
-        });
-      }
-      if (callerSignal?.aborted && isTimeoutAbortReason(callerSignal.reason)) {
-        throw new VvLlmError("Request timed out by the caller", {
-          kind: "timeout",
-          code: "TIMEOUT_ERR",
-          cause: error,
-        });
-      }
-      if (callerSignal?.aborted) {
-        throw new VvLlmError("Request was cancelled by the caller", {
-          kind: "cancelled",
-          code: "ABORT_ERR",
-          cause: error,
-        });
-      }
-      throw new VvLlmError(error instanceof Error ? error.message : "Network request failed", {
-        kind: "network",
-        cause: error,
-      });
-    } finally {
-      if (timeoutId !== undefined) clearTimeout(timeoutId);
-      callerSignal?.removeEventListener("abort", abortFromCaller);
-    }
-  }
-
-  private async readJson(response: Response): Promise<unknown> {
-    const text = await response.text();
-    if (!text) return {};
-    try {
-      return JSON.parse(text) as unknown;
-    } catch (error) {
-      throw new VvLlmError("Provider returned invalid JSON", {
-        kind: "serialization",
-        status: response.status,
-        cause: error,
-      });
-    }
-  }
-
-  private async errorFromResponse(response: Response): Promise<VvLlmError> {
-    const body = await this.readJson(response);
-    return VvLlmError.fromResponse(response.status, body, response.headers);
-  }
 }
 
 function isCanonicalChatRequest(request: ChatRequest | ChatExecutionRequest): request is ChatRequest {
@@ -435,12 +318,6 @@ const FLAT_CHAT_REQUEST_KEYS = new Set([
   "signal",
 ]);
 
-function isTimeoutAbortReason(reason: unknown): boolean {
-  return typeof reason === "object"
-    && reason !== null
-    && "name" in reason
-    && (reason as { name?: unknown }).name === "TimeoutError";
-}
 
 function buildChatBody(params: ChatCompletionCreateParams | ChatCompletionStreamParams): Record<string, unknown> {
   const body: Record<string, unknown> = {

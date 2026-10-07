@@ -69,7 +69,7 @@ settings 在本地未声明档位时继承固定目录的推理能力，再应�
 ## Contract 与模型目录
 
 canonical language-neutral contract 位于独立的 `vv-llm-contract` 仓库。
-本仓库 vendor 了锁定的 `contract/v1.2.2/` artifact tree，
+本仓库 vendor 了锁定的 `contract/v1.3.0/` artifact tree，
 并生成 `src/generated/contract-catalog.ts`。默认 `ModelCatalog` 使用该目录，
 同时导出 contract version、revision 和 SHA-256 metadata。该 release 使用
 OpenAI fixture v2，并将 retry fixture/schema 独立锁定。
@@ -109,3 +109,29 @@ Gemini 3 及后续模型的请求会省略 `temperature`、`top_p`、`top_k` 和
 不会猜测数值到档位的映射。需要指定思考强度时使用 `reasoning_effort` 或
 Google 的 `thinking_config.thinking_level`，不要同时设置两者。3.7 Flash 和 3.8 Flash
 支持 low/medium/high，不支持 minimal；Gemini 2.5 保留原有预算与采样行为。
+
+## Decisions
+
+独立的 `DecisionClient` 复用 HTTP 传输和模型目录。
+`createDecisionClientFromSettings` 通过 `decision_backends`
+解析模型及端点，与聊天、嵌入和重排配置分开。
+
+```ts
+import { DecisionClient } from "vv-llm-ts";
+const client = new DecisionClient({ apiKey: process.env.OPENAI_API_KEY });
+const response = await client.create({
+  model: "gpt-6-luna",
+  input: "The screen arrived broken.",
+  questions: [{ type: "predicate", name: "damaged", instructions: "Does the customer report damage?" }],
+});
+```
+
+问题支持 predicate、choice 和 score。choice 使用 `choices`，
+score 使用 `rubric`，返回 `score`、`confidence` 和
+`probabilities`。客户端保留概率分布、拒答和用量，由调用方选择阈值。
+编解码器校验请求和响应；未知或不支持的能力会在发送请求前报错。
+图片仅支持内联 base64，无需增加运行时依赖。
+
+真实测试先构建包，设置 `VV_LLM_RUN_LIVE_TESTS=1` 和
+`VV_LLM_SETTINGS_JSON`，再执行 `node scripts/live-decisions.mjs`。
+测试可在内存中复用现有 OpenAI 聊天端点绑定，不修改配置文件。

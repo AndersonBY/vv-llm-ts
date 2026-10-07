@@ -27,7 +27,7 @@ native `fetch` API and has no runtime dependencies.
 - Stable `VvLlmError` classification with status, request ID, retry hints, and
   `retry-after-ms` precedence matching the Python/Rust protocol fixture.
 - The default `ModelCatalog` is generated from the pinned
-  `vv-llm-contract` v1.2.2 catalog and exposes contract version, schema,
+  `vv-llm-contract` v1.3.0 catalog and exposes contract version, schema,
   fixture, catalog-revision, and artifact-hash metadata.
 
 ## Canonical request API
@@ -202,7 +202,7 @@ The language-neutral contract is maintained in the independent
 
 ## Contract consumption
 
-The checked-in `contract/v1.2.2/` tree is a byte-for-byte vendor snapshot of
+The checked-in `contract/v1.3.0/` tree is a byte-for-byte vendor snapshot of
 the canonical release: `consumer-lock.v1.json`, `manifest.json`,
 `checksums.sha256`, the catalog, the v2 OpenAI-compatible fixture, the
 independent retry fixture, and ten schemas.
@@ -274,3 +274,32 @@ mapping is inferred. Use `reasoning_effort` or Google `thinking_config.thinking_
 for explicit control, but not both. Gemini 3.7 Flash and 3.8 Flash expose
 low/medium/high; minimal is unsupported. Gemini 2.5 retains its budget and sampling
 behavior. Input objects are not mutated.
+
+## Decisions
+
+`DecisionClient` is a standalone client that shares the HTTP transport and model
+catalog. `createDecisionClientFromSettings` resolves `decision_backends` independently
+from chat, embedding, and rerank configuration.
+
+```ts
+import { DecisionClient } from "vv-llm-ts";
+const client = new DecisionClient({ apiKey: process.env.OPENAI_API_KEY });
+const response = await client.create({
+  model: "gpt-6-luna",
+  input: "The screen arrived broken.",
+  questions: [{ type: "predicate", name: "damaged", instructions: "Does the customer report damage?" }],
+});
+```
+
+Questions support `predicate`, `choice`, and `score`. The response preserves probability
+distributions, refusals, and usage; callers choose thresholds. Canonical codecs
+validate request/response shapes. Unknown/unsupported capabilities fail before
+transport. Images must use inline base64 data URLs. No runtime dependency is added.
+
+To run a real smoke test, build the package, set `VV_LLM_RUN_LIVE_TESTS=1` and
+`VV_LLM_SETTINGS_JSON` to a local settings file, then run
+`node scripts/live-decisions.mjs`. The smoke runner can reuse an existing OpenAI
+chat endpoint binding in memory; it does not edit the settings file.
+
+Choice questions use `choices`; score questions use `rubric` and return
+`score`, `confidence`, and `probabilities`. Choice IDs can be strings or booleans.

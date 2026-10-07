@@ -37,6 +37,11 @@
       "additionalProperties": { "$ref": "#/$defs/BackendConfig" },
       "default": {}
     },
+    "decision_backends": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/BackendConfig" },
+      "default": {}
+    },
     "rerank_backends": {
       "type": "object",
       "additionalProperties": { "$ref": "#/$defs/BackendConfig" },
@@ -140,6 +145,12 @@
         },
         "streaming": { "type": "boolean", "default": true },
         "parallel_tool_calls": { "type": "boolean", "default": false },
+        "decision_types": {
+          "type": ["array", "null"],
+          "uniqueItems": true,
+          "items": { "type": "string", "enum": ["predicate", "choice", "score"] },
+          "description": "Supported decision operations. Missing/null means unknown; [] means unsupported."
+        },
         "reasoning_efforts": {
           "type": ["array", "null"],
           "uniqueItems": true,

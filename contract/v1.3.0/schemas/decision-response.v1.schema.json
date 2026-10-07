@@ -1,0 +1,258 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:vv-llm-contract:decision-response:v1",
+  "title": "Provider-neutral decision response",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "model",
+    "answers"
+  ],
+  "properties": {
+    "model": {
+      "type": "string",
+      "minLength": 1
+    },
+    "answers": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "probability"
+            ],
+            "properties": {
+              "type": {
+                "const": "predicate"
+              },
+              "name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "probability": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "choice",
+              "options"
+            ],
+            "properties": {
+              "type": {
+                "const": "choice"
+              },
+              "name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "choice": {
+                "type": [
+                  "string",
+                  "boolean"
+                ]
+              },
+              "options": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "choice",
+                    "probability"
+                  ],
+                  "properties": {
+                    "choice": {
+                      "type": [
+                        "string",
+                        "boolean"
+                      ]
+                    },
+                    "probability": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "score",
+              "confidence",
+              "probabilities"
+            ],
+            "properties": {
+              "type": {
+                "const": "score"
+              },
+              "name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "score": {
+                "type": "number"
+              },
+              "confidence": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "probabilities": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "value",
+                    "label",
+                    "probability"
+                  ],
+                  "properties": {
+                    "value": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "label": {
+                      "type": "string"
+                    },
+                    "probability": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type"
+            ],
+            "properties": {
+              "type": {
+                "const": "refusal"
+              },
+              "name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "usage": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [],
+          "properties": {
+            "input_tokens": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "output_tokens": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "total_tokens": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "input_tokens_details": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "required": [],
+                  "properties": {
+                    "cached_tokens": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ],
+                      "minimum": 0
+                    },
+                    "cache_write_tokens": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ],
+                      "minimum": 0
+                    }
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "output_tokens_details": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "required": [],
+                  "properties": {
+                    "reasoning_tokens": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ],
+                      "minimum": 0
+                    }
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  }
+}

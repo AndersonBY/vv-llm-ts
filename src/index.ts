@@ -15,6 +15,7 @@ export {
 } from "./catalog.js";
 export type { ModelConfig } from "./types.js";
 export * from "./client.js";
+export * from "./decisions.js";
 export * from "./types.js";
 export * from "./canonical.js";
 export * from "./errors.js";

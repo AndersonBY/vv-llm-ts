@@ -56,6 +56,12 @@
         },
         "streaming": { "type": "boolean" },
         "parallel_tool_calls": { "type": "boolean" },
+        "decision_types": {
+          "type": ["array", "null"],
+          "uniqueItems": true,
+          "items": { "type": "string", "enum": ["predicate", "choice", "score"] },
+          "description": "Supported decision operations. Missing/null means unknown; [] means unsupported."
+        },
         "reasoning_efforts": {
           "type": ["array", "null"],
           "uniqueItems": true,

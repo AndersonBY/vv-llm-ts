@@ -61,6 +61,8 @@ export class ModelCatalog {
     if (aliases != null && (typeof aliases !== "object" || Array.isArray(aliases) || Object.entries(aliases).some(([alias, target]) => !alias.trim() || typeof target !== "string" || !target.trim()))) {
       throw new TypeError("reasoning_effort_aliases must map non-empty strings to non-empty strings");
     }
+    const decisions = config.capabilities?.decision_types;
+    if (decisions != null && (!Array.isArray(decisions) || decisions.some((kind) => !["predicate", "choice", "score"].includes(kind)) || new Set(decisions).size !== decisions.length)) throw new TypeError("decision_types must contain unique supported types");
     this.entries.set(config.id, { enabled: true, ...config });
     return this;
   }

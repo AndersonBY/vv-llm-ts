@@ -2,6 +2,7 @@ import { DEFAULT_MODEL_CATALOG, DEFAULT_MODEL_CONFIGS, ModelCatalog, type ModelC
 import type { JsonObject, ModelCapabilities } from "./types.js";
 import { VvLlmError } from "./errors.js";
 import { type ClientOptions, VvLlmClient } from "./client.js";
+import { DecisionClient } from "./decisions.js";
 
 const CHAT_BACKENDS = [
   "anthropic", "deepseek", "gemini", "groq", "local", "minimax", "mistral",
@@ -63,12 +64,13 @@ export interface Settings {
   endpoints?: readonly EndpointConfig[];
   backends?: Record<string, BackendConfig>;
   embedding_backends?: Record<string, BackendConfig>;
+  decision_backends?: Record<string, BackendConfig>;
   rerank_backends?: Record<string, BackendConfig>;
   /** Preserve unrelated settings fields when loading a shared config. */
   [key: string]: unknown;
 }
 
-export type SettingsKind = "chat" | "embedding" | "rerank";
+export type SettingsKind = "chat" | "embedding" | "rerank" | "decision";
 
 export interface ResolvedModelConfig {
   kind: SettingsKind;
@@ -128,7 +130,8 @@ export function resolveSettingsModel(
       code: "BACKEND_NOT_FOUND",
     });
   }
-  const models = backendConfig.models ?? {};
+  const decisionDefaults = kind === "decision" ? Object.fromEntries(DEFAULT_MODEL_CONFIGS.filter((model) => model.backend === backend && model.capabilities?.decision_types?.length).map((model): [string, SettingsModelConfig] => [model.id, { ...model }])) : {};
+  const models: Record<string, SettingsModelConfig> = { ...decisionDefaults, ...backendConfig.models };
   const entry = models[modelId] ?? Object.values(models).find((candidate) => candidate.id === modelId);
   if (!entry || entry.enabled === false) {
     throw new VvLlmError(`Model '${modelId}' is not configured for backend '${backend}'`, {
@@ -138,7 +141,7 @@ export function resolveSettingsModel(
   }
 
   const catalogModel = modelCatalog?.get(modelId) ?? modelCatalog?.get(entry.id);
-  const defaults = kind === "chat" && modelCatalog === undefined ? DEFAULT_MODEL_CONFIGS.find((model) => model.backend === backend && (model.id === modelId || model.id === entry.id))?.capabilities : undefined;
+  const defaults = (kind === "chat" || kind === "decision") && modelCatalog === undefined ? DEFAULT_MODEL_CONFIGS.find((model) => model.backend === backend && (model.id === modelId || model.id === entry.id))?.capabilities : undefined;
   const reasoningDefaults = defaults ? { thinking: defaults.thinking, reasoning_efforts: defaults.reasoning_efforts, reasoning_effort_aliases: defaults.reasoning_effort_aliases } : {};
   const configuredBindings = entry.endpoints ?? [];
   const fallbackBindings = configuredBindings.length > 0
@@ -170,7 +173,7 @@ export function resolveSettingsModel(
       code: "ENDPOINT_NOT_FOUND",
     });
   }
-  const model = { ...catalogModel, ...entry, capabilities: { ...reasoningDefaults, ...catalogModel?.capabilities, ...entry.capabilities, ...binding.capabilities } };
+  const model = { ...catalogModel, ...entry, capabilities: { ...(kind === "decision" ? defaults : reasoningDefaults), ...catalogModel?.capabilities, ...entry.capabilities, ...binding.capabilities } };
   return {
     kind,
     backend,
@@ -242,6 +245,7 @@ function getBackendMap(settings: Settings, kind: SettingsKind): Record<string, B
   if (kind === "chat") {
     return settings.backends ?? {};
   }
+  if (kind === "decision") return settings.decision_backends ?? {};
   return kind === "embedding"
     ? settings.embedding_backends ?? {}
     : settings.rerank_backends ?? {};
@@ -263,7 +267,7 @@ function validateSettings(settings: Settings): void {
   if (!settings || typeof settings !== "object" || Array.isArray(settings)) {
     throw new TypeError("settings must be an object");
   }
-  for (const backendMap of [settings.backends, settings.embedding_backends, settings.rerank_backends]) {
+  for (const backendMap of [settings.backends, settings.embedding_backends, settings.rerank_backends, settings.decision_backends]) {
     for (const backend of Object.values(backendMap ?? {})) {
       for (const model of Object.values(backend.models ?? {})) {
         for (const binding of model.endpoints ?? []) {
@@ -275,4 +279,19 @@ function validateSettings(settings: Settings): void {
       }
     }
   }
+}
+
+export function createDecisionClientFromSettings(settings: Settings, options: SettingsFactoryOptions): { client: DecisionClient; resolved: ResolvedModelConfig } {
+  if (options.backend !== "openai") throw new VvLlmError("Unsupported decision backend", { kind: "configuration" });
+  const resolved = resolveSettingsModel(settings, "decision", options.backend, options.model, options.modelCatalog ?? options.model_catalog);
+  const endpoint = resolved.endpoint;
+  if (endpoint.is_azure || endpoint.is_vertex || endpoint.is_bedrock || (endpoint.endpoint_type && !["default", "openai"].includes(endpoint.endpoint_type))) {
+    throw new VvLlmError("Decision client requires an OpenAI endpoint", { kind: "configuration" });
+  }
+  const catalog = new ModelCatalog((options.modelCatalog ?? options.model_catalog ?? DEFAULT_MODEL_CATALOG).list());
+  catalog.add({ ...resolved.model, id: resolved.model_id });
+  catalog.add({ ...resolved.model, id: options.model });
+  const headers = new Headers(endpoint.headers);
+  if (options.headers) new Headers(options.headers).forEach((value, key) => headers.set(key, value));
+  return { client: new DecisionClient({ ...options, model: options.model, modelId: resolved.model_id, modelCatalog: catalog, baseURL: options.baseURL ?? options.base_url ?? endpoint.api_base ?? undefined, apiKey: options.apiKey ?? options.api_key ?? endpoint.api_key, headers }), resolved };
 }

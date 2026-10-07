@@ -1,18 +1,18 @@
 {
   "format": "vv-llm-contract-manifest.v1",
-  "contract_version": "1.2.2",
+  "contract_version": "1.3.0",
   "schema_version": 2,
   "fixture_version": 2,
-  "catalog_revision": 17,
+  "catalog_revision": 18,
   "checksums": "checksums.sha256",
   "contract": {
     "name": "vv-llm-contract",
-    "version": "1.2.2"
+    "version": "1.3.0"
   },
   "revisions": {
     "schema": "v2",
     "fixture": "v2",
-    "catalog": "v17"
+    "catalog": "v18"
   },
   "provenance": {
     "openai_compatible_fixture": {
@@ -21,7 +21,7 @@
     },
     "default_chat_catalog": {
       "source": "vv-llm-contract/catalog/default-chat-catalog.json",
-      "sha256": "3546456510bd754c120cb41f9f447345a19cff684cf5e0b38122d5b279bcc2bb"
+      "sha256": "fd2dde062087d11dee5f6dfc12ef2373031c237df35bae2764099ec14dfc4d83"
     }
   },
   "artifacts": {
@@ -35,13 +35,16 @@
       "schemas/settings.v2.schema.json",
       "schemas/model-catalog.v1.schema.json",
       "schemas/openai-compatible-fixture.v2.schema.json",
-      "schemas/retry-after.v1.schema.json"
+      "schemas/retry-after.v1.schema.json",
+      "schemas/decision-request.v1.schema.json",
+      "schemas/decision-response.v1.schema.json"
     ],
     "fixtures": [
       "fixtures/openai-compatible.v2.json",
       "fixtures/retry-after.v1.json",
       "fixtures/settings-resolution.v1.json",
-      "fixtures/reasoning-effort.v1.json"
+      "fixtures/reasoning-effort.v1.json",
+      "fixtures/decisions.v1.json"
     ],
     "catalog": [
       "catalog/default-chat-catalog.json"

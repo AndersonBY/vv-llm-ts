@@ -1680,6 +1680,11 @@
               "high",
               "xhigh",
               "max"
+            ],
+            "decision_types": [
+              "predicate",
+              "choice",
+              "score"
             ]
           }
         },

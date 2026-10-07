@@ -22,9 +22,9 @@
   },
   "files": [
     "dist",
-    "contract/v1.2.2/consumer-lock.v1.json",
-    "contract/v1.2.2/manifest.json",
-    "contract/v1.2.2/checksums.sha256",
+    "contract/v1.3.0/consumer-lock.v1.json",
+    "contract/v1.3.0/manifest.json",
+    "contract/v1.3.0/checksums.sha256",
     "README.md",
     "README_ZH.md",
     "CHANGELOG.md",
@@ -40,7 +40,7 @@
     "examples:check": "npm run build && tsc -p tsconfig.examples.json --noEmit",
     "examples:build": "npm run build && tsc -p tsconfig.examples.json",
     "build:test": "tsc -p tsconfig.test.json",
-    "test": "npm run contract:check && npm run build:test && node --test dist-test/tests/client.test.js dist-test/tests/contract-lock.test.js dist-test/tests/execution.test.js",
+    "test": "npm run contract:check && npm run build:test && node --test dist-test/tests/client.test.js dist-test/tests/decisions.test.js dist-test/tests/contract-lock.test.js dist-test/tests/execution.test.js",
     "pack:check": "npm run contract:check && npm run build && npm pack --dry-run"
   },
   "devDependencies": {

@@ -213,6 +213,7 @@ export interface ModelCapabilities {
   streaming?: boolean;
   parallel_tool_calls?: boolean;
   thinking?: ThinkingCapability;
+  decision_types?: readonly ("predicate" | "choice" | "score")[] | null;
   reasoning_efforts?: readonly string[] | null;
   reasoning_effort_aliases?: Readonly<Record<string, string>> | null;
 }

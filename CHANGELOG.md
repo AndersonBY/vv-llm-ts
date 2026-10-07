@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Add standalone decision clients with predicate, choice, score, and refusal
+  responses, independent decision_backends settings, and opt-in live smoke tests.
+- Adopt shared contract 1.3.0, catalog revision 18 and decision conformance fixtures.
+
 ## 0.2.4 - 2026-10-07
 
 - Omit temperature, top_p, top_k and legacy thinking budgets from Gemini 3+

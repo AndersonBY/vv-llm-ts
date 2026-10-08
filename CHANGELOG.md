@@ -1,10 +1,13 @@
 # Changelog
 
-## Unreleased
+## 0.3.0 - 2026-10-08
+
+- Add `claude-haiku-5-5` from shared catalog revision 19 with a 1M context
+  window, 128K output limit, image input, tools, and five reasoning efforts.
 
 - Add standalone decision clients with predicate, choice, score, and refusal
   responses, independent decision_backends settings, and opt-in live smoke tests.
-- Adopt shared contract 1.3.0, catalog revision 18 and decision conformance fixtures.
+- Adopt shared contract 1.3.0, catalog revision 19 and decision conformance fixtures.
 
 ## 0.2.4 - 2026-10-07
 

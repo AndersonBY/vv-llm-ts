@@ -1963,6 +1963,29 @@
               "max"
             ]
           }
+        },
+        "claude-haiku-5-5": {
+          "id": "claude-haiku-5-5",
+          "context_length": 1000000,
+          "max_output_tokens": 128000,
+          "function_call_available": true,
+          "response_format_available": false,
+          "native_multimodal": true,
+          "capabilities": {
+            "tools": true,
+            "input_modalities": [
+              "text",
+              "image"
+            ],
+            "thinking": "configurable",
+            "reasoning_efforts": [
+              "low",
+              "medium",
+              "high",
+              "xhigh",
+              "max"
+            ]
+          }
         }
       }
     },

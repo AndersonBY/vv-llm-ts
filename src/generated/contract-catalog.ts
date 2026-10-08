@@ -7,12 +7,12 @@ import type { ModelConfig } from "../types.js";
 export const CONTRACT_VERSION = "1.3.0" as const;
 export const CONTRACT_SCHEMA_VERSION = 2 as const;
 export const CONTRACT_FIXTURE_VERSION = 2 as const;
-export const CONTRACT_CATALOG_REVISION = 18 as const;
-export const CONTRACT_CONSUMER_LOCK_SHA256 = "929679bd43f8092bae4171179cd405f664ae15fab52ce9a88c67e86c6027fdb9" as const;
-export const CONTRACT_MANIFEST_SHA256 = "adece5f28a998d87e0684734be364c8a503c69e1b434e1dca0b2afc22e857f3f" as const;
-export const CONTRACT_CHECKSUMS_SHA256 = "7d02df9624a7919ef397e58013942fbc6286623a33b722288aaa6c82cf2b5287" as const;
+export const CONTRACT_CATALOG_REVISION = 19 as const;
+export const CONTRACT_CONSUMER_LOCK_SHA256 = "e2df07c360c71d0b6e2be3c73cef02150885c6a4cdaef5412e1a3ffcd696466d" as const;
+export const CONTRACT_MANIFEST_SHA256 = "59d448b979792abf871b9292c1c8662099c4e529eaaa1cda1fb55797cb083ef6" as const;
+export const CONTRACT_CHECKSUMS_SHA256 = "36e57b796bff9dcd309a89bd0648f8beaac4205d67c731c159cdd30bb7b16d4b" as const;
 export const CONTRACT_ARTIFACTS = {
-  "catalog/default-chat-catalog.json": "fd2dde062087d11dee5f6dfc12ef2373031c237df35bae2764099ec14dfc4d83",
+  "catalog/default-chat-catalog.json": "11c14fc7bdbf72056ed869755d86a08f54bd6d7866eaf089dd28ee541a6532b3",
   "fixtures/decisions.v1.json": "910fafaf8bf87420603ac155b95ced298d7671099e9eb5adbb3abc1257b5e9c4",
   "fixtures/openai-compatible.v2.json": "7696b0c53b8d64ef1d5a483bfe12c2c8a4a372a18258244c862b7b52ad9ede99",
   "fixtures/reasoning-effort.v1.json": "943d77546491f68132ab7f4e777b65bdd1cd8dea34804347da379faa5b6e4228",
@@ -2123,6 +2123,30 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "response_format_available": false,
     "native_multimodal": true,
     "capabilities": {
+      "reasoning_efforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ]
+    }
+  },
+  {
+    "backend": "anthropic",
+    "id": "claude-haiku-5-5",
+    "context_length": 1000000,
+    "max_output_tokens": 128000,
+    "function_call_available": true,
+    "response_format_available": false,
+    "native_multimodal": true,
+    "capabilities": {
+      "tools": true,
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "thinking": "configurable",
       "reasoning_efforts": [
         "low",
         "medium",

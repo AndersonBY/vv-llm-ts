@@ -151,8 +151,8 @@ test("default client consumes the pinned contract catalog and metadata", () => {
   }
   const glmFlash = client.getModelConfig("glm-5.3-flash");
   assert.equal(CONTRACT_VERSION, "1.3.0");
-  assert.equal(CONTRACT_CATALOG_REVISION, 18);
-  assert.equal(CONTRACT_CONSUMER_LOCK_SHA256, "929679bd43f8092bae4171179cd405f664ae15fab52ce9a88c67e86c6027fdb9");
+  assert.equal(CONTRACT_CATALOG_REVISION, 19);
+  assert.equal(CONTRACT_CONSUMER_LOCK_SHA256, "e2df07c360c71d0b6e2be3c73cef02150885c6a4cdaef5412e1a3ffcd696466d");
   assert.equal(client.modelCatalog, DEFAULT_MODEL_CATALOG);
   assert.equal(vision?.max_image_dimension, 8192);
   assert.equal(vision?.capabilities?.thinking, "configurable");
@@ -166,6 +166,18 @@ test("default client consumes the pinned contract catalog and metadata", () => {
     structured_output: "json_schema",
     input_modalities: ["text", "image", "video"],
     thinking: "always_enabled", reasoning_efforts: ["low", "high", "max"],
+  });
+  const haiku = client.getModelConfig("claude-haiku-5-5");
+  assert.equal(haiku?.context_length, 1_000_000);
+  assert.equal(haiku?.max_output_tokens, 128_000);
+  assert.equal(haiku?.function_call_available, true);
+  assert.equal(haiku?.response_format_available, false);
+  assert.equal(haiku?.native_multimodal, true);
+  assert.deepEqual(haiku?.capabilities, {
+    tools: true,
+    input_modalities: ["text", "image"],
+    thinking: "configurable",
+    reasoning_efforts: ["low", "medium", "high", "xhigh", "max"],
   });
   const flashNext = client.getModelConfig("qwen3.8-flash-next");
   assert.equal(flashNext?.id, "qwen3.8-flash-next");

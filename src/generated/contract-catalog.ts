@@ -4,15 +4,15 @@
  */
 import type { ModelConfig } from "../types.js";
 
-export const CONTRACT_VERSION = "1.3.0" as const;
+export const CONTRACT_VERSION = "1.3.1" as const;
 export const CONTRACT_SCHEMA_VERSION = 2 as const;
 export const CONTRACT_FIXTURE_VERSION = 2 as const;
-export const CONTRACT_CATALOG_REVISION = 19 as const;
-export const CONTRACT_CONSUMER_LOCK_SHA256 = "e2df07c360c71d0b6e2be3c73cef02150885c6a4cdaef5412e1a3ffcd696466d" as const;
-export const CONTRACT_MANIFEST_SHA256 = "59d448b979792abf871b9292c1c8662099c4e529eaaa1cda1fb55797cb083ef6" as const;
-export const CONTRACT_CHECKSUMS_SHA256 = "36e57b796bff9dcd309a89bd0648f8beaac4205d67c731c159cdd30bb7b16d4b" as const;
+export const CONTRACT_CATALOG_REVISION = 20 as const;
+export const CONTRACT_CONSUMER_LOCK_SHA256 = "3b7d2c97b0546e9f14aa1ea23cf587113c050eb1a4902adc9a0a64dba35f6ed2" as const;
+export const CONTRACT_MANIFEST_SHA256 = "7b82dbe1b2026f4dbfb369be12a849b2631458909f164129a74de769148c327a" as const;
+export const CONTRACT_CHECKSUMS_SHA256 = "f3aade09ccb8de2399d9e659eb63c5a12894632876af67f5670392228384491b" as const;
 export const CONTRACT_ARTIFACTS = {
-  "catalog/default-chat-catalog.json": "11c14fc7bdbf72056ed869755d86a08f54bd6d7866eaf089dd28ee541a6532b3",
+  "catalog/default-chat-catalog.json": "2963808ff14d9770a501bb0a9ab53be557ea1ad874d81a5d78961f4bce96cbb1",
   "fixtures/decisions.v1.json": "910fafaf8bf87420603ac155b95ced298d7671099e9eb5adbb3abc1257b5e9c4",
   "fixtures/openai-compatible.v2.json": "7696b0c53b8d64ef1d5a483bfe12c2c8a4a372a18258244c862b7b52ad9ede99",
   "fixtures/reasoning-effort.v1.json": "943d77546491f68132ab7f4e777b65bdd1cd8dea34804347da379faa5b6e4228",
@@ -2466,6 +2466,30 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
         "audio"
       ],
       "thinking": "configurable",
+      "reasoning_efforts": [
+        "low",
+        "medium",
+        "high"
+      ]
+    }
+  },
+  {
+    "backend": "gemini",
+    "id": "gemini-4-argon",
+    "context_length": 1048576,
+    "max_output_tokens": 65536,
+    "function_call_available": true,
+    "response_format_available": true,
+    "native_multimodal": true,
+    "capabilities": {
+      "tools": true,
+      "structured_output": "json_schema",
+      "input_modalities": [
+        "text",
+        "image",
+        "video",
+        "audio"
+      ],
       "reasoning_efforts": [
         "low",
         "medium",

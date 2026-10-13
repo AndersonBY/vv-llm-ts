@@ -2291,6 +2291,29 @@
             ]
           }
         },
+        "gemini-4-argon": {
+          "id": "gemini-4-argon",
+          "context_length": 1048576,
+          "max_output_tokens": 65536,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true,
+          "capabilities": {
+            "tools": true,
+            "structured_output": "json_schema",
+            "input_modalities": [
+              "text",
+              "image",
+              "video",
+              "audio"
+            ],
+            "reasoning_efforts": [
+              "low",
+              "medium",
+              "high"
+            ]
+          }
+        },
         "gemini-3.8-flash": {
           "id": "gemini-3.8-flash",
           "context_length": 1048576,

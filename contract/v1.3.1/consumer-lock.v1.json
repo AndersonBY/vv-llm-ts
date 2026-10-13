@@ -1,13 +1,13 @@
 {
   "format": "vv-llm-contract-consumer-lock.v1",
-  "contract_version": "1.3.0",
+  "contract_version": "1.3.1",
   "schema_version": 2,
   "fixture_version": 2,
-  "catalog_revision": 19,
-  "manifest_sha256": "59d448b979792abf871b9292c1c8662099c4e529eaaa1cda1fb55797cb083ef6",
-  "checksums_sha256": "36e57b796bff9dcd309a89bd0648f8beaac4205d67c731c159cdd30bb7b16d4b",
+  "catalog_revision": 20,
+  "manifest_sha256": "7b82dbe1b2026f4dbfb369be12a849b2631458909f164129a74de769148c327a",
+  "checksums_sha256": "f3aade09ccb8de2399d9e659eb63c5a12894632876af67f5670392228384491b",
   "artifacts": {
-    "catalog/default-chat-catalog.json": "11c14fc7bdbf72056ed869755d86a08f54bd6d7866eaf089dd28ee541a6532b3",
+    "catalog/default-chat-catalog.json": "2963808ff14d9770a501bb0a9ab53be557ea1ad874d81a5d78961f4bce96cbb1",
     "fixtures/decisions.v1.json": "910fafaf8bf87420603ac155b95ced298d7671099e9eb5adbb3abc1257b5e9c4",
     "fixtures/openai-compatible.v2.json": "7696b0c53b8d64ef1d5a483bfe12c2c8a4a372a18258244c862b7b52ad9ede99",
     "fixtures/reasoning-effort.v1.json": "943d77546491f68132ab7f4e777b65bdd1cd8dea34804347da379faa5b6e4228",

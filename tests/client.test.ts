@@ -150,9 +150,9 @@ test("default client consumes the pinned contract catalog and metadata", () => {
     assert.deepEqual(client.getModelConfig(id), expected);
   }
   const glmFlash = client.getModelConfig("glm-5.3-flash");
-  assert.equal(CONTRACT_VERSION, "1.3.1");
-  assert.equal(CONTRACT_CATALOG_REVISION, 20);
-  assert.equal(CONTRACT_CONSUMER_LOCK_SHA256, "3b7d2c97b0546e9f14aa1ea23cf587113c050eb1a4902adc9a0a64dba35f6ed2");
+  assert.equal(CONTRACT_VERSION, "1.3.2");
+  assert.equal(CONTRACT_CATALOG_REVISION, 21);
+  assert.equal(CONTRACT_CONSUMER_LOCK_SHA256, "5f470276c3439467dcd3bf0a834d03162997e73e1a23ce3862863cfc15f61bd5");
   assert.equal(client.modelCatalog, DEFAULT_MODEL_CATALOG);
   assert.equal(vision?.max_image_dimension, 8192);
   assert.equal(vision?.capabilities?.thinking, "configurable");
@@ -190,6 +190,19 @@ test("default client consumes the pinned contract catalog and metadata", () => {
     structured_output: "json_schema",
     input_modalities: ["text", "image", "video", "audio"],
     reasoning_efforts: ["low", "medium", "high"],
+  });
+  const minimaxFlash = client.getModelConfig("MiniMax-M3.1-Flash");
+  assert.equal(minimaxFlash?.context_length, 1_000_000);
+  assert.equal(minimaxFlash?.max_output_tokens, 512_000);
+  assert.equal(minimaxFlash?.function_call_available, true);
+  assert.equal(minimaxFlash?.response_format_available, false);
+  assert.equal(minimaxFlash?.native_multimodal, true);
+  assert.deepEqual(minimaxFlash?.capabilities, {
+    tools: true,
+    structured_output: "none",
+    input_modalities: ["text", "image", "video"],
+    thinking: "always_enabled",
+    reasoning_efforts: ["low", "medium", "high", "xhigh", "max"],
   });
   for (const effort of ["low", "medium", "high"]) {
     assert.doesNotThrow(() => validateReasoningEffort("gemini-4-argon", effort, argon?.capabilities, "strict"));

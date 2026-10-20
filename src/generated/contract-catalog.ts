@@ -4,15 +4,15 @@
  */
 import type { ModelConfig } from "../types.js";
 
-export const CONTRACT_VERSION = "1.3.1" as const;
+export const CONTRACT_VERSION = "1.3.2" as const;
 export const CONTRACT_SCHEMA_VERSION = 2 as const;
 export const CONTRACT_FIXTURE_VERSION = 2 as const;
-export const CONTRACT_CATALOG_REVISION = 20 as const;
-export const CONTRACT_CONSUMER_LOCK_SHA256 = "3b7d2c97b0546e9f14aa1ea23cf587113c050eb1a4902adc9a0a64dba35f6ed2" as const;
-export const CONTRACT_MANIFEST_SHA256 = "7b82dbe1b2026f4dbfb369be12a849b2631458909f164129a74de769148c327a" as const;
-export const CONTRACT_CHECKSUMS_SHA256 = "f3aade09ccb8de2399d9e659eb63c5a12894632876af67f5670392228384491b" as const;
+export const CONTRACT_CATALOG_REVISION = 21 as const;
+export const CONTRACT_CONSUMER_LOCK_SHA256 = "5f470276c3439467dcd3bf0a834d03162997e73e1a23ce3862863cfc15f61bd5" as const;
+export const CONTRACT_MANIFEST_SHA256 = "5e0caef5cb243a8904c6a1805dd2b5da9d815fc59a67ff7e6c3f09bbb7a53505" as const;
+export const CONTRACT_CHECKSUMS_SHA256 = "fadd1a919bb60994d1d844b1ec01a8cf527e4cd0bd2e1992bc04085294049e1e" as const;
 export const CONTRACT_ARTIFACTS = {
-  "catalog/default-chat-catalog.json": "2963808ff14d9770a501bb0a9ab53be557ea1ad874d81a5d78961f4bce96cbb1",
+  "catalog/default-chat-catalog.json": "9be5f5206c113c9b48f6df92269e2a243a2ddf3e2837ddbaf8e902c2f04e0b7d",
   "fixtures/decisions.v1.json": "910fafaf8bf87420603ac155b95ced298d7671099e9eb5adbb3abc1257b5e9c4",
   "fixtures/openai-compatible.v2.json": "7696b0c53b8d64ef1d5a483bfe12c2c8a4a372a18258244c862b7b52ad9ede99",
   "fixtures/reasoning-effort.v1.json": "943d77546491f68132ab7f4e777b65bdd1cd8dea34804347da379faa5b6e4228",
@@ -2235,6 +2235,32 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "native_multimodal": true,
     "capabilities": {
       "reasoning_efforts": []
+    }
+  },
+  {
+    "backend": "minimax",
+    "id": "MiniMax-M3.1-Flash",
+    "context_length": 1000000,
+    "max_output_tokens": 512000,
+    "function_call_available": true,
+    "response_format_available": false,
+    "native_multimodal": true,
+    "capabilities": {
+      "tools": true,
+      "structured_output": "none",
+      "input_modalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "thinking": "always_enabled",
+      "reasoning_efforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ]
     }
   },
   {

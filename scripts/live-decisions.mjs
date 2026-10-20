@@ -29,7 +29,7 @@ try {
   const selected = backend.models?.[model];
   const ids = new Set([backend.default_endpoint, ...(selected?.endpoints ?? []).map((binding) => typeof binding === "string" ? binding : binding.endpoint_id)]);
   const decisionSettings = { endpoints: settings.endpoints?.filter((endpoint) => ids.has(endpoint.id)), decision_backends: { openai: { default_endpoint: backend.default_endpoint, models: selected ? { [model]: selected } : {} } } };
-  const fixture = JSON.parse(readFileSync(new URL("../contract/v1.3.1/fixtures/decisions.v1.json", import.meta.url), "utf8"));
+  const fixture = JSON.parse(readFileSync(new URL("../contract/v1.3.2/fixtures/decisions.v1.json", import.meta.url), "utf8"));
   const { client } = createDecisionClientFromSettings(decisionSettings, { backend: "openai", model });
   const request = structuredClone(fixture.request);
   delete request.model;

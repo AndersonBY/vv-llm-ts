@@ -4,15 +4,15 @@
  */
 import type { ModelConfig } from "../types.js";
 
-export const CONTRACT_VERSION = "1.3.2" as const;
+export const CONTRACT_VERSION = "1.3.3" as const;
 export const CONTRACT_SCHEMA_VERSION = 2 as const;
 export const CONTRACT_FIXTURE_VERSION = 2 as const;
-export const CONTRACT_CATALOG_REVISION = 21 as const;
-export const CONTRACT_CONSUMER_LOCK_SHA256 = "5f470276c3439467dcd3bf0a834d03162997e73e1a23ce3862863cfc15f61bd5" as const;
-export const CONTRACT_MANIFEST_SHA256 = "5e0caef5cb243a8904c6a1805dd2b5da9d815fc59a67ff7e6c3f09bbb7a53505" as const;
-export const CONTRACT_CHECKSUMS_SHA256 = "fadd1a919bb60994d1d844b1ec01a8cf527e4cd0bd2e1992bc04085294049e1e" as const;
+export const CONTRACT_CATALOG_REVISION = 22 as const;
+export const CONTRACT_CONSUMER_LOCK_SHA256 = "c0c8c9cbdfce2fde8423dbd43b2d54c70155d37ed13c908d61767024ee2d96cf" as const;
+export const CONTRACT_MANIFEST_SHA256 = "76d09a9e3c36baacd05ac5780725f5aafbdbd695eee07aa7c2eaaeaeb3d854e4" as const;
+export const CONTRACT_CHECKSUMS_SHA256 = "9a9c6f1568e6f2b4c5fd620d50cd96374ca1b95be3cefae24570511783006a69" as const;
 export const CONTRACT_ARTIFACTS = {
-  "catalog/default-chat-catalog.json": "9be5f5206c113c9b48f6df92269e2a243a2ddf3e2837ddbaf8e902c2f04e0b7d",
+  "catalog/default-chat-catalog.json": "13aebe56f1af464d4a2b6b7756f7423d0c4ebbe2b1cb980db4f309c6fda7c8bc",
   "fixtures/decisions.v1.json": "910fafaf8bf87420603ac155b95ced298d7671099e9eb5adbb3abc1257b5e9c4",
   "fixtures/openai-compatible.v2.json": "7696b0c53b8d64ef1d5a483bfe12c2c8a4a372a18258244c862b7b52ad9ede99",
   "fixtures/reasoning-effort.v1.json": "943d77546491f68132ab7f4e777b65bdd1cd8dea34804347da379faa5b6e4228",
@@ -134,6 +134,30 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
     "response_format_available": true,
     "native_multimodal": true,
     "capabilities": {
+      "reasoning_efforts": [
+        "low",
+        "high",
+        "max"
+      ]
+    }
+  },
+  {
+    "backend": "moonshot",
+    "id": "kimi-k3.1-pro",
+    "context_length": 1048576,
+    "max_output_tokens": 1048576,
+    "function_call_available": true,
+    "response_format_available": true,
+    "native_multimodal": true,
+    "capabilities": {
+      "tools": true,
+      "structured_output": "json_schema",
+      "input_modalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "thinking": "always_enabled",
       "reasoning_efforts": [
         "low",
         "high",

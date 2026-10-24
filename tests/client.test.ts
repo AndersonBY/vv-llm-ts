@@ -150,9 +150,9 @@ test("default client consumes the pinned contract catalog and metadata", () => {
     assert.deepEqual(client.getModelConfig(id), expected);
   }
   const glmFlash = client.getModelConfig("glm-5.3-flash");
-  assert.equal(CONTRACT_VERSION, "1.3.2");
-  assert.equal(CONTRACT_CATALOG_REVISION, 21);
-  assert.equal(CONTRACT_CONSUMER_LOCK_SHA256, "5f470276c3439467dcd3bf0a834d03162997e73e1a23ce3862863cfc15f61bd5");
+  assert.equal(CONTRACT_VERSION, "1.3.3");
+  assert.equal(CONTRACT_CATALOG_REVISION, 22);
+  assert.equal(CONTRACT_CONSUMER_LOCK_SHA256, "c0c8c9cbdfce2fde8423dbd43b2d54c70155d37ed13c908d61767024ee2d96cf");
   assert.equal(client.modelCatalog, DEFAULT_MODEL_CATALOG);
   assert.equal(vision?.max_image_dimension, 8192);
   assert.equal(vision?.capabilities?.thinking, "configurable");
@@ -799,4 +799,32 @@ test("Gemini level conflicts and unsupported minimal fail before transport", asy
   }
   await assert.rejects(client.completeChat({ model: "gemini-3.8-flash", messages: [], extra_body: { google: { thinking_config: { thinking_level: "low", thinkingLevel: "high" } } } }), /Conflicting Gemini/);
   await assert.rejects(client.completeChat({ model: "gemini-3.8-flash", messages: [], reasoning_effort: "high", extra_body: { google: { thinking_config: { thinkingLevel: "high" } } } }), /conflicts/);
+});
+
+test("Kimi K3.1 Pro exposes the official limits and effort choices", () => {
+  const client = new VvLlmClient({ fetch: jsonFetch({}) });
+  const model = client.getModelConfig("kimi-k3.1-pro");
+  assert.deepEqual(model, {
+    enabled: true,
+    backend: "moonshot",
+    id: "kimi-k3.1-pro",
+    context_length: 1_048_576,
+    max_output_tokens: 1_048_576,
+    function_call_available: true,
+    response_format_available: true,
+    native_multimodal: true,
+    capabilities: {
+      tools: true,
+      structured_output: "json_schema",
+      input_modalities: ["text", "image", "video"],
+      thinking: "always_enabled",
+      reasoning_efforts: ["low", "high", "max"],
+    },
+  });
+  for (const effort of ["low", "high", "max"]) {
+    assert.doesNotThrow(() => validateReasoningEffort("kimi-k3.1-pro", effort, model?.capabilities, "strict"));
+  }
+  for (const effort of ["none", "medium", "ultra"]) {
+    assert.throws(() => validateReasoningEffort("kimi-k3.1-pro", effort, model?.capabilities, "strict"), /reasoning_effort/);
+  }
 });

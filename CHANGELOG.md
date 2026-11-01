@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.4 - 2026-11-01
+
+- Vendor the local shared contract 1.3.4 candidate (not yet published) and add
+  tool-call index conformance assertions for sparse and reordered stream deltas.
+- Add interleaved tool-call aggregation and single indexless-call regressions.
+  Existing TypeScript production code already preserves explicit indices.
+
 ## 0.3.3 - 2026-10-24
 
 - Adopt shared contract 1.3.3 and catalog revision 22 with `kimi-k3.1-pro`: 1,048,576-token

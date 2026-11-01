@@ -18,6 +18,7 @@ import {
   resolveSettingsModel,
   toChatCompletionCreateParams,
   type FetchLike,
+  type ChatCompletionChunk,
   type CanonicalImageUrlContentPart,
   type CanonicalTextContentPart,
   type EndpointBindingInput,
@@ -150,9 +151,9 @@ test("default client consumes the pinned contract catalog and metadata", () => {
     assert.deepEqual(client.getModelConfig(id), expected);
   }
   const glmFlash = client.getModelConfig("glm-5.3-flash");
-  assert.equal(CONTRACT_VERSION, "1.3.3");
+  assert.equal(CONTRACT_VERSION, "1.3.4");
   assert.equal(CONTRACT_CATALOG_REVISION, 22);
-  assert.equal(CONTRACT_CONSUMER_LOCK_SHA256, "c0c8c9cbdfce2fde8423dbd43b2d54c70155d37ed13c908d61767024ee2d96cf");
+  assert.equal(CONTRACT_CONSUMER_LOCK_SHA256, "13db5e2b078041e24842162a483603df97324e9b6db0a62163adbbdbf332c755");
   assert.equal(client.modelCatalog, DEFAULT_MODEL_CATALOG);
   assert.equal(vision?.max_image_dimension, 8192);
   assert.equal(vision?.capabilities?.thinking, "configurable");
@@ -292,12 +293,23 @@ test("OpenAI-compatible contract fixture drives canonical request and SSE respon
   const streamParams = toChatCompletionCreateParams(streamRequest);
   if (streamParams.stream !== true) throw new Error("fixture stream unexpectedly disabled streaming");
   const stream = await client.createChatCompletion(streamParams);
-  const chunks = [];
+  const chunks: ChatCompletionChunk[] = [];
   for await (const chunk of stream) chunks.push(chunk);
   assert.equal(chunks.length, fixture.stream_case.expected_deltas.length);
-  assert.equal(chunks[0]?.choices[0]?.delta.content, fixture.stream_case.expected_deltas[0]?.content);
-  assert.equal(chunks[0]?.choices[0]?.delta.reasoning_content, fixture.stream_case.expected_deltas[0]?.reasoning_content);
-  assert.equal(chunks[2]?.usage?.total_tokens, fixture.stream_case.expected_deltas[2]?.usage?.total_tokens);
+  for (const [index, expected] of fixture.stream_case.expected_deltas.entries()) {
+    const delta = chunks[index]?.choices[0]?.delta;
+    assert.equal(delta?.content ?? "", expected.content);
+    assert.equal(delta?.reasoning_content ?? "", expected.reasoning_content);
+    assert.deepEqual((delta?.tool_calls ?? []).map((call) => ({
+      id: call.id,
+      name: call.function?.name,
+      arguments: call.function?.arguments,
+      index: call.index,
+    })), expected.tool_calls);
+  }
+  for (const [index, expected] of fixture.stream_case.expected_deltas.entries()) {
+    if (expected.usage) assert.equal(chunks[index]?.usage?.total_tokens, expected.usage.total_tokens);
+  }
 });
 
 test("canonical tools and tool calls are adapted when options are omitted", async () => {
@@ -528,7 +540,7 @@ test("streaming chat parses split SSE events and aggregates content and tool cal
     messages: [{ role: "user", content: "stream" }],
     stream: true,
   });
-  const chunks = [];
+  const chunks: ChatCompletionChunk[] = [];
   for await (const chunk of stream) chunks.push(chunk);
   assert.equal(chunks.length, 3);
   assert.equal(chunks[0]?.choices[0]?.delta.content, "Hel");
@@ -541,6 +553,59 @@ test("streaming chat parses split SSE events and aggregates content and tool cal
   assert.equal(complete.choices[0]?.message.tool_calls?.[0]?.function.name, "lookup");
   assert.equal(complete.choices[0]?.message.tool_calls?.[0]?.function.arguments, "{\"city\":\"Shanghai\"}");
   assert.equal(complete.usage?.total_tokens, 5);
+});
+
+// The provider index identifies a tool across the whole stream, not its
+// position in an individual chunk (vv-llm#2).
+for (const [label, indices] of [
+  ["interleaved", [0, 1]],
+  ["sparse and reordered", [7, 0]],
+] as const) {
+  test(`streaming chat preserves ${label} tool indices and aggregates by identity`, async () => {
+    const [a, b] = indices;
+    const calls = [
+      [{ index: a, id: "call-a", type: "function", function: { name: "lookup_a", arguments: '{"city":"' } }],
+      [{ index: b, id: "call-b", type: "function", function: { name: "lookup_b", arguments: '{"city":"' } }],
+      [{ index: a, function: { arguments: 'Paris"}' } }],
+      [{ index: b, function: { arguments: 'Tokyo"}' } }],
+    ];
+    const payload = calls.map((tool_calls) => `data: ${JSON.stringify({
+      id: "parallel-tools", object: "chat.completion.chunk", created: 1, model: "m",
+      choices: [{ index: 0, delta: { tool_calls }, finish_reason: null }],
+    })}\n\n`).join("") + "data: [DONE]\n\n";
+    const client = new VvLlmClient({ fetch: async () => new Response(payload, {
+      headers: { "content-type": "text/event-stream" },
+    }) });
+    const chunks: ChatCompletionChunk[] = [];
+    for await (const chunk of await client.chat.completions.create({ model: "m", messages: [], stream: true })) {
+      chunks.push(chunk);
+    }
+    assert.deepEqual(chunks.map((chunk) => chunk.choices[0]?.delta.tool_calls?.[0]?.index), [a, b, a, b]);
+    const complete = await collectChatStream((async function* () { yield* chunks; })());
+    assert.deepEqual(complete.choices[0]?.message.tool_calls, [
+      { id: "call-a", type: "function", index: a, function: { name: "lookup_a", arguments: '{"city":"Paris"}' } },
+      { id: "call-b", type: "function", index: b, function: { name: "lookup_b", arguments: '{"city":"Tokyo"}' } },
+    ].sort((left, right) => left.index - right.index));
+  });
+}
+
+test("stream collector keeps the positional fallback for a single indexless tool", async () => {
+  // This compatibility fallback cannot disambiguate indexless parallel calls.
+  const payload = [
+    { id: "single", type: "function", function: { name: "lookup", arguments: '{"city":"' } },
+    { function: { arguments: 'Paris"}' } },
+  ].map((call) => `data: ${JSON.stringify({
+    id: "single-tool", object: "chat.completion.chunk", created: 1, model: "m",
+    choices: [{ index: 0, delta: { tool_calls: [call] }, finish_reason: null }],
+  })}\n\n`).join("") + "data: [DONE]\n\n";
+  const client = new VvLlmClient({ fetch: async () => new Response(payload, {
+    headers: { "content-type": "text/event-stream" },
+  }) });
+  const complete = await collectChatStream(await client.chat.completions.create({ model: "m", messages: [], stream: true }));
+  assert.deepEqual(complete.choices[0]?.message.tool_calls, [{
+    id: "single", type: "function", index: 0,
+    function: { name: "lookup", arguments: '{"city":"Paris"}' },
+  }]);
 });
 
 test("embeddings and rerank normalize common responses", async () => {

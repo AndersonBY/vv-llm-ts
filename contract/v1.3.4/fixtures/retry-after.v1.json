@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "name": "milliseconds_take_precedence",
+      "headers": { "retry-after-ms": "1500", "retry-after": "9" },
+      "now_unix_seconds": 0,
+      "expected_seconds": 1.5
+    },
+    {
+      "name": "fractional_seconds",
+      "headers": { "retry-after": "2.25" },
+      "now_unix_seconds": 0,
+      "expected_seconds": 2.25
+    },
+    {
+      "name": "http_date",
+      "headers": { "retry-after": "Thu, 01 Jan 1970 00:00:05 GMT" },
+      "now_unix_seconds": 1,
+      "expected_seconds": 4.0
+    },
+    {
+      "name": "past_http_date_clamps_to_zero",
+      "headers": { "retry-after": "Thu, 01 Jan 1970 00:00:05 GMT" },
+      "now_unix_seconds": 10,
+      "expected_seconds": 0.0
+    },
+    {
+      "name": "invalid_headers",
+      "headers": { "retry-after-ms": "invalid", "retry-after": "not-a-date" },
+      "now_unix_seconds": 0,
+      "expected_seconds": null
+    },
+    {
+      "name": "invalid_milliseconds_falls_back_to_seconds",
+      "headers": { "retry-after-ms": "invalid", "retry-after": "3.5" },
+      "now_unix_seconds": 0,
+      "expected_seconds": 3.5
+    },
+    {
+      "name": "negative_milliseconds_clamp_to_zero",
+      "headers": { "retry-after-ms": "-100", "retry-after": "9" },
+      "now_unix_seconds": 0,
+      "expected_seconds": 0.0
+    }
+  ]
+}

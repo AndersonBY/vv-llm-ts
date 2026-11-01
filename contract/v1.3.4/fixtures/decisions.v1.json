@@ -1,0 +1,745 @@
+{
+  "version": 1,
+  "request": {
+    "model": "gpt-6-luna",
+    "input": "The package arrived with a broken screen. Please replace it.",
+    "questions": [
+      {
+        "type": "predicate",
+        "name": "damaged",
+        "instructions": "Does the customer report damage?"
+      },
+      {
+        "type": "choice",
+        "name": "intent",
+        "instructions": "Identify the customer intent.",
+        "choices": [
+          "replacement",
+          "refund"
+        ]
+      },
+      {
+        "type": "score",
+        "name": "urgency",
+        "instructions": "Rate urgency from low to high using the supplied rubric.",
+        "rubric": [
+          {
+            "label": "low"
+          },
+          {
+            "label": "medium"
+          },
+          {
+            "label": "high"
+          }
+        ]
+      }
+    ]
+  },
+  "response": {
+    "model": "gpt-6-luna",
+    "answers": [
+      {
+        "type": "predicate",
+        "name": "damaged",
+        "probability": 0.0
+      },
+      {
+        "type": "choice",
+        "name": "intent",
+        "choice": "replacement",
+        "options": [
+          {
+            "choice": "replacement",
+            "probability": 0.75
+          },
+          {
+            "choice": "refund",
+            "probability": 0.25
+          }
+        ]
+      },
+      {
+        "type": "score",
+        "name": "urgency",
+        "score": 1.5,
+        "confidence": 0.8,
+        "probabilities": [
+          {
+            "value": 0,
+            "label": "low",
+            "probability": 0.0
+          },
+          {
+            "value": 1,
+            "label": "medium",
+            "probability": 0.5
+          },
+          {
+            "value": 2,
+            "label": "high",
+            "probability": 0.5
+          }
+        ]
+      }
+    ],
+    "usage": {
+      "input_tokens": 42,
+      "output_tokens": 0,
+      "total_tokens": 42,
+      "input_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0
+      },
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    }
+  },
+  "refusal_response": {
+    "model": "gpt-6-luna",
+    "answers": [
+      {
+        "type": "refusal",
+        "name": null
+      }
+    ]
+  },
+  "invalid_requests": [
+    {
+      "model": " ",
+      "input": "The package arrived with a broken screen. Please replace it.",
+      "questions": [
+        {
+          "type": "predicate",
+          "name": "damaged",
+          "instructions": "Does the customer report damage?"
+        },
+        {
+          "type": "choice",
+          "name": "intent",
+          "instructions": "Identify the customer intent.",
+          "choices": [
+            "replacement",
+            "refund"
+          ]
+        },
+        {
+          "type": "score",
+          "name": "urgency",
+          "instructions": "Rate urgency from low to high using the supplied rubric.",
+          "rubric": [
+            {
+              "label": "low"
+            },
+            {
+              "label": "medium"
+            },
+            {
+              "label": "high"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "model": "gpt-6-luna",
+      "input": "The package arrived with a broken screen. Please replace it.",
+      "questions": []
+    },
+    {
+      "model": "gpt-6-luna",
+      "input": "The package arrived with a broken screen. Please replace it.",
+      "questions": [
+        {
+          "type": "classification",
+          "name": "damaged",
+          "instructions": "Does the customer report damage?"
+        },
+        {
+          "type": "choice",
+          "name": "intent",
+          "instructions": "Identify the customer intent.",
+          "choices": [
+            "replacement",
+            "refund"
+          ]
+        },
+        {
+          "type": "score",
+          "name": "urgency",
+          "instructions": "Rate urgency from low to high using the supplied rubric.",
+          "rubric": [
+            {
+              "label": "low"
+            },
+            {
+              "label": "medium"
+            },
+            {
+              "label": "high"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "model": "gpt-6-luna",
+      "input": "The package arrived with a broken screen. Please replace it.",
+      "questions": [
+        {
+          "type": "choice",
+          "instructions": "Pick one",
+          "choices": [
+            "same",
+            "same"
+          ]
+        }
+      ]
+    },
+    {
+      "model": "gpt-6-luna",
+      "input": [
+        {
+          "role": "system",
+          "content": "hello"
+        }
+      ],
+      "questions": [
+        {
+          "type": "predicate",
+          "name": "damaged",
+          "instructions": "Does the customer report damage?"
+        },
+        {
+          "type": "choice",
+          "name": "intent",
+          "instructions": "Identify the customer intent.",
+          "choices": [
+            "replacement",
+            "refund"
+          ]
+        },
+        {
+          "type": "score",
+          "name": "urgency",
+          "instructions": "Rate urgency from low to high using the supplied rubric.",
+          "rubric": [
+            {
+              "label": "low"
+            },
+            {
+              "label": "medium"
+            },
+            {
+              "label": "high"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "model": "gpt-6-luna",
+      "input": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "image_url",
+              "image_url": "https://example.invalid/image.png"
+            }
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "type": "predicate",
+          "name": "damaged",
+          "instructions": "Does the customer report damage?"
+        },
+        {
+          "type": "choice",
+          "name": "intent",
+          "instructions": "Identify the customer intent.",
+          "choices": [
+            "replacement",
+            "refund"
+          ]
+        },
+        {
+          "type": "score",
+          "name": "urgency",
+          "instructions": "Rate urgency from low to high using the supplied rubric.",
+          "rubric": [
+            {
+              "label": "low"
+            },
+            {
+              "label": "medium"
+            },
+            {
+              "label": "high"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "model": "gpt-6-luna",
+      "input": "The package arrived with a broken screen. Please replace it.",
+      "questions": [
+        {
+          "type": "predicate",
+          "name": "damaged",
+          "instructions": "Does the customer report damage?"
+        },
+        {
+          "type": "predicate",
+          "name": "damaged",
+          "instructions": "Does the customer report damage?"
+        }
+      ]
+    },
+    {
+      "model": "gpt-6-luna",
+      "input": "The package arrived with a broken screen. Please replace it.",
+      "questions": [
+        {
+          "type": "choice",
+          "instructions": "Pick one",
+          "options": [
+            "old",
+            "shape"
+          ]
+        }
+      ]
+    },
+    {
+      "model": "gpt-6-luna",
+      "input": "The package arrived with a broken screen. Please replace it.",
+      "questions": [
+        {
+          "type": "score",
+          "instructions": "Score it",
+          "levels": [
+            {
+              "value": 0,
+              "label": "old"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "model": "gpt-6-luna",
+      "input": "The package arrived with a broken screen. Please replace it.",
+      "questions": [
+        {
+          "type": "predicate",
+          "name": "damaged",
+          "instructions": "Does the customer report damage?"
+        },
+        {
+          "type": "choice",
+          "name": "intent",
+          "instructions": "Identify the customer intent.",
+          "choices": [
+            "replacement",
+            "refund"
+          ]
+        },
+        {
+          "type": "score",
+          "name": "urgency",
+          "instructions": "Rate urgency from low to high using the supplied rubric.",
+          "rubric": [
+            {
+              "label": "low"
+            },
+            {
+              "label": "medium"
+            },
+            {
+              "label": "high"
+            }
+          ]
+        }
+      ],
+      "instructions": "unsupported top-level field"
+    }
+  ],
+  "invalid_responses": [
+    {
+      "model": "gpt-6-luna",
+      "answers": [
+        {
+          "type": "predicate",
+          "probability": true
+        }
+      ],
+      "usage": {
+        "input_tokens": 42,
+        "output_tokens": 0,
+        "total_tokens": 42,
+        "input_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0
+        },
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      }
+    },
+    {
+      "model": "gpt-6-luna",
+      "answers": [
+        {
+          "type": "predicate",
+          "probability": 1.1
+        }
+      ],
+      "usage": {
+        "input_tokens": 42,
+        "output_tokens": 0,
+        "total_tokens": 42,
+        "input_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0
+        },
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      }
+    },
+    {
+      "model": "gpt-6-luna",
+      "answers": [
+        {
+          "type": "predicate",
+          "name": "damaged",
+          "probability": 0.0
+        },
+        {
+          "type": "choice",
+          "name": "intent",
+          "choice": "replacement",
+          "options": [
+            {
+              "choice": "replacement",
+              "probability": 0.75
+            },
+            {
+              "choice": "refund",
+              "probability": 0.25
+            }
+          ]
+        },
+        {
+          "type": "score",
+          "name": "urgency",
+          "score": 1.5,
+          "confidence": 0.8,
+          "probabilities": [
+            {
+              "value": 0,
+              "label": "low",
+              "probability": 0.0
+            },
+            {
+              "value": 1,
+              "label": "medium",
+              "probability": 0.5
+            },
+            {
+              "value": 2,
+              "label": "high",
+              "probability": 0.5
+            }
+          ]
+        }
+      ],
+      "usage": {
+        "input_tokens": -1
+      }
+    },
+    {
+      "model": "gpt-6-luna",
+      "answers": [
+        {
+          "type": "predicate",
+          "name": "damaged",
+          "probability": 0.0
+        },
+        {
+          "type": "choice",
+          "name": "intent",
+          "choice": "replacement",
+          "options": [
+            {
+              "choice": "replacement",
+              "probability": 0.75
+            },
+            {
+              "choice": "refund",
+              "probability": 0.25
+            }
+          ]
+        },
+        {
+          "type": "score",
+          "name": "urgency",
+          "score": 1.5,
+          "confidence": 0.8,
+          "probabilities": [
+            {
+              "value": 0,
+              "label": "low",
+              "probability": 0.0
+            },
+            {
+              "value": 1,
+              "label": "medium",
+              "probability": 0.5
+            },
+            {
+              "value": 2,
+              "label": "high",
+              "probability": 0.5
+            }
+          ]
+        }
+      ],
+      "usage": {
+        "input_tokens": "42"
+      }
+    },
+    {
+      "model": "gpt-6-luna",
+      "answers": [
+        {
+          "type": "choice",
+          "choice": "replacement",
+          "options": []
+        }
+      ],
+      "usage": {
+        "input_tokens": 42,
+        "output_tokens": 0,
+        "total_tokens": 42,
+        "input_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0
+        },
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      }
+    },
+    {
+      "model": "gpt-6-luna",
+      "answers": [
+        {
+          "type": "predicate",
+          "name": "damaged",
+          "probability": 0.0
+        },
+        {
+          "type": "choice",
+          "name": "intent",
+          "choice": "replacement",
+          "options": [
+            {
+              "choice": "replacement",
+              "probability": 0.75
+            },
+            {
+              "choice": "refund",
+              "probability": 0.25
+            }
+          ]
+        },
+        {
+          "type": "score",
+          "name": "urgency",
+          "score": 1.5,
+          "confidence": 1.1,
+          "probabilities": [
+            {
+              "value": 0,
+              "label": "low",
+              "probability": 0.0
+            },
+            {
+              "value": 1,
+              "label": "medium",
+              "probability": 0.5
+            },
+            {
+              "value": 2,
+              "label": "high",
+              "probability": 0.5
+            }
+          ]
+        }
+      ],
+      "usage": {
+        "input_tokens": 42,
+        "output_tokens": 0,
+        "total_tokens": 42,
+        "input_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0
+        },
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      }
+    },
+    {
+      "model": "gpt-6-luna",
+      "answers": [
+        {
+          "type": "predicate",
+          "name": "damaged",
+          "probability": 0.0
+        },
+        {
+          "type": "choice",
+          "name": "intent",
+          "choice": "replacement",
+          "options": [
+            {
+              "choice": "replacement",
+              "probability": 0.75
+            },
+            {
+              "choice": "refund",
+              "probability": 0.25
+            }
+          ]
+        },
+        {
+          "type": "score",
+          "name": "urgency",
+          "score": 1.5,
+          "confidence": 0.8,
+          "probabilities": [
+            {
+              "value": 0.5,
+              "label": "low",
+              "probability": 0.0
+            },
+            {
+              "value": 1,
+              "label": "medium",
+              "probability": 0.5
+            },
+            {
+              "value": 2,
+              "label": "high",
+              "probability": 0.5
+            }
+          ]
+        }
+      ],
+      "usage": {
+        "input_tokens": 42,
+        "output_tokens": 0,
+        "total_tokens": 42,
+        "input_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0
+        },
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      }
+    }
+  ],
+  "valid_requests": [
+    {
+      "model": "gpt-6-luna",
+      "input": [
+        {
+          "type": "message",
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "Is this damaged?"
+            },
+            {
+              "type": "image_url",
+              "image_url": "data:image/png;base64,aGVsbG8=",
+              "detail": "original"
+            }
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "type": "choice",
+          "instructions": "Is it damaged?",
+          "choices": [
+            true,
+            {
+              "id": false,
+              "description": "No damage"
+            }
+          ]
+        },
+        {
+          "type": "score",
+          "instructions": "Rate urgency",
+          "rubric": "Return a score from 0 to 10."
+        }
+      ],
+      "safety_identifier": "test-user"
+    }
+  ],
+  "valid_responses": [
+    {
+      "model": "gpt-6-luna",
+      "answers": [
+        {
+          "type": "choice",
+          "name": null,
+          "choice": false,
+          "options": [
+            {
+              "choice": true,
+              "probability": 0.25
+            },
+            {
+              "choice": false,
+              "probability": 0.75
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "model": "gpt-6-luna",
+      "answers": [
+        {
+          "type": "score",
+          "name": null,
+          "score": 7.5,
+          "confidence": 0.8,
+          "probabilities": [
+            {
+              "value": 0,
+              "label": "low",
+              "probability": 0.25
+            },
+            {
+              "value": 1,
+              "label": "high",
+              "probability": 0.75
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

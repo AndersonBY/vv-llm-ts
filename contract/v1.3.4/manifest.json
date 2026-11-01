@@ -1,0 +1,53 @@
+{
+  "format": "vv-llm-contract-manifest.v1",
+  "contract_version": "1.3.4",
+  "schema_version": 2,
+  "fixture_version": 2,
+  "catalog_revision": 22,
+  "checksums": "checksums.sha256",
+  "contract": {
+    "name": "vv-llm-contract",
+    "version": "1.3.4"
+  },
+  "revisions": {
+    "schema": "v2",
+    "fixture": "v2",
+    "catalog": "v22"
+  },
+  "provenance": {
+    "openai_compatible_fixture": {
+      "source": "vv-llm-contract/fixtures/openai-compatible.v2.json",
+      "sha256": "b0bec6f100377be20dd0bc2646024667fd8f3bf164976143d4d6c30e1e7f7e48"
+    },
+    "default_chat_catalog": {
+      "source": "vv-llm-contract/catalog/default-chat-catalog.json",
+      "sha256": "13aebe56f1af464d4a2b6b7756f7423d0c4ebbe2b1cb980db4f309c6fda7c8bc"
+    }
+  },
+  "artifacts": {
+    "schemas": [
+      "schemas/chat-request.v1.schema.json",
+      "schemas/chat-response.v1.schema.json",
+      "schemas/chat-stream-delta.v1.schema.json",
+      "schemas/error-details.v1.schema.json",
+      "schemas/embedding.v1.schema.json",
+      "schemas/rerank.v1.schema.json",
+      "schemas/settings.v2.schema.json",
+      "schemas/model-catalog.v1.schema.json",
+      "schemas/openai-compatible-fixture.v2.schema.json",
+      "schemas/retry-after.v1.schema.json",
+      "schemas/decision-request.v1.schema.json",
+      "schemas/decision-response.v1.schema.json"
+    ],
+    "fixtures": [
+      "fixtures/openai-compatible.v2.json",
+      "fixtures/retry-after.v1.json",
+      "fixtures/settings-resolution.v1.json",
+      "fixtures/reasoning-effort.v1.json",
+      "fixtures/decisions.v1.json"
+    ],
+    "catalog": [
+      "catalog/default-chat-catalog.json"
+    ]
+  }
+}

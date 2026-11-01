@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:vv-llm-contract:error-details:v1",
+  "title": "vv-llm canonical error details v1",
+  "$comment": "Retryability is derived from kind and is intentionally not duplicated as a mutable field. Unknown optional provider-neutral fields use the x_* extension namespace.",
+  "type": "object",
+  "required": [
+    "kind",
+    "message"
+  ],
+  "properties": {
+    "kind": {
+      "enum": [
+        "authentication",
+        "rate_limited",
+        "network",
+        "timeout",
+        "invalid_request",
+        "context_length",
+        "content_policy",
+        "model_not_found",
+        "provider_internal",
+        "serialization",
+        "configuration",
+        "unknown"
+      ]
+    },
+    "message": {
+      "type": "string"
+    },
+    "provider": {
+      "type": "string"
+    },
+    "model": {
+      "type": "string"
+    },
+    "status_code": {
+      "type": "integer",
+      "minimum": 100,
+      "maximum": 599
+    },
+    "provider_code": {
+      "type": "string"
+    },
+    "retry_after_seconds": {
+      "type": "number",
+      "minimum": 0
+    },
+    "request_id": {
+      "type": "string"
+    },
+    "raw_body": {
+      "type": "string"
+    }
+  },
+  "patternProperties": {
+    "^x_[a-z][a-z0-9_]*$": {}
+  },
+  "additionalProperties": false
+}

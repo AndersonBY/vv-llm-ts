@@ -1,0 +1,253 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:vv-llm-contract:decision-request:v1",
+  "title": "Provider-neutral decision request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "model",
+    "input",
+    "questions"
+  ],
+  "properties": {
+    "model": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "input": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "role",
+              "content"
+            ],
+            "properties": {
+              "type": {
+                "const": "message"
+              },
+              "role": {
+                "const": "user"
+              },
+              "content": {
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "type",
+                            "text"
+                          ],
+                          "properties": {
+                            "type": {
+                              "const": "text"
+                            },
+                            "text": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "type",
+                            "image_url"
+                          ],
+                          "properties": {
+                            "type": {
+                              "const": "image_url"
+                            },
+                            "image_url": {
+                              "type": "string",
+                              "pattern": "^data:image/[^;,]+;base64,[A-Za-z0-9+/]+={0,2}$"
+                            },
+                            "detail": {
+                              "enum": [
+                                "auto",
+                                "low",
+                                "high",
+                                "original"
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "questions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "instructions"
+            ],
+            "properties": {
+              "type": {
+                "const": "predicate"
+              },
+              "instructions": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "instructions",
+              "choices"
+            ],
+            "properties": {
+              "type": {
+                "const": "choice"
+              },
+              "instructions": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "choices": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": [
+                        "string",
+                        "boolean"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "id",
+                        "description"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": [
+                            "string",
+                            "boolean"
+                          ]
+                        },
+                        "description": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "uniqueItems": true
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "instructions",
+              "rubric"
+            ],
+            "properties": {
+              "type": {
+                "const": "score"
+              },
+              "instructions": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "rubric": {
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "label"
+                      ],
+                      "properties": {
+                        "label": {
+                          "type": "string"
+                        },
+                        "description": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "uniqueItems": true
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "uniqueItems": true
+    },
+    "safety_identifier": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 128
+    }
+  }
+}

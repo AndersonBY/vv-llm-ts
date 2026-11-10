@@ -1733,6 +1733,30 @@
               "max"
             ]
           }
+        },
+        "gpt-6.1-terra": {
+          "id": "gpt-6.1-terra",
+          "context_length": 1050000,
+          "max_output_tokens": 128000,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true,
+          "capabilities": {
+            "tools": true,
+            "structured_output": "json_schema",
+            "input_modalities": [
+              "text",
+              "image"
+            ],
+            "reasoning_efforts": [
+              "none",
+              "low",
+              "medium",
+              "high",
+              "xhigh",
+              "max"
+            ]
+          }
         }
       }
     },

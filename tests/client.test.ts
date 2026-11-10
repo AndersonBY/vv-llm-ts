@@ -151,9 +151,21 @@ test("default client consumes the pinned contract catalog and metadata", () => {
     assert.deepEqual(client.getModelConfig(id), expected);
   }
   const glmFlash = client.getModelConfig("glm-5.3-flash");
-  assert.equal(CONTRACT_VERSION, "1.3.4");
-  assert.equal(CONTRACT_CATALOG_REVISION, 22);
-  assert.equal(CONTRACT_CONSUMER_LOCK_SHA256, "13db5e2b078041e24842162a483603df97324e9b6db0a62163adbbdbf332c755");
+  const terra = client.getModelConfig("gpt-6.1-terra");
+  assert.equal(terra?.context_length, 1_050_000);
+  assert.equal(terra?.max_output_tokens, 128_000);
+  assert.equal(terra?.function_call_available, true);
+  assert.equal(terra?.response_format_available, true);
+  assert.equal(terra?.native_multimodal, true);
+  assert.deepEqual(terra?.capabilities, {
+    tools: true,
+    structured_output: "json_schema",
+    input_modalities: ["text", "image"],
+    reasoning_efforts: ["none", "low", "medium", "high", "xhigh", "max"],
+  });
+  assert.equal(CONTRACT_VERSION, "1.3.5");
+  assert.equal(CONTRACT_CATALOG_REVISION, 23);
+  assert.equal(CONTRACT_CONSUMER_LOCK_SHA256, "fdd36544c81d835b1928d387997344a33caa140491098b8580a7cf73566e0000");
   assert.equal(client.modelCatalog, DEFAULT_MODEL_CATALOG);
   assert.equal(vision?.max_image_dimension, 8192);
   assert.equal(vision?.capabilities?.thinking, "configurable");

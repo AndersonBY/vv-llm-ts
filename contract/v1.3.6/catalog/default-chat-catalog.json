@@ -2409,6 +2409,29 @@
               "high"
             ]
           }
+        },
+        "gemini-4-carbon": {
+          "id": "gemini-4-carbon",
+          "context_length": 1048576,
+          "max_output_tokens": 65536,
+          "function_call_available": true,
+          "response_format_available": true,
+          "native_multimodal": true,
+          "capabilities": {
+            "tools": true,
+            "structured_output": "json_schema",
+            "input_modalities": [
+              "text",
+              "image",
+              "video",
+              "audio"
+            ],
+            "reasoning_efforts": [
+              "low",
+              "medium",
+              "high"
+            ]
+          }
         }
       }
     },

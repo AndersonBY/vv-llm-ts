@@ -163,9 +163,9 @@ test("default client consumes the pinned contract catalog and metadata", () => {
     input_modalities: ["text", "image"],
     reasoning_efforts: ["none", "low", "medium", "high", "xhigh", "max"],
   });
-  assert.equal(CONTRACT_VERSION, "1.3.5");
-  assert.equal(CONTRACT_CATALOG_REVISION, 23);
-  assert.equal(CONTRACT_CONSUMER_LOCK_SHA256, "fdd36544c81d835b1928d387997344a33caa140491098b8580a7cf73566e0000");
+  assert.equal(CONTRACT_VERSION, "1.3.6");
+  assert.equal(CONTRACT_CATALOG_REVISION, 24);
+  assert.equal(CONTRACT_CONSUMER_LOCK_SHA256, "92d1d0d0c640180fba68fc0753e9f5b3ee4817e23907accbe9d6ad53818533be");
   assert.equal(client.modelCatalog, DEFAULT_MODEL_CATALOG);
   assert.equal(vision?.max_image_dimension, 8192);
   assert.equal(vision?.capabilities?.thinking, "configurable");
@@ -204,6 +204,8 @@ test("default client consumes the pinned contract catalog and metadata", () => {
     input_modalities: ["text", "image", "video", "audio"],
     reasoning_efforts: ["low", "medium", "high"],
   });
+  const carbon = client.getModelConfig("gemini-4-carbon");
+  assert.deepEqual(carbon, { ...argon, id: "gemini-4-carbon" });
   const minimaxFlash = client.getModelConfig("MiniMax-M3.1-Flash");
   assert.equal(minimaxFlash?.context_length, 1_000_000);
   assert.equal(minimaxFlash?.max_output_tokens, 512_000);
@@ -217,11 +219,13 @@ test("default client consumes the pinned contract catalog and metadata", () => {
     thinking: "always_enabled",
     reasoning_efforts: ["low", "medium", "high", "xhigh", "max"],
   });
-  for (const effort of ["low", "medium", "high"]) {
-    assert.doesNotThrow(() => validateReasoningEffort("gemini-4-argon", effort, argon?.capabilities, "strict"));
+  for (const [modelId, cfg] of [["gemini-4-argon", argon], ["gemini-4-carbon", carbon]] as const) {
+    for (const effort of ["low", "medium", "high"]) {
+      assert.doesNotThrow(() => validateReasoningEffort(modelId, effort, cfg?.capabilities, "strict"));
+    }
+    assert.throws(() => validateReasoningEffort(modelId, "none", cfg?.capabilities, "strict"));
+    assert.throws(() => validateReasoningEffort(modelId, "minimal", cfg?.capabilities, "strict"));
   }
-  assert.throws(() => validateReasoningEffort("gemini-4-argon", "none", argon?.capabilities, "strict"));
-  assert.throws(() => validateReasoningEffort("gemini-4-argon", "minimal", argon?.capabilities, "strict"));
   const flashNext = client.getModelConfig("qwen3.8-flash-next");
   assert.equal(flashNext?.id, "qwen3.8-flash-next");
   assert.equal(client.getModelConfig("qwen3.8-flash"), undefined);

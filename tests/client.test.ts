@@ -163,9 +163,9 @@ test("default client consumes the pinned contract catalog and metadata", () => {
     input_modalities: ["text", "image"],
     reasoning_efforts: ["none", "low", "medium", "high", "xhigh", "max"],
   });
-  assert.equal(CONTRACT_VERSION, "1.3.6");
-  assert.equal(CONTRACT_CATALOG_REVISION, 24);
-  assert.equal(CONTRACT_CONSUMER_LOCK_SHA256, "92d1d0d0c640180fba68fc0753e9f5b3ee4817e23907accbe9d6ad53818533be");
+  assert.equal(CONTRACT_VERSION, "1.3.7");
+  assert.equal(CONTRACT_CATALOG_REVISION, 25);
+  assert.equal(CONTRACT_CONSUMER_LOCK_SHA256, "35a10ecae04c8e8e5d661e284e01d27fe823365f531e28d600f7e6d889ac7b1c");
   assert.equal(client.modelCatalog, DEFAULT_MODEL_CATALOG);
   assert.equal(vision?.max_image_dimension, 8192);
   assert.equal(vision?.capabilities?.thinking, "configurable");
@@ -193,6 +193,18 @@ test("default client consumes the pinned contract catalog and metadata", () => {
     reasoning_efforts: ["low", "medium", "high", "xhigh", "max"],
   });
   const argon = client.getModelConfig("gemini-4-argon");
+  const fable = client.getModelConfig("claude-fable-5-2");
+  assert.deepEqual(fable, {
+    ...haiku,
+    id: "claude-fable-5-2",
+    capabilities: { ...haiku?.capabilities, thinking: "always_enabled" },
+  });
+  for (const effort of ["low", "medium", "high", "xhigh", "max"]) {
+    assert.doesNotThrow(() => validateReasoningEffort("claude-fable-5-2", effort, fable?.capabilities, "strict"));
+  }
+  for (const effort of ["none", "minimal", "ultra"]) {
+    assert.throws(() => validateReasoningEffort("claude-fable-5-2", effort, fable?.capabilities, "strict"), /does not support/);
+  }
   assert.equal(argon?.context_length, 1_048_576);
   assert.equal(argon?.max_output_tokens, 65_536);
   assert.equal(argon?.function_call_available, true);

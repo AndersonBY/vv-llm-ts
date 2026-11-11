@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.7 - 2026-11-11
+
+- Adopt shared contract 1.3.7 and catalog revision 25 with `claude-fable-5-2`: 1M context, 128K maximum output, text/image input, tools, always-on adaptive thinking, and low/medium/high/xhigh/max reasoning efforts.
+
 ## 0.3.6 - 2026-11-11
 
 - Add `gemini-4-carbon` with a unified 1,048,576-token context, 65,536-token synchronous output limit, text/image/video/audio input, tools, structured output, and low/medium/high reasoning efforts.

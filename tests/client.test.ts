@@ -163,9 +163,9 @@ test("default client consumes the pinned contract catalog and metadata", () => {
     input_modalities: ["text", "image"],
     reasoning_efforts: ["none", "low", "medium", "high", "xhigh", "max"],
   });
-  assert.equal(CONTRACT_VERSION, "1.3.7");
-  assert.equal(CONTRACT_CATALOG_REVISION, 25);
-  assert.equal(CONTRACT_CONSUMER_LOCK_SHA256, "35a10ecae04c8e8e5d661e284e01d27fe823365f531e28d600f7e6d889ac7b1c");
+  assert.equal(CONTRACT_VERSION, "1.3.8");
+  assert.equal(CONTRACT_CATALOG_REVISION, 26);
+  assert.equal(CONTRACT_CONSUMER_LOCK_SHA256, "5662e5d8a6950274beab6758524a86ab318dee8d69c4c1634434c4651f02e1dc");
   assert.equal(client.modelCatalog, DEFAULT_MODEL_CATALOG);
   assert.equal(vision?.max_image_dimension, 8192);
   assert.equal(vision?.capabilities?.thinking, "configurable");

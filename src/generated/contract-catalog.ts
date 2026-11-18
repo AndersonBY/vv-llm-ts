@@ -4,15 +4,15 @@
  */
 import type { ModelConfig } from "../types.js";
 
-export const CONTRACT_VERSION = "1.3.7" as const;
+export const CONTRACT_VERSION = "1.3.8" as const;
 export const CONTRACT_SCHEMA_VERSION = 2 as const;
 export const CONTRACT_FIXTURE_VERSION = 2 as const;
-export const CONTRACT_CATALOG_REVISION = 25 as const;
-export const CONTRACT_CONSUMER_LOCK_SHA256 = "35a10ecae04c8e8e5d661e284e01d27fe823365f531e28d600f7e6d889ac7b1c" as const;
-export const CONTRACT_MANIFEST_SHA256 = "80e7792f61cb9789b475576f78d16e7d8ffabf81ec240413b4504233a8401cd0" as const;
-export const CONTRACT_CHECKSUMS_SHA256 = "88cac4f8acdeb82db9a5abc679a68f7ffe41cf21be5dbb3cdce694b3006e2a31" as const;
+export const CONTRACT_CATALOG_REVISION = 26 as const;
+export const CONTRACT_CONSUMER_LOCK_SHA256 = "5662e5d8a6950274beab6758524a86ab318dee8d69c4c1634434c4651f02e1dc" as const;
+export const CONTRACT_MANIFEST_SHA256 = "9efd887bbe1518f4b1dcb52148a8495e176592de5d8772af2933724d0d659ac8" as const;
+export const CONTRACT_CHECKSUMS_SHA256 = "eebb989fae165a37469cf4d099d7692fb4b9e5a9139632a174be1a8c5c12f309" as const;
 export const CONTRACT_ARTIFACTS = {
-  "catalog/default-chat-catalog.json": "802f9ec982d79cf0c7eb28d130cb1f1918986789c63b00ee670280d5ffbafbe1",
+  "catalog/default-chat-catalog.json": "f4c5d044355eb2ec84e7d2985f0f597d945beed6d16849804f0e51703672377e",
   "fixtures/decisions.v1.json": "910fafaf8bf87420603ac155b95ced298d7671099e9eb5adbb3abc1257b5e9c4",
   "fixtures/openai-compatible.v2.json": "b0bec6f100377be20dd0bc2646024667fd8f3bf164976143d4d6c30e1e7f7e48",
   "fixtures/reasoning-effort.v1.json": "943d77546491f68132ab7f4e777b65bdd1cd8dea34804347da379faa5b6e4228",
@@ -1868,6 +1868,54 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
   {
     "backend": "openai",
     "id": "gpt-6.1-sol",
+    "context_length": 1050000,
+    "max_output_tokens": 128000,
+    "function_call_available": true,
+    "response_format_available": true,
+    "native_multimodal": true,
+    "capabilities": {
+      "tools": true,
+      "structured_output": "json_schema",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "reasoning_efforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ]
+    }
+  },
+  {
+    "backend": "openai",
+    "id": "gpt-6.2-astra",
+    "context_length": 1050000,
+    "max_output_tokens": 128000,
+    "function_call_available": true,
+    "response_format_available": true,
+    "native_multimodal": true,
+    "capabilities": {
+      "tools": true,
+      "structured_output": "json_schema",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "reasoning_efforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ]
+    }
+  },
+  {
+    "backend": "openai",
+    "id": "gpt-6.2-sol",
     "context_length": 1050000,
     "max_output_tokens": 128000,
     "function_call_available": true,

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.8 - 2026-11-18
+
+- Adopt shared contract 1.3.8 and catalog revision 26 with `gpt-6.2-astra`
+  and `gpt-6.2-sol`: 1.05M context, 128K maximum output, text/image input,
+  tools, structured output, and low/medium/high/xhigh/max reasoning efforts.
+
 ## 0.3.7 - 2026-11-11
 
 - Adopt shared contract 1.3.7 and catalog revision 25 with `claude-fable-5-2`: 1M context, 128K maximum output, text/image input, tools, always-on adaptive thinking, and low/medium/high/xhigh/max reasoning efforts.

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.9 - 2026-11-19
+
+- Adopt shared contract 1.3.9 and catalog revision 27 with `gemini-4-neon`:
+  unified 1,048,576-token input/output limit, 1,048,576-token maximum output
+  for long decodes, text/image/video/audio input, tools, structured output,
+  and low/medium/high/xhigh reasoning efforts.
+
 ## 0.3.8 - 2026-11-18
 
 - Adopt shared contract 1.3.8 and catalog revision 26 with `gpt-6.2-astra`

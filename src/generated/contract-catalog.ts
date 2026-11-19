@@ -4,15 +4,15 @@
  */
 import type { ModelConfig } from "../types.js";
 
-export const CONTRACT_VERSION = "1.3.8" as const;
+export const CONTRACT_VERSION = "1.3.9" as const;
 export const CONTRACT_SCHEMA_VERSION = 2 as const;
 export const CONTRACT_FIXTURE_VERSION = 2 as const;
-export const CONTRACT_CATALOG_REVISION = 26 as const;
-export const CONTRACT_CONSUMER_LOCK_SHA256 = "5662e5d8a6950274beab6758524a86ab318dee8d69c4c1634434c4651f02e1dc" as const;
-export const CONTRACT_MANIFEST_SHA256 = "9efd887bbe1518f4b1dcb52148a8495e176592de5d8772af2933724d0d659ac8" as const;
-export const CONTRACT_CHECKSUMS_SHA256 = "eebb989fae165a37469cf4d099d7692fb4b9e5a9139632a174be1a8c5c12f309" as const;
+export const CONTRACT_CATALOG_REVISION = 27 as const;
+export const CONTRACT_CONSUMER_LOCK_SHA256 = "3c53070186c4146f55dc1e8311be7ece44fd5c327cef649b696eae0f7e87380a" as const;
+export const CONTRACT_MANIFEST_SHA256 = "23111faf6227ca5276e728798d30ef69eda97d604ee18c4a7c91c91267360900" as const;
+export const CONTRACT_CHECKSUMS_SHA256 = "00a8d635581136059e442a6a358f241e555e65086ebbdb036d66ba735ac7d555" as const;
 export const CONTRACT_ARTIFACTS = {
-  "catalog/default-chat-catalog.json": "f4c5d044355eb2ec84e7d2985f0f597d945beed6d16849804f0e51703672377e",
+  "catalog/default-chat-catalog.json": "aa60c763e3454b875d26b39d3a47318047a486fffe4034af6d6f6f9c01bd98c0",
   "fixtures/decisions.v1.json": "910fafaf8bf87420603ac155b95ced298d7671099e9eb5adbb3abc1257b5e9c4",
   "fixtures/openai-compatible.v2.json": "b0bec6f100377be20dd0bc2646024667fd8f3bf164976143d4d6c30e1e7f7e48",
   "fixtures/reasoning-effort.v1.json": "943d77546491f68132ab7f4e777b65bdd1cd8dea34804347da379faa5b6e4228",
@@ -2690,6 +2690,31 @@ export const DEFAULT_MODEL_CONFIGS: readonly ContractCatalogModelConfig[] = [
         "low",
         "medium",
         "high"
+      ]
+    }
+  },
+  {
+    "backend": "gemini",
+    "id": "gemini-4-neon",
+    "context_length": 1048576,
+    "max_output_tokens": 1048576,
+    "function_call_available": true,
+    "response_format_available": true,
+    "native_multimodal": true,
+    "capabilities": {
+      "tools": true,
+      "structured_output": "json_schema",
+      "input_modalities": [
+        "text",
+        "image",
+        "video",
+        "audio"
+      ],
+      "reasoning_efforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh"
       ]
     }
   },

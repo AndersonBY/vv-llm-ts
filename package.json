@@ -1,6 +1,6 @@
 {
   "name": "vv-llm-ts",
-  "version": "0.3.9",
+  "version": "0.3.10",
   "description": "Strict, dependency-light TypeScript client for OpenAI-compatible chat, embeddings, and rerank APIs",
   "license": "MIT",
   "author": "VV LLM contributors",
@@ -22,9 +22,9 @@
   },
   "files": [
     "dist",
-    "contract/v1.3.9/consumer-lock.v1.json",
-    "contract/v1.3.9/manifest.json",
-    "contract/v1.3.9/checksums.sha256",
+    "contract/v1.3.10/consumer-lock.v1.json",
+    "contract/v1.3.10/manifest.json",
+    "contract/v1.3.10/checksums.sha256",
     "README.md",
     "README_ZH.md",
     "CHANGELOG.md",
